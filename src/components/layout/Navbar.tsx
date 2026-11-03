@@ -123,7 +123,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-blue-900/20 bg-[#030712]/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-[#182030] bg-[#06080e]/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-glow-blue group-hover:scale-105 transition-transform">
@@ -342,13 +342,13 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/admin/reconciliation"
-            className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 border border-blue-900/40 text-[11px] font-mono text-blue-300 hover:border-blue-500/50 transition-colors"
+            className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0c101a] border border-[#182030] text-[11px] font-mono text-slate-300 hover:border-blue-500/50 transition-colors"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>15/15 Invariants PASS</span>
           </Link>
 
-          <div className="hidden sm:flex items-center rounded-xl bg-slate-900 border border-slate-800 p-0.5 text-xs font-mono">
+          <div className="hidden sm:flex items-center rounded-xl bg-[#0c101a] border border-[#182030] p-0.5 text-xs font-mono">
             <button
               onClick={() => handleQuickSwitch('CUSTOMER')}
               disabled={switching}

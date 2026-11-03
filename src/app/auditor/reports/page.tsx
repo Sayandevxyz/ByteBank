@@ -62,7 +62,7 @@ export default function AuditorReportsPage() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center py-20 text-slate-400 font-mono text-sm">
-        <RefreshCw className="w-4 h-4 animate-spin text-cyan-400 mr-2" />
+        <RefreshCw className="w-4 h-4 animate-spin text-blue-400 mr-2" />
         Aggregating Compliance Views from PostgreSQL...
       </div>
     );
@@ -94,7 +94,7 @@ export default function AuditorReportsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-800 text-cyan-400 font-semibold">
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#111c33] border border-blue-800 text-blue-400 font-semibold">
               COMPLIANCE ANALYTICS
             </span>
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
@@ -109,7 +109,7 @@ export default function AuditorReportsPage() {
 
         <Link
           href="/auditor/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Auditor Dashboard
         </Link>
@@ -117,10 +117,10 @@ export default function AuditorReportsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <PieIcon className="w-4 h-4 text-cyan-400" />
+              <PieIcon className="w-4 h-4 text-blue-400" />
               Transaction Outcome Distribution
             </h2>
             <span className="text-xs font-mono text-slate-500">PostgreSQL Status Enum</span>
@@ -166,8 +166,8 @@ export default function AuditorReportsPage() {
           </div>
         </div>
 
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
               Risk Screening Outcomes
@@ -203,8 +203,8 @@ export default function AuditorReportsPage() {
         </div>
       </div>
 
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-emerald-400" />
             Simulated Reference Volume by Asset (SRU / USD Equivalent)
@@ -233,8 +233,8 @@ export default function AuditorReportsPage() {
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden space-y-4">
-        <div className="p-4 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4">
+        <div className="p-4 bg-[#0c101a] border-b border-[#182030] flex items-center justify-between">
           <div>
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
               <Database className="w-4 h-4 text-rose-400" />
@@ -253,7 +253,7 @@ export default function AuditorReportsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/40 text-slate-400 border-b border-slate-800">
+              <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
                 <tr>
                   <th className="py-2.5 px-4 font-semibold">Calendar Month</th>
                   <th className="py-2.5 px-4 font-semibold">Outcome Status</th>

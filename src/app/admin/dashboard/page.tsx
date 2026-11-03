@@ -67,7 +67,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-[#182030]">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-purple-950/80 border border-purple-800 text-purple-400 font-bold">
@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/admin/lab"
-            className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow transition-all"
+            className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow-blue transition-all"
           >
             <FlaskConical className="w-4 h-4" />
             Open DBMS Lab
@@ -95,16 +95,16 @@ export default function AdminDashboardPage() {
             href="/admin/reconciliation"
             className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
           >
-            <Scale className="w-4 h-4 text-cyan-400" />
+            <Scale className="w-4 h-4 text-blue-400" />
             Run Reconciliation
           </Link>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Users className="w-3.5 h-3.5 text-cyan-400" /> Total Customers
+            <Users className="w-3.5 h-3.5 text-blue-400" /> Total Customers
           </div>
           <div className="text-xl font-bold font-mono text-white">
             {totals.customer_count || '125'}
@@ -112,7 +112,7 @@ export default function AdminDashboardPage() {
           <div className="text-[10px] text-slate-500">Seeded CUST101-225</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <Wallet className="w-3.5 h-3.5 text-emerald-400" /> Customer Accounts
           </div>
@@ -122,19 +122,19 @@ export default function AdminDashboardPage() {
           <div className="text-[10px] text-slate-500">1:1 Customer mapping</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <ShieldAlert className="w-3.5 h-3.5 text-amber-400" /> Pending KYC
           </div>
           <div className="text-xl font-bold font-mono text-amber-400">
             {pendingKycCount}
           </div>
-          <Link href="/admin/kyc" className="text-[10px] text-cyan-400 hover:underline">
+          <Link href="/admin/kyc" className="text-[10px] text-blue-400 hover:underline">
             Review queue &rarr;
           </Link>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <Activity className="w-3.5 h-3.5 text-purple-400" /> Total Txns
           </div>
@@ -146,7 +146,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <Scale className="w-3.5 h-3.5 text-teal-400" /> Reconciliation
           </div>
@@ -161,7 +161,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <Layers className="w-3.5 h-3.5 text-rose-400" /> Audit Triggers
           </div>
@@ -172,11 +172,11 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2">
+      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#182030] gap-2">
           <div>
             <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-blue-400" />
               Live Transaction Flow Network (3D Topology)
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
@@ -184,14 +184,14 @@ export default function AdminDashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-4 text-xs font-mono">
-            <span className="flex items-center gap-1.5 text-cyan-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block shadow-glow" /> System Treasury
+            <span className="flex items-center gap-1.5 text-blue-400">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block shadow-glow-blue" /> System Treasury
             </span>
             <span className="flex items-center gap-1.5 text-emerald-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block shadow-glow" /> Verified Customers
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block shadow-glow-blue" /> Verified Customers
             </span>
             <span className="flex items-center gap-1.5 text-rose-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block shadow-glow" /> Frozen / Flagged
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block shadow-glow-blue" /> Frozen / Flagged
             </span>
           </div>
         </div>
@@ -204,14 +204,14 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link
           href="/admin/kyc"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-800 text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-[#111c33] border border-blue-800 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <ShieldAlert className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-white flex items-center justify-between">
             KYC Review Queue
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
           </h3>
           <p className="text-xs text-slate-400">
             Inspect pending customer onboarding, verify SHA-256 ID proof hashes, approve or reject with audit triggers.
@@ -220,14 +220,14 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/accounts"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
         >
           <div className="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-800 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Wallet className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-white flex items-center justify-between">
             Account Management
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
           </h3>
           <p className="text-xs text-slate-400">
             Freeze and unfreeze accounts with mandatory reason codes, view ledger balances, and enforce compliance holds.
@@ -236,14 +236,14 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/assets"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
         >
           <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Sliders className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-white flex items-center justify-between">
             Assets &amp; Prices
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
           </h3>
           <p className="text-xs text-slate-400">
             Configure precision scales, define new crypto/stock pairs, and adjust simulated reference exchange rates with live SSE broadcast.
@@ -252,14 +252,14 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/customer-lookup"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-cyan-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
         >
           <div className="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-800 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Search className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-white flex items-center justify-between">
             Controlled Staff Lookup
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
           </h3>
           <p className="text-xs text-slate-400">
             Secure customer data viewer enforcing mandatory purpose codes, automatically recording access logs.

@@ -130,7 +130,7 @@ export default function AdminReconciliationPage() {
           <button
             onClick={handleRunReconciliation}
             disabled={runningRecon}
-            className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 disabled:bg-slate-800 text-white font-bold text-xs font-mono shadow-glow transition-all flex items-center gap-2"
+            className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 disabled:bg-slate-800 text-white font-bold text-xs font-mono shadow-glow-blue transition-all flex items-center gap-2"
           >
             {runningRecon ? (
               <>
@@ -147,7 +147,7 @@ export default function AdminReconciliationPage() {
 
           <Link
             href="/admin/dashboard"
-            className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+            className="text-xs font-mono text-blue-400 hover:text-blue-300"
           >
             &larr; Back to Admin Dashboard
           </Link>
@@ -172,7 +172,7 @@ export default function AdminReconciliationPage() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-2">
           <div className="text-xs font-mono text-slate-400">Total Account/Asset Pairs</div>
           <div className="text-3xl font-extrabold text-white font-mono">
             {summary?.total_pairs || '868'}
@@ -180,7 +180,7 @@ export default function AdminReconciliationPage() {
           <div className="text-[11px] text-slate-500">Across all customer and system accounts</div>
         </div>
 
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-2">
           <div className="text-xs font-mono text-slate-400">Balanced Pairs (100% Match)</div>
           <div className="text-3xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
             <CheckCircle2 className="w-6 h-6 text-emerald-400" />
@@ -191,7 +191,7 @@ export default function AdminReconciliationPage() {
 
         <div
           className={`glass-panel p-6 rounded-2xl border space-y-2 ${
-            isMismatched ? 'border-rose-800/80 bg-rose-950/20' : 'border-slate-800'
+            isMismatched ? 'border-rose-800/80 bg-rose-950/20' : 'border-[#182030]'
           }`}
         >
           <div className="text-xs font-mono text-slate-400">Mismatched Pairs (Drift)</div>
@@ -215,8 +215,8 @@ export default function AdminReconciliationPage() {
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden space-y-4">
-        <div className="p-4 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4">
+        <div className="p-4 bg-[#0c101a] border-b border-[#182030] flex items-center justify-between">
           <div>
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
@@ -235,7 +235,7 @@ export default function AdminReconciliationPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/40 text-slate-400 border-b border-slate-800">
+              <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
                 <tr>
                   <th className="py-3 px-4 font-semibold">Issue ID</th>
                   <th className="py-3 px-4 font-semibold">Account No</th>
@@ -250,7 +250,7 @@ export default function AdminReconciliationPage() {
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
                 {issues.map((issue) => (
                   <tr key={issue.issue_id} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-cyan-400 font-bold">
+                    <td className="py-3 px-4 text-blue-400 font-bold">
                       ISSUE-{issue.issue_id}
                     </td>
                     <td className="py-3 px-4 font-bold text-white">{issue.account_no}</td>
@@ -309,15 +309,15 @@ export default function AdminReconciliationPage() {
         )}
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden space-y-4">
-        <div className="p-4 bg-slate-900/80 border-b border-slate-800 text-xs font-bold font-mono text-white flex items-center gap-2">
-          <History className="w-4 h-4 text-cyan-400" />
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4">
+        <div className="p-4 bg-[#0c101a] border-b border-[#182030] text-xs font-bold font-mono text-white flex items-center gap-2">
+          <History className="w-4 h-4 text-blue-400" />
           Recent Automated Reconciliation Runs (reconciliation_run)
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-slate-900/40 text-slate-400 border-b border-slate-800">
+            <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
               <tr>
                 <th className="py-2.5 px-4">Run ID</th>
                 <th className="py-2.5 px-4">Started At</th>
@@ -330,7 +330,7 @@ export default function AdminReconciliationPage() {
             <tbody className="divide-y divide-slate-800/60 text-slate-300">
               {runs.map((r) => (
                 <tr key={r.run_id}>
-                  <td className="py-2.5 px-4 text-cyan-400 font-bold">RUN-{r.run_id}</td>
+                  <td className="py-2.5 px-4 text-blue-400 font-bold">RUN-{r.run_id}</td>
                   <td className="py-2.5 px-4 text-slate-400">
                     {new Date(r.started_at).toLocaleString()}
                   </td>

@@ -99,7 +99,7 @@ export default function AdminKycPage() {
 
         <Link
           href="/admin/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Admin Dashboard
         </Link>
@@ -122,15 +122,15 @@ export default function AdminKycPage() {
         </div>
       )}
 
-      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
-        <div className="flex rounded-xl bg-slate-900 border border-slate-800 p-1">
+      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex items-center justify-between">
+        <div className="flex rounded-xl bg-slate-900 border border-[#182030] p-1">
           {(['pending', 'verified', 'rejected', 'all'] as const).map((st) => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
               className={`px-3 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${
                 statusFilter === st
-                  ? 'bg-purple-600 text-white font-bold shadow-glow'
+                  ? 'bg-purple-600 text-white font-bold shadow-glow-blue'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -147,7 +147,7 @@ export default function AdminKycPage() {
         </button>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
         {loading ? (
           <div className="py-20 text-center text-slate-500 text-xs font-mono">
             <RefreshCw className="w-4 h-4 animate-spin text-purple-400 inline mr-2" />
@@ -160,7 +160,7 @@ export default function AdminKycPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400">
+              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                 <tr>
                   <th className="py-3 px-4 font-semibold">Cust ID</th>
                   <th className="py-3 px-4 font-semibold">Full Name</th>
@@ -174,7 +174,7 @@ export default function AdminKycPage() {
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
                 {customers.map((c) => (
                   <tr key={c.customer_id} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-cyan-400 font-bold">
+                    <td className="py-3 px-4 text-blue-400 font-bold">
                       CUST{c.customer_id}
                     </td>
                     <td className="py-3 px-4">
@@ -187,8 +187,8 @@ export default function AdminKycPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-1.5 text-slate-400">
-                        <Hash className="w-3 h-3 text-cyan-400 shrink-0" />
-                        <span className="font-mono text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-slate-800 truncate max-w-[140px]">
+                        <Hash className="w-3 h-3 text-blue-400 shrink-0" />
+                        <span className="font-mono text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-[#182030] truncate max-w-[140px]">
                           {c.id_proof_hash}
                         </span>
                       </div>
@@ -261,7 +261,7 @@ export default function AdminKycPage() {
               placeholder="e.g. ID proof hash unreadable or expired document."
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-slate-900 border border-[#182030] rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-rose-500"
             />
 
             <div className="flex items-center justify-end gap-3 pt-2">
@@ -285,7 +285,7 @@ export default function AdminKycPage() {
                   )
                 }
                 disabled={processingId === rejectModalCustomer.customer_id}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono shadow-glow"
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono shadow-glow-blue"
               >
                 Confirm Rejection
               </button>

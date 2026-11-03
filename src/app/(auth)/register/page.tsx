@@ -62,13 +62,13 @@ export default function RegisterPage() {
 
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-lg glass-panel p-8 rounded-2xl border border-slate-800 shadow-glass">
+      <div className="w-full max-w-lg glass-panel p-8 rounded-2xl border border-[#182030] shadow-glass">
 
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800 text-xs">
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#182030] text-xs">
           <div className="flex items-center gap-2">
             <span
               className={`w-6 h-6 rounded-full flex items-center justify-center font-bold font-mono ${
-                step >= 1 ? 'bg-cyan-500 text-black' : 'bg-slate-800 text-slate-400'
+                step >= 1 ? 'bg-blue-500 text-black' : 'bg-slate-800 text-slate-400'
               }`}
             >
               1
@@ -79,7 +79,7 @@ export default function RegisterPage() {
           <div className="flex items-center gap-2">
             <span
               className={`w-6 h-6 rounded-full flex items-center justify-center font-bold font-mono ${
-                step >= 2 ? 'bg-cyan-500 text-black' : 'bg-slate-800 text-slate-400'
+                step >= 2 ? 'bg-blue-500 text-black' : 'bg-slate-800 text-slate-400'
               }`}
             >
               2
@@ -114,7 +114,7 @@ export default function RegisterPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Aditya Sharma"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
                   />
                 </div>
               </div>
@@ -130,7 +130,7 @@ export default function RegisterPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="aditya@example.com"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
                     />
                   </div>
                 </div>
@@ -145,7 +145,7 @@ export default function RegisterPage() {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="9876543999"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500"
+                      className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
                     />
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export default function RegisterPage() {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="25 MG Road, Bengaluru 560001"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
                   />
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function RegisterPage() {
                     required
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white"
                   />
                 </div>
               </div>
@@ -186,7 +186,7 @@ export default function RegisterPage() {
                   if (fullName && email && phone && address) setStep(2);
                   else setError('Please complete all personal fields before proceeding');
                 }}
-                className="w-full py-2.5 mt-4 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow transition-all"
+                className="w-full py-2.5 mt-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow-blue transition-all"
               >
                 <span>Continue to Simulated KYC</span>
                 <ArrowRight className="w-4 h-4" />
@@ -194,8 +194,8 @@ export default function RegisterPage() {
             </>
           ) : (
             <>
-              <div className="p-4 rounded-xl bg-cyan-950/30 border border-cyan-800/60 text-xs text-slate-300 space-y-2">
-                <div className="flex items-center gap-2 font-semibold text-cyan-400">
+              <div className="p-4 rounded-xl bg-[#111c33]/30 border border-blue-800/60 text-xs text-slate-300 space-y-2">
+                <div className="flex items-center gap-2 font-semibold text-blue-400">
                   <ShieldCheck className="w-4 h-4" />
                   <span>Privacy-Preserving KYC Simulation</span>
                 </div>
@@ -211,7 +211,7 @@ export default function RegisterPage() {
                   <select
                     value={idType}
                     onChange={(e) => setIdType(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 text-sm text-white focus:outline-none focus:border-cyan-500"
+                    className="w-full px-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] text-sm text-white focus:outline-none focus:border-blue-500"
                   >
                     <option value="PAN">PAN Card</option>
                     <option value="AADHAAR">Aadhaar Card</option>
@@ -227,7 +227,7 @@ export default function RegisterPage() {
                     value={idProofNumber}
                     onChange={(e) => setIdProofNumber(e.target.value)}
                     placeholder="PAN-ABCDE1234F"
-                    className="w-full px-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white"
+                    className="w-full px-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white"
                   />
                 </div>
               </div>
@@ -242,7 +242,7 @@ export default function RegisterPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white"
                   />
                 </div>
               </div>
@@ -251,14 +251,14 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="flex-1 py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white text-sm"
+                  className="flex-1 py-2.5 rounded-lg bg-slate-900 border border-[#182030] text-slate-300 hover:text-white text-sm"
                 >
                   Back
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow disabled:opacity-50"
+                  className="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow-blue disabled:opacity-50"
                 >
                   <span>{loading ? 'Creating Account...' : 'Complete Registration'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -270,7 +270,7 @@ export default function RegisterPage() {
 
         <div className="mt-6 text-center text-xs text-slate-400">
           Already have an account?{' '}
-          <Link href="/login" className="text-cyan-400 hover:underline">
+          <Link href="/login" className="text-blue-400 hover:underline">
             Sign In
           </Link>
         </div>

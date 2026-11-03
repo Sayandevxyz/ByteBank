@@ -63,13 +63,13 @@ export default function AuditorAuditLogsPage() {
 
         <Link
           href="/auditor/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Auditor Dashboard
         </Link>
       </div>
 
-      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center gap-4 text-xs font-mono">
+      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-wrap items-center gap-4 text-xs font-mono">
         <div className="flex items-center gap-1.5 text-slate-400">
           <Filter className="w-3.5 h-3.5 text-purple-400" />
           <span>Filters:</span>
@@ -78,7 +78,7 @@ export default function AuditorAuditLogsPage() {
         <select
           value={actionFilter}
           onChange={(e) => setActionFilter(e.target.value)}
-          className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-purple-500"
+          className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-purple-500"
         >
           <option value="">All Actions</option>
           <option value="INSERT">INSERT</option>
@@ -89,7 +89,7 @@ export default function AuditorAuditLogsPage() {
         <select
           value={resourceFilter}
           onChange={(e) => setResourceFilter(e.target.value)}
-          className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-purple-500"
+          className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-purple-500"
         >
           <option value="">All Resources</option>
           <option value="customer">customer</option>
@@ -109,7 +109,7 @@ export default function AuditorAuditLogsPage() {
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
         {loading ? (
           <div className="py-20 text-center text-slate-500 text-xs font-mono">
             <RefreshCw className="w-4 h-4 animate-spin text-purple-400 inline mr-2" />
@@ -122,7 +122,7 @@ export default function AuditorAuditLogsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400">
+              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                 <tr>
                   <th className="py-3 px-4 w-8"></th>
                   <th className="py-3 px-4 font-semibold">Log ID</th>
@@ -161,7 +161,7 @@ export default function AuditorAuditLogsPage() {
                               log.action === 'INSERT'
                                 ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
                                 : log.action === 'UPDATE'
-                                ? 'bg-cyan-950 text-cyan-400 border border-cyan-800'
+                                ? 'bg-[#111c33] text-blue-400 border border-blue-800'
                                 : 'bg-rose-950 text-rose-400 border border-rose-800'
                             }`}
                           >
@@ -192,7 +192,7 @@ export default function AuditorAuditLogsPage() {
                                 <span className="text-[10px] uppercase text-rose-400 font-bold">
                                   Previous State (old_value):
                                 </span>
-                                <pre className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-400 overflow-x-auto max-h-48">
+                                <pre className="p-3 rounded-lg bg-slate-900 border border-[#182030] text-[11px] text-slate-400 overflow-x-auto max-h-48">
                                   {log.old_value
                                     ? JSON.stringify(log.old_value, null, 2)
                                     : 'null (New entity inserted)'}
@@ -203,7 +203,7 @@ export default function AuditorAuditLogsPage() {
                                 <span className="text-[10px] uppercase text-emerald-400 font-bold">
                                   Mutated State (new_value - Masked):
                                 </span>
-                                <pre className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-emerald-300 overflow-x-auto max-h-48">
+                                <pre className="p-3 rounded-lg bg-slate-900 border border-[#182030] text-[11px] text-emerald-300 overflow-x-auto max-h-48">
                                   {log.new_value
                                     ? JSON.stringify(log.new_value, null, 2)
                                     : 'null (Entity removed)'}

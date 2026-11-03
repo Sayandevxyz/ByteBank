@@ -137,7 +137,7 @@ export default function CustomerHistoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-800 text-cyan-400 font-semibold">
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#111c33] border border-blue-800 text-blue-400 font-semibold">
               TRANSACTION LEDGER
             </span>
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
@@ -151,7 +151,7 @@ export default function CustomerHistoryPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex rounded-xl bg-slate-900 border border-slate-800 p-1">
+          <div className="flex rounded-xl bg-slate-900 border border-[#182030] p-1">
             <button
               onClick={() => {
                 setActiveTab('transactions');
@@ -159,7 +159,7 @@ export default function CustomerHistoryPage() {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 activeTab === 'transactions'
-                  ? 'bg-cyan-600 text-white font-bold shadow-glow'
+                  ? 'bg-blue-600 text-white font-bold shadow-glow-blue'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -172,7 +172,7 @@ export default function CustomerHistoryPage() {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 activeTab === 'statement'
-                  ? 'bg-cyan-600 text-white font-bold shadow-glow'
+                  ? 'bg-blue-600 text-white font-bold shadow-glow-blue'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -184,15 +184,15 @@ export default function CustomerHistoryPage() {
             onClick={handleExportCsv}
             className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
           >
-            <Download className="w-3.5 h-3.5 text-cyan-400" />
+            <Download className="w-3.5 h-3.5 text-blue-400" />
             Export CSV
           </button>
         </div>
       </div>
 
-      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center gap-3 text-xs">
+      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-wrap items-center gap-3 text-xs">
         <div className="flex items-center gap-1.5 text-slate-400 font-mono">
-          <Filter className="w-3.5 h-3.5 text-cyan-400" />
+          <Filter className="w-3.5 h-3.5 text-blue-400" />
           <span>Filters:</span>
         </div>
 
@@ -204,7 +204,7 @@ export default function CustomerHistoryPage() {
                 setAssetId(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-cyan-500"
+              className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-blue-500"
             >
               <option value="">All Assets</option>
               {assets.map((a) => (
@@ -220,7 +220,7 @@ export default function CustomerHistoryPage() {
                 setType(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-cyan-500"
+              className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-blue-500"
             >
               <option value="">All Types</option>
               <option value="transfer">Transfer</option>
@@ -235,7 +235,7 @@ export default function CustomerHistoryPage() {
                 setStatus(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-cyan-500"
+              className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-blue-500"
             >
               <option value="">All Statuses</option>
               <option value="success">Success</option>
@@ -255,7 +255,7 @@ export default function CustomerHistoryPage() {
               setStartDate(e.target.value);
               setPage(1);
             }}
-            className="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-slate-300 font-mono text-[11px]"
+            className="bg-slate-900 border border-[#182030] rounded-lg px-2 py-1 text-slate-300 font-mono text-[11px]"
           />
           <span className="text-slate-500">To:</span>
           <input
@@ -265,14 +265,14 @@ export default function CustomerHistoryPage() {
               setEndDate(e.target.value);
               setPage(1);
             }}
-            className="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-slate-300 font-mono text-[11px]"
+            className="bg-slate-900 border border-[#182030] rounded-lg px-2 py-1 text-slate-300 font-mono text-[11px]"
           />
         </div>
 
         {(assetId || type || status || startDate || endDate) && (
           <button
             onClick={resetFilters}
-            className="text-[11px] text-cyan-400 hover:underline ml-auto font-mono"
+            className="text-[11px] text-blue-400 hover:underline ml-auto font-mono"
           >
             Clear Filters
           </button>
@@ -280,10 +280,10 @@ export default function CustomerHistoryPage() {
       </div>
 
       {activeTab === 'transactions' && (
-        <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+        <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
           {loading ? (
             <div className="py-20 flex items-center justify-center text-slate-500 text-xs font-mono">
-              <RefreshCw className="w-4 h-4 animate-spin text-cyan-400 mr-2" />
+              <RefreshCw className="w-4 h-4 animate-spin text-blue-400 mr-2" />
               Fetching Transactions from PostgreSQL...
             </div>
           ) : transactions.length === 0 ? (
@@ -293,7 +293,7 @@ export default function CustomerHistoryPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400">
+                <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                   <tr>
                     <th className="py-3 px-4 font-semibold">Tx ID</th>
                     <th className="py-3 px-4 font-semibold">Direction / Counterparty</th>
@@ -309,7 +309,7 @@ export default function CustomerHistoryPage() {
                     const isDebit = tx.direction === 'OUT';
                     return (
                       <tr key={tx.transaction_id} className="hover:bg-slate-800/30 transition-colors">
-                        <td className="py-3 px-4 text-cyan-400 font-bold">
+                        <td className="py-3 px-4 text-blue-400 font-bold">
                           #{tx.transaction_id}
                         </td>
                         <td className="py-3 px-4">
@@ -388,7 +388,7 @@ export default function CustomerHistoryPage() {
             </div>
           )}
 
-          <div className="p-4 bg-slate-900/60 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+          <div className="p-4 bg-[#0c101a] border-t border-[#182030] flex items-center justify-between text-xs font-mono">
             <span className="text-slate-500">
               Showing page {page} of {totalPages} ({total} total transactions)
             </span>
@@ -414,15 +414,15 @@ export default function CustomerHistoryPage() {
       )}
 
       {activeTab === 'statement' && (
-        <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden space-y-4 p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2">
+        <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4 p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#182030] gap-2">
             <div>
               <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <FileText className="w-4 h-4 text-cyan-400" />
+                <FileText className="w-4 h-4 text-blue-400" />
                 Immutable Account Ledger Statement ({accountNo})
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Every line below is an immutable <code className="text-cyan-300">ledger_entry</code> generated by a committed transaction. Updates and deletes are blocked by database triggers.
+                Every line below is an immutable <code className="text-blue-300">ledger_entry</code> generated by a committed transaction. Updates and deletes are blocked by database triggers.
               </p>
             </div>
             <span className="text-xs font-mono text-emerald-400 px-3 py-1 rounded bg-emerald-950/60 border border-emerald-800">
@@ -432,7 +432,7 @@ export default function CustomerHistoryPage() {
 
           {loading ? (
             <div className="py-16 text-center text-slate-500 text-xs font-mono">
-              <RefreshCw className="w-4 h-4 animate-spin text-cyan-400 inline mr-2" />
+              <RefreshCw className="w-4 h-4 animate-spin text-blue-400 inline mr-2" />
               Evaluating Statement View...
             </div>
           ) : statement.length === 0 ? (
@@ -442,7 +442,7 @@ export default function CustomerHistoryPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400">
+                <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                   <tr>
                     <th className="py-3 px-4 font-semibold">Ledger Entry ID</th>
                     <th className="py-3 px-4 font-semibold">Linked Tx ID</th>
@@ -458,7 +458,7 @@ export default function CustomerHistoryPage() {
                     const isPositive = signedQty > 0;
                     return (
                       <tr key={entry.entry_id} className="hover:bg-slate-800/30">
-                        <td className="py-3 px-4 text-cyan-400 font-bold">
+                        <td className="py-3 px-4 text-blue-400 font-bold">
                           ENTRY-{entry.entry_id}
                         </td>
                         <td className="py-3 px-4 text-slate-400">

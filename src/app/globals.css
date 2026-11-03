@@ -1,18 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #030712;
+  --background: #06080e;
   --foreground: #f8fafc;
+  --card-bg: #0c101a;
+  --card-border: #182030;
+  --card-hover-border: #24324c;
   --accent-blue: #2563eb;
-  --accent-blue-glow: rgba(37, 99, 235, 0.35);
+  --accent-blue-light: #3b82f6;
+  --badge-bg: #111c33;
+  --badge-border: #1b2b4d;
 }
 
 body {
   background-color: var(--background);
   background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.18), transparent 70%),
-    radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 40%),
-    radial-gradient(circle at 15% 70%, rgba(30, 64, 175, 0.08), transparent 40%);
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(37, 99, 235, 0.12), transparent 70%),
+    radial-gradient(circle at 90% 20%, rgba(37, 99, 235, 0.05), transparent 40%),
+    radial-gradient(circle at 10% 80%, rgba(37, 99, 235, 0.04), transparent 40%);
   background-attachment: fixed;
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -20,47 +25,64 @@ body {
 }
 
 .glass-panel {
-  background: rgba(11, 19, 38, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(59, 130, 246, 0.14);
+  background: #0c101a;
+  border: 1px solid #182030;
 }
 
 .glass-panel-elevated {
-  background: rgba(15, 25, 50, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(59, 130, 246, 0.22);
+  background: #0f1422;
+  border: 1px solid #1e283d;
 }
 
 .glass-chip {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0c101a;
+  border: 1px solid #182030;
+  transition: all 0.2s ease;
 }
 
 .glass-chip:hover {
-  border-color: rgba(59, 130, 246, 0.4);
-  background: rgba(20, 32, 60, 0.85);
+  border-color: #24324c;
+  background: #111726;
+}
+
+.feature-card {
+  background: #0c101a;
+  border: 1px solid #182030;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+}
+
+.feature-card:hover {
+  border-color: #24324c;
+  background: #0e1422;
+}
+
+.feature-icon-box {
+  background: #121929;
+  border: 1px solid #1d273d;
+  border-radius: 0.75rem;
+  color: #3b82f6;
+}
+
+.feature-badge {
+  background: #111c33;
+  border: 1px solid #1b2b4d;
+  color: #3b82f6;
+  border-radius: 9999px;
 }
 
 .shadow-glow-blue {
-  box-shadow: 0 0 25px -4px rgba(37, 99, 235, 0.4);
-}
-
-.shadow-glow-cyan {
-  box-shadow: 0 0 25px -4px rgba(6, 182, 212, 0.35);
+  box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary-blue {
   background-color: #2563eb;
   color: #ffffff;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-primary-blue:hover {
   background-color: #1d4ed8;
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
 }
 
 ::-webkit-scrollbar {
@@ -68,10 +90,10 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #030712;
+  background: #06080e;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #182030;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {

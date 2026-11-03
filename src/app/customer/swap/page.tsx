@@ -169,7 +169,7 @@ export default function SwapPage() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center py-20 text-slate-400 font-mono text-sm">
-        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse mr-2" />
+        <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse mr-2" />
         Loading Market Maker asset pools...
       </div>
     );
@@ -181,7 +181,7 @@ export default function SwapPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-800 text-cyan-400 font-semibold">
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#111c33] border border-blue-800 text-blue-400 font-semibold">
               ATOMIC SWAP ENGINE
             </span>
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
@@ -196,7 +196,7 @@ export default function SwapPage() {
 
         <Link
           href="/customer/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300 flex items-center gap-1"
         >
           &larr; Back to Dashboard
         </Link>
@@ -204,7 +204,7 @@ export default function SwapPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div className="md:col-span-7 space-y-6">
-          <form onSubmit={handlePreview} className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+          <form onSubmit={handlePreview} className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-6">
             {error && (
               <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-800 text-rose-300 text-xs flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
@@ -221,7 +221,7 @@ export default function SwapPage() {
                     <button
                       type="button"
                       onClick={() => handlePercentage(1.0)}
-                      className="text-cyan-400 hover:underline font-bold"
+                      className="text-blue-400 hover:underline font-bold"
                     >
                       {selectedFromHolding.available_qty.toFixed(Math.min(selectedFromHolding.quantity_scale, 6))}{' '}
                       {selectedFromHolding.symbol}
@@ -230,7 +230,7 @@ export default function SwapPage() {
                 )}
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
+              <div className="p-4 rounded-xl bg-[#0c101a] border border-[#182030] space-y-3">
                 <div className="flex items-center gap-3">
                   <select
                     value={fromAssetId}
@@ -239,7 +239,7 @@ export default function SwapPage() {
                       setPreviewData(null);
                       setSwapResult(null);
                     }}
-                    className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-cyan-500"
+                    className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-blue-500"
                   >
                     {holdings.map((h) => (
                       <option key={h.asset_id} value={h.asset_id}>
@@ -262,7 +262,7 @@ export default function SwapPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-800/60">
+                <div className="flex items-center justify-end gap-2 pt-1 border-t border-[#182030]">
                   {[0.25, 0.5, 0.75, 1.0].map((pct) => (
                     <button
                       key={pct}
@@ -286,7 +286,7 @@ export default function SwapPage() {
                   setToAssetId(oldFrom);
                   setPreviewData(null);
                 }}
-                className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 hover:border-cyan-500 text-cyan-400 flex items-center justify-center shadow-lg transition-transform hover:rotate-180"
+                className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 hover:border-blue-500 text-blue-400 flex items-center justify-center shadow-lg transition-transform hover:rotate-180"
                 title="Invert swap pair"
               >
                 <ArrowDown className="w-4 h-4" />
@@ -303,7 +303,7 @@ export default function SwapPage() {
                 )}
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center gap-3">
+              <div className="p-4 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center gap-3">
                 <select
                   value={toAssetId}
                   onChange={(e) => {
@@ -311,7 +311,7 @@ export default function SwapPage() {
                     setPreviewData(null);
                     setSwapResult(null);
                   }}
-                  className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-cyan-500"
+                  className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-blue-500"
                 >
                   {allAssets.map((a) => (
                     <option key={a.asset_id} value={a.asset_id} disabled={a.asset_id === fromAssetId}>
@@ -334,7 +334,7 @@ export default function SwapPage() {
               <button
                 type="submit"
                 disabled={previewLoading || !fromQuantity || parseFloat(fromQuantity) <= 0}
-                className="w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold text-sm transition-all shadow-glow flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold text-sm transition-all shadow-glow-blue flex items-center justify-center gap-2"
               >
                 {previewLoading ? (
                   <>
@@ -352,13 +352,13 @@ export default function SwapPage() {
           </form>
 
           {previewData && (
-            <div className="glass-panel p-6 rounded-2xl border border-cyan-800/80 bg-cyan-950/20 space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <div className="flex items-center justify-between pb-3 border-b border-cyan-800/40">
-                <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
+            <div className="glass-panel p-6 rounded-2xl border border-blue-800/80 bg-[#111c33]/20 space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="flex items-center justify-between pb-3 border-b border-blue-800/40">
+                <div className="flex items-center gap-2 text-blue-400 font-bold text-sm">
                   <ShieldCheck className="w-4 h-4" />
                   ACID Stored Procedure Execution Quote
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-900/60 border border-cyan-700 text-cyan-300">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 border border-blue-700 text-blue-300">
                   simulated_swap()
                 </span>
               </div>
@@ -385,7 +385,7 @@ export default function SwapPage() {
                 </div>
                 <div className="flex justify-between text-slate-300">
                   <span className="text-slate-500">Counterparty:</span>
-                  <span className="text-cyan-400">ByteBank Market Maker (BB-TREASURY)</span>
+                  <span className="text-blue-400">ByteBank Market Maker (BB-TREASURY)</span>
                 </div>
                 <div className="flex justify-between text-slate-300">
                   <span className="text-slate-500">Atomic Execution:</span>
@@ -405,7 +405,7 @@ export default function SwapPage() {
                   type="button"
                   onClick={handleConfirmSwap}
                   disabled={confirmLoading}
-                  className="flex-2 py-2.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 text-white font-bold text-xs transition-all shadow-glow flex items-center justify-center gap-2"
+                  className="flex-2 py-2.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 text-white font-bold text-xs transition-all shadow-glow-blue flex items-center justify-center gap-2"
                 >
                   {confirmLoading ? (
                     <>
@@ -430,7 +430,7 @@ export default function SwapPage() {
                 Atomic Swap Committed Successfully!
               </div>
               <p className="text-xs text-slate-300 font-mono">
-                Swap Group ID: <span className="text-cyan-400 font-bold">{swapResult.swapGroup}</span>
+                Swap Group ID: <span className="text-blue-400 font-bold">{swapResult.swapGroup}</span>
               </p>
 
               <div className="space-y-2 pt-2">
@@ -440,7 +440,7 @@ export default function SwapPage() {
                 {swapResult.legs?.map((leg: any, idx: number) => (
                   <div
                     key={leg.transaction_id || idx}
-                    className="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono"
+                    className="p-3 rounded-lg bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono"
                   >
                     <div>
                       <span className="text-slate-500">#{leg.transaction_id} </span>
@@ -473,8 +473,8 @@ export default function SwapPage() {
         </div>
 
         <div className="md:col-span-5 space-y-6">
-          <div className="p-6 rounded-2xl glass-panel border border-slate-800 space-y-4 text-xs">
-            <div className="flex items-center gap-2 text-cyan-400 font-bold">
+          <div className="p-6 rounded-2xl glass-panel border border-[#182030] space-y-4 text-xs">
+            <div className="flex items-center gap-2 text-blue-400 font-bold">
               <Building className="w-4 h-4" />
               <span>How Simulated Swaps Work</span>
             </div>
@@ -483,7 +483,7 @@ export default function SwapPage() {
             </p>
             <ol className="list-decimal list-inside space-y-2 text-slate-300 font-mono text-[11px]">
               <li>
-                <strong className="text-cyan-400">Leg 1 (Sell):</strong> Customer debited for source asset; Treasury credited.
+                <strong className="text-blue-400">Leg 1 (Sell):</strong> Customer debited for source asset; Treasury credited.
               </li>
               <li>
                 <strong className="text-emerald-400">Leg 2 (Buy):</strong> Treasury debited for target asset; Customer credited.
@@ -496,9 +496,9 @@ export default function SwapPage() {
               </li>
             </ol>
 
-            <div className="pt-3 border-t border-slate-800/80">
+            <div className="pt-3 border-t border-[#182030]">
               <span className="text-slate-500 font-mono text-[10px] block">PL/pgSQL PROCEDURE:</span>
-              <code className="text-[11px] text-cyan-300 block mt-1 bg-slate-900 p-2 rounded border border-slate-800 font-mono">
+              <code className="text-[11px] text-blue-300 block mt-1 bg-slate-900 p-2 rounded border border-[#182030] font-mono">
                 simulated_swap(acc_id, from_id, to_id, qty)
               </code>
             </div>

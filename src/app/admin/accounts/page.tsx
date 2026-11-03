@@ -117,7 +117,7 @@ export default function AdminAccountsPage() {
 
         <Link
           href="/admin/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Admin Dashboard
         </Link>
@@ -140,7 +140,7 @@ export default function AdminAccountsPage() {
         </div>
       )}
 
-      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono">
+      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono">
         <div className="flex items-center gap-3 flex-1 max-w-md">
           <div className="relative w-full">
             <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
@@ -149,20 +149,20 @@ export default function AdminAccountsPage() {
               placeholder="Search by account number, name, or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500"
+              className="w-full bg-slate-900 border border-[#182030] rounded-xl pl-9 pr-3 py-2 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-blue-500"
             />
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex rounded-xl bg-slate-900 border border-slate-800 p-1">
+          <div className="flex rounded-xl bg-slate-900 border border-[#182030] p-1">
             {(['all', 'active', 'frozen'] as const).map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${
                   statusFilter === st
-                    ? 'bg-purple-600 text-white font-bold shadow-glow'
+                    ? 'bg-purple-600 text-white font-bold shadow-glow-blue'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -180,7 +180,7 @@ export default function AdminAccountsPage() {
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
         {loading ? (
           <div className="py-20 text-center text-slate-500 text-xs font-mono">
             <RefreshCw className="w-4 h-4 animate-spin text-purple-400 inline mr-2" />
@@ -193,7 +193,7 @@ export default function AdminAccountsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400">
+              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                 <tr>
                   <th className="py-3 px-4 font-semibold">Account No</th>
                   <th className="py-3 px-4 font-semibold">Owner / Customer</th>
@@ -207,7 +207,7 @@ export default function AdminAccountsPage() {
               <tbody className="divide-y divide-slate-800/60 text-slate-300">
                 {filteredAccounts.map((acc) => (
                   <tr key={acc.account_id} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-cyan-400 font-bold">
+                    <td className="py-3 px-4 text-blue-400 font-bold">
                       {acc.account_no}
                       {acc.is_system && (
                         <span className="ml-2 px-1.5 py-0.5 rounded bg-amber-950 border border-amber-800 text-amber-400 text-[9px]">
@@ -282,7 +282,7 @@ export default function AdminAccountsPage() {
 
       {actionModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 bg-slate-950 max-w-md w-full space-y-4">
+          <div className="glass-panel p-6 rounded-2xl border border-[#182030] bg-slate-950 max-w-md w-full space-y-4">
             <div className="flex items-center gap-2 text-white font-bold text-sm">
               <ShieldAlert
                 className={`w-4 h-4 ${
@@ -309,7 +309,7 @@ export default function AdminAccountsPage() {
                 placeholder="e.g. Account security review / Suspicious activity report #104"
                 value={actionReason}
                 onChange={(e) => setActionReason(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-cyan-500"
+                className="w-full bg-slate-900 border border-[#182030] rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-blue-500"
               />
             </div>
 
@@ -328,7 +328,7 @@ export default function AdminAccountsPage() {
                 type="button"
                 onClick={handleExecuteAction}
                 disabled={processing || !actionReason.trim()}
-                className={`px-4 py-2 rounded-xl text-white text-xs font-bold font-mono shadow-glow ${
+                className={`px-4 py-2 rounded-xl text-white text-xs font-bold font-mono shadow-glow-blue ${
                   actionModal.action === 'freeze'
                     ? 'bg-rose-600 hover:bg-rose-500'
                     : 'bg-emerald-600 hover:bg-emerald-500'

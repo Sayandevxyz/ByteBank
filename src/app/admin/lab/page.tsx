@@ -120,18 +120,18 @@ export default function DbmsLabPage() {
 
         <Link
           href="/admin/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Admin Dashboard
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-slate-900 border border-slate-800">
+      <div className="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-slate-900 border border-[#182030]">
         <button
           onClick={() => setActiveTab('concurrency')}
           className={`flex-1 min-w-[200px] py-2.5 px-4 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 ${
             activeTab === 'concurrency'
-              ? 'bg-purple-600 text-white shadow-glow'
+              ? 'bg-purple-600 text-white shadow-glow-blue'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -143,7 +143,7 @@ export default function DbmsLabPage() {
           onClick={() => setActiveTab('idempotency')}
           className={`flex-1 min-w-[200px] py-2.5 px-4 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 ${
             activeTab === 'idempotency'
-              ? 'bg-purple-600 text-white shadow-glow'
+              ? 'bg-purple-600 text-white shadow-glow-blue'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -155,7 +155,7 @@ export default function DbmsLabPage() {
           onClick={() => setActiveTab('crash')}
           className={`flex-1 min-w-[200px] py-2.5 px-4 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 ${
             activeTab === 'crash'
-              ? 'bg-purple-600 text-white shadow-glow'
+              ? 'bg-purple-600 text-white shadow-glow-blue'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -167,7 +167,7 @@ export default function DbmsLabPage() {
           onClick={() => setActiveTab('drift')}
           className={`flex-1 min-w-[200px] py-2.5 px-4 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 ${
             activeTab === 'drift'
-              ? 'bg-purple-600 text-white shadow-glow'
+              ? 'bg-purple-600 text-white shadow-glow-blue'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -178,7 +178,7 @@ export default function DbmsLabPage() {
 
       {activeTab === 'concurrency' && (
         <div className="space-y-6">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
@@ -193,7 +193,7 @@ export default function DbmsLabPage() {
               <button
                 onClick={runConcurrencyLab}
                 disabled={concurrencyLoading}
-                className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:bg-slate-800 text-white font-bold text-xs font-mono shadow-glow transition-all flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:bg-slate-800 text-white font-bold text-xs font-mono shadow-glow-blue transition-all flex items-center gap-2"
               >
                 {concurrencyLoading ? (
                   <>
@@ -209,17 +209,17 @@ export default function DbmsLabPage() {
               </button>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 font-mono text-xs text-slate-300 space-y-2">
-              <div className="text-cyan-400 font-bold">DBMS Invariant Under Test:</div>
+            <div className="p-4 rounded-xl bg-[#0c101a] border border-[#182030] font-mono text-xs text-slate-300 space-y-2">
+              <div className="text-blue-400 font-bold">DBMS Invariant Under Test:</div>
               <p className="text-slate-400 text-[11px] leading-relaxed">
-                PostgreSQL row locks (<code className="text-cyan-300">SELECT ... FOR UPDATE</code> ordered by <code className="text-cyan-300">account_id, asset_id</code>) serialize the requests. The first transaction locks the holding and debits 0.8 BTC (remaining balance = 0.2 BTC). The second transaction unblocks, revalidates available balance, and cleanly fails with <code className="text-rose-400">INSUFFICIENT_FUNDS</code>.
+                PostgreSQL row locks (<code className="text-blue-300">SELECT ... FOR UPDATE</code> ordered by <code className="text-blue-300">account_id, asset_id</code>) serialize the requests. The first transaction locks the holding and debits 0.8 BTC (remaining balance = 0.2 BTC). The second transaction unblocks, revalidates available balance, and cleanly fails with <code className="text-rose-400">INSUFFICIENT_FUNDS</code>.
               </p>
             </div>
           </div>
 
           {concurrencyResult && (
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6 animate-in fade-in">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-6 animate-in fade-in">
+              <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
                 <span className="text-xs font-mono text-slate-400">Race Condition Execution Log</span>
                 <span
                   className={`text-xs font-mono px-3 py-1 rounded font-bold ${
@@ -236,10 +236,10 @@ export default function DbmsLabPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+                <div className="p-4 rounded-xl bg-slate-900 border border-[#182030] space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold font-mono text-white flex items-center gap-1.5">
-                      <Terminal className="w-3.5 h-3.5 text-cyan-400" />
+                      <Terminal className="w-3.5 h-3.5 text-blue-400" />
                       Transaction Thread A (0.8 BTC)
                     </span>
                     <span
@@ -262,7 +262,7 @@ export default function DbmsLabPage() {
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+                <div className="p-4 rounded-xl bg-slate-900 border border-[#182030] space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold font-mono text-white flex items-center gap-1.5">
                       <Terminal className="w-3.5 h-3.5 text-purple-400" />
@@ -289,7 +289,7 @@ export default function DbmsLabPage() {
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs font-mono">
+              <div className="p-4 rounded-xl bg-slate-950 border border-[#182030] flex items-center justify-between text-xs font-mono">
                 <div>
                   <span className="text-slate-500">PostgreSQL Verified Final Balance: </span>
                   <span className="text-white font-bold text-sm">
@@ -308,9 +308,9 @@ export default function DbmsLabPage() {
 
       {activeTab === 'idempotency' && (
         <div className="space-y-6">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
             <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <RotateCcw className="w-5 h-5 text-cyan-400" />
+              <RotateCcw className="w-5 h-5 text-blue-400" />
               Idempotency Key &amp; Request Fingerprint Verification
             </h2>
             <p className="text-xs text-slate-400">
@@ -321,9 +321,9 @@ export default function DbmsLabPage() {
               <button
                 onClick={() => runIdempotencyLab('exact_retry')}
                 disabled={idempotencyLoading}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500 text-left space-y-2 transition-all group"
+                className="p-4 rounded-xl bg-slate-900 border border-[#182030] hover:border-blue-500 text-left space-y-2 transition-all group"
               >
-                <div className="text-xs font-bold text-white group-hover:text-cyan-400 font-mono flex items-center justify-between">
+                <div className="text-xs font-bold text-white group-hover:text-blue-400 font-mono flex items-center justify-between">
                   Scenario A: Identical Retry
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>
@@ -335,7 +335,7 @@ export default function DbmsLabPage() {
               <button
                 onClick={() => runIdempotencyLab('conflict_body')}
                 disabled={idempotencyLoading}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-rose-500 text-left space-y-2 transition-all group"
+                className="p-4 rounded-xl bg-slate-900 border border-[#182030] hover:border-rose-500 text-left space-y-2 transition-all group"
               >
                 <div className="text-xs font-bold text-white group-hover:text-rose-400 font-mono flex items-center justify-between">
                   Scenario B: Payload Conflict
@@ -349,7 +349,7 @@ export default function DbmsLabPage() {
               <button
                 onClick={() => runIdempotencyLab('concurrent')}
                 disabled={idempotencyLoading}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500 text-left space-y-2 transition-all group"
+                className="p-4 rounded-xl bg-slate-900 border border-[#182030] hover:border-amber-500 text-left space-y-2 transition-all group"
               >
                 <div className="text-xs font-bold text-white group-hover:text-amber-400 font-mono flex items-center justify-between">
                   Scenario C: In-Flight Collision
@@ -363,20 +363,20 @@ export default function DbmsLabPage() {
           </div>
 
           {idempotencyResult && (
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4 font-mono text-xs animate-in fade-in">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4 font-mono text-xs animate-in fade-in">
+              <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
                 <span className="text-slate-400">Idempotency Protocol Response</span>
-                <span className="text-cyan-400 font-bold">{idempotencyResult.scenario}</span>
+                <span className="text-blue-400 font-bold">{idempotencyResult.scenario}</span>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <div className="p-4 rounded-xl bg-slate-950 border border-[#182030] space-y-2">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Idempotency Key:</span>
                   <span className="text-white">{idempotencyResult.idempotencyKey}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Fingerprint SHA-256:</span>
-                  <span className="text-cyan-300 break-all">{idempotencyResult.fingerprint}</span>
+                  <span className="text-blue-300 break-all">{idempotencyResult.fingerprint}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">HTTP Status:</span>
@@ -404,7 +404,7 @@ export default function DbmsLabPage() {
 
       {activeTab === 'crash' && (
         <div className="space-y-6">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
@@ -419,7 +419,7 @@ export default function DbmsLabPage() {
               <button
                 onClick={runCrashLab}
                 disabled={crashLoading}
-                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 text-white font-bold text-xs font-mono shadow-glow transition-all flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:bg-slate-800 text-white font-bold text-xs font-mono shadow-glow-blue transition-all flex items-center gap-2"
               >
                 {crashLoading ? (
                   <>
@@ -435,7 +435,7 @@ export default function DbmsLabPage() {
               </button>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 font-mono text-xs text-slate-300 space-y-2">
+            <div className="p-4 rounded-xl bg-[#0c101a] border border-[#182030] font-mono text-xs text-slate-300 space-y-2">
               <div className="text-rose-400 font-bold">The Rollback Paradox:</div>
               <p className="text-slate-400 text-[11px] leading-relaxed">
                 In PostgreSQL, an aborted transaction rolls back <em>all</em> internal modifications (no ledger rows created, balances untouched). However, compliance and audit rules mandate that <strong>failed attempts must be logged</strong>. ByteBank solves this using an autonomous connection runner that logs the failure record and reason outside the aborted transaction.
@@ -444,8 +444,8 @@ export default function DbmsLabPage() {
           </div>
 
           {crashResult && (
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4 font-mono text-xs animate-in fade-in">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4 font-mono text-xs animate-in fade-in">
+              <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
                 <span className="text-slate-400">Autonomous Failure Telemetry</span>
                 <span className="text-emerald-400 font-bold flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4" />
@@ -454,15 +454,15 @@ export default function DbmsLabPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                <div className="p-4 rounded-xl bg-slate-950 border border-[#182030] space-y-2">
                   <div className="text-rose-400 font-bold">Primary Posting Transaction:</div>
                   <div className="text-slate-400">Status: <span className="text-rose-400">ROLLED BACK</span></div>
                   <div className="text-slate-400">Balances Changed: <span className="text-emerald-400">0 (Zero Mutation)</span></div>
                   <div className="text-slate-400">Aborted Error: <span className="text-rose-300">{crashResult.abortedError}</span></div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-                  <div className="text-cyan-400 font-bold">Autonomous Logging Path:</div>
+                <div className="p-4 rounded-xl bg-slate-950 border border-[#182030] space-y-2">
+                  <div className="text-blue-400 font-bold">Autonomous Logging Path:</div>
                   <div className="text-slate-400">Persisted Tx ID: <span className="text-white font-bold">#{crashResult.loggedTransactionId}</span></div>
                   <div className="text-slate-400">Recorded Status: <span className="text-rose-400 font-bold">FAILED</span></div>
                   <div className="text-slate-400">Failure Reason: <span className="text-slate-200">{crashResult.loggedFailureReason}</span></div>
@@ -476,7 +476,7 @@ export default function DbmsLabPage() {
 
       {activeTab === 'drift' && (
         <div className="space-y-6">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
             <h2 className="text-base font-bold text-white flex items-center gap-2">
               <Scale className="w-5 h-5 text-teal-400" />
               Reconciliation Drift Injection &amp; Compensating Resolution
@@ -489,7 +489,7 @@ export default function DbmsLabPage() {
               <button
                 onClick={() => runDriftLab('inject')}
                 disabled={driftLoading}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500 text-left space-y-2 transition-all group"
+                className="p-4 rounded-xl bg-slate-900 border border-[#182030] hover:border-amber-500 text-left space-y-2 transition-all group"
               >
                 <div className="text-xs font-bold text-amber-400 font-mono">
                   Step 1: Inject Drift
@@ -502,20 +502,20 @@ export default function DbmsLabPage() {
               <button
                 onClick={() => runDriftLab('reconcile')}
                 disabled={driftLoading}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500 text-left space-y-2 transition-all group"
+                className="p-4 rounded-xl bg-slate-900 border border-[#182030] hover:border-blue-500 text-left space-y-2 transition-all group"
               >
-                <div className="text-xs font-bold text-cyan-400 font-mono">
+                <div className="text-xs font-bold text-blue-400 font-mono">
                   Step 2: Run Reconciliation
                 </div>
                 <div className="text-[11px] text-slate-400">
-                  Execute <code className="text-cyan-300">run_reconciliation()</code> to detect drift and create a <code className="text-cyan-300">reconciliation_issue</code>.
+                  Execute <code className="text-blue-300">run_reconciliation()</code> to detect drift and create a <code className="text-blue-300">reconciliation_issue</code>.
                 </div>
               </button>
 
               <button
                 onClick={() => runDriftLab('fix')}
                 disabled={driftLoading}
-                className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500 text-left space-y-2 transition-all group"
+                className="p-4 rounded-xl bg-slate-900 border border-[#182030] hover:border-emerald-500 text-left space-y-2 transition-all group"
               >
                 <div className="text-xs font-bold text-emerald-400 font-mono">
                   Step 3: Compensating Reversal
@@ -528,16 +528,16 @@ export default function DbmsLabPage() {
           </div>
 
           {driftResult && (
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4 font-mono text-xs animate-in fade-in">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4 font-mono text-xs animate-in fade-in">
+              <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
                 <span className="text-slate-400">Reconciliation Step Result</span>
                 <span className="text-teal-400 font-bold">{driftResult.action}</span>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-slate-300">
+              <div className="p-4 rounded-xl bg-slate-950 border border-[#182030] space-y-2 text-slate-300">
                 <div>Message: {driftResult.message}</div>
                 {driftResult.variance && <div>Detected Variance: <span className="text-amber-400 font-bold">{driftResult.variance}</span></div>}
-                {driftResult.issueId && <div>Open Issue ID: <span className="text-cyan-300">ISSUE-{driftResult.issueId}</span></div>}
+                {driftResult.issueId && <div>Open Issue ID: <span className="text-blue-300">ISSUE-{driftResult.issueId}</span></div>}
                 {driftResult.reversalEntryId && <div>Compensating Ledger Entry: <span className="text-emerald-400 font-bold">ENTRY-{driftResult.reversalEntryId}</span></div>}
               </div>
             </div>

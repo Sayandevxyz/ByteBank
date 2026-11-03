@@ -168,14 +168,14 @@ export default function AdminAssetsPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow transition-all"
+            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow-blue transition-all"
           >
             <PlusCircle className="w-4 h-4" />
             Add New Asset
           </button>
           <Link
             href="/admin/dashboard"
-            className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+            className="text-xs font-mono text-blue-400 hover:text-blue-300"
           >
             &larr; Back to Admin Dashboard
           </Link>
@@ -209,7 +209,7 @@ export default function AdminAssetsPage() {
           assets.map((asset) => (
             <div
               key={asset.asset_id}
-              className="glass-panel p-6 rounded-2xl border border-slate-800 hover:border-slate-700 transition-all space-y-4"
+              className="glass-panel p-6 rounded-2xl border border-[#182030] hover:border-slate-700 transition-all space-y-4"
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -218,7 +218,7 @@ export default function AdminAssetsPage() {
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded font-mono uppercase font-bold ${
                         asset.type === 'crypto'
-                          ? 'bg-cyan-950/80 border border-cyan-800 text-cyan-400'
+                          ? 'bg-[#111c33] border border-blue-800 text-blue-400'
                           : 'bg-purple-950/80 border border-purple-800 text-purple-400'
                       }`}
                     >
@@ -233,14 +233,14 @@ export default function AdminAssetsPage() {
                     setEditingPriceAsset(asset);
                     setNewPrice(parseFloat(asset.sim_ref_price).toString());
                   }}
-                  className="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-emerald-600 text-slate-400 hover:text-emerald-400 transition-colors"
+                  className="p-2 rounded-lg bg-slate-900 border border-[#182030] hover:border-emerald-600 text-slate-400 hover:text-emerald-400 transition-colors"
                   title="Update Simulated Price"
                 >
                   <Edit2 className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-slate-800/80 text-xs font-mono">
+              <div className="space-y-2 pt-2 border-t border-[#182030] text-xs font-mono">
                 <div className="flex justify-between items-baseline">
                   <span className="text-slate-500">Simulated Price:</span>
                   <span className="text-lg font-extrabold text-white">
@@ -253,7 +253,7 @@ export default function AdminAssetsPage() {
 
                 <div className="flex justify-between text-slate-400">
                   <span className="text-slate-500">Scale Precision:</span>
-                  <span className="text-cyan-400 font-bold">{asset.quantity_scale} decimals</span>
+                  <span className="text-blue-400 font-bold">{asset.quantity_scale} decimals</span>
                 </div>
 
                 <div className="flex justify-between text-slate-500 text-[10px]">
@@ -289,7 +289,7 @@ export default function AdminAssetsPage() {
                   step="any"
                   value={newPrice}
                   onChange={(e) => setNewPrice(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-slate-900 border border-[#182030] rounded-xl pl-9 pr-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -306,7 +306,7 @@ export default function AdminAssetsPage() {
                 type="button"
                 onClick={handleUpdatePrice}
                 disabled={processing || !newPrice || parseFloat(newPrice) <= 0}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold font-mono shadow-glow"
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold font-mono shadow-glow-blue"
               >
                 {processing ? 'Broadcasting...' : 'Broadcast Price Update'}
               </button>
@@ -319,7 +319,7 @@ export default function AdminAssetsPage() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={handleCreateAsset}
-            className="glass-panel p-6 rounded-2xl border border-slate-800 bg-slate-950 max-w-md w-full space-y-4"
+            className="glass-panel p-6 rounded-2xl border border-[#182030] bg-slate-950 max-w-md w-full space-y-4"
           >
             <div className="flex items-center gap-2 text-white font-bold text-sm">
               <PlusCircle className="w-4 h-4 text-emerald-400" />
@@ -335,7 +335,7 @@ export default function AdminAssetsPage() {
                   placeholder="AVAX"
                   value={newAsset.symbol}
                   onChange={(e) => setNewAsset({ ...newAsset, symbol: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white uppercase focus:border-emerald-500"
+                  className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white uppercase focus:border-emerald-500"
                 />
               </div>
 
@@ -347,7 +347,7 @@ export default function AdminAssetsPage() {
                   placeholder="Avalanche"
                   value={newAsset.name}
                   onChange={(e) => setNewAsset({ ...newAsset, name: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:border-emerald-500"
+                  className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white focus:border-emerald-500"
                 />
               </div>
 
@@ -357,7 +357,7 @@ export default function AdminAssetsPage() {
                   <select
                     value={newAsset.type}
                     onChange={(e: any) => setNewAsset({ ...newAsset, type: e.target.value })}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:border-emerald-500"
+                    className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white focus:border-emerald-500"
                   >
                     <option value="crypto">Crypto</option>
                     <option value="stock">Simulated Stock</option>
@@ -374,7 +374,7 @@ export default function AdminAssetsPage() {
                     onChange={(e) =>
                       setNewAsset({ ...newAsset, quantityScale: parseInt(e.target.value, 10) })
                     }
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:border-emerald-500"
+                    className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -388,7 +388,7 @@ export default function AdminAssetsPage() {
                   placeholder="35.50"
                   value={newAsset.simRefPrice}
                   onChange={(e) => setNewAsset({ ...newAsset, simRefPrice: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:border-emerald-500"
+                  className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -404,7 +404,7 @@ export default function AdminAssetsPage() {
               <button
                 type="submit"
                 disabled={processing}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold font-mono shadow-glow"
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold font-mono shadow-glow-blue"
               >
                 {processing ? 'Registering...' : 'Register in PostgreSQL'}
               </button>

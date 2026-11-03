@@ -88,13 +88,13 @@ export default function AuditorTransactionsPage() {
 
         <Link
           href="/auditor/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Auditor Dashboard
         </Link>
       </div>
 
-      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center gap-4 text-xs font-mono">
+      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-wrap items-center gap-4 text-xs font-mono">
         <div className="flex items-center gap-1.5 text-slate-400">
           <Filter className="w-3.5 h-3.5 text-emerald-400" />
           <span>Filters:</span>
@@ -106,7 +106,7 @@ export default function AuditorTransactionsPage() {
             setAssetId(e.target.value);
             setPage(1);
           }}
-          className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-emerald-500"
+          className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-emerald-500"
         >
           <option value="">All Assets</option>
           {assets.map((a) => (
@@ -122,7 +122,7 @@ export default function AuditorTransactionsPage() {
             setStatus(e.target.value);
             setPage(1);
           }}
-          className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-emerald-500"
+          className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-emerald-500"
         >
           <option value="">All Statuses</option>
           <option value="success">Success</option>
@@ -141,7 +141,7 @@ export default function AuditorTransactionsPage() {
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
         {loading ? (
           <div className="py-20 text-center text-slate-500 text-xs font-mono">
             <RefreshCw className="w-4 h-4 animate-spin text-emerald-400 inline mr-2" />
@@ -154,7 +154,7 @@ export default function AuditorTransactionsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400">
+              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                 <tr>
                   <th className="py-3 px-4 font-semibold">Tx ID</th>
                   <th className="py-3 px-4 font-semibold">Masked Sender</th>
@@ -230,7 +230,7 @@ export default function AuditorTransactionsPage() {
           </div>
         )}
 
-        <div className="p-4 bg-slate-900/60 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+        <div className="p-4 bg-[#0c101a] border-t border-[#182030] flex items-center justify-between text-xs font-mono">
           <span className="text-slate-500">
             Page {page} of {totalPages} ({total} masked transactions)
           </span>

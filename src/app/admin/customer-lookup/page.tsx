@@ -106,13 +106,13 @@ export default function CustomerLookupPage() {
 
         <Link
           href="/admin/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Admin Dashboard
         </Link>
       </div>
 
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-6">
         <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-800/40 text-amber-200/90 text-xs flex items-start gap-3">
           <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
           <div className="space-y-1">
@@ -137,7 +137,7 @@ export default function CustomerLookupPage() {
                   placeholder="e.g. CUST101, BB-ACC-5001, or rahul.sharma@example.com"
                   value={queryInput}
                   onChange={(e) => setQueryInput(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-amber-500"
+                  className="w-full bg-slate-900 border border-[#182030] rounded-xl pl-9 pr-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
@@ -147,7 +147,7 @@ export default function CustomerLookupPage() {
               <select
                 value={purposeCode}
                 onChange={(e) => setPurposeCode(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-amber-500"
               >
                 {PURPOSE_OPTIONS.map((opt) => (
                   <option key={opt.code} value={opt.code}>
@@ -160,13 +160,13 @@ export default function CustomerLookupPage() {
 
           <div className="flex items-center justify-between pt-2">
             <div className="text-[11px] font-mono text-slate-500">
-              Try seeded master accounts: <span className="text-cyan-400">CUST101</span>, <span className="text-cyan-400">CUST104</span>, or <span className="text-cyan-400">BB-ACC-5004</span>
+              Try seeded master accounts: <span className="text-blue-400">CUST101</span>, <span className="text-blue-400">CUST104</span>, or <span className="text-blue-400">BB-ACC-5004</span>
             </div>
 
             <button
               type="submit"
               disabled={loading || !queryInput.trim()}
-              className="px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 text-white font-semibold text-xs font-mono shadow-glow transition-all flex items-center gap-2"
+              className="px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 text-white font-semibold text-xs font-mono shadow-glow-blue transition-all flex items-center gap-2"
             >
               {loading ? 'Logging & Querying...' : 'Execute Logged Lookup'}
             </button>
@@ -182,16 +182,16 @@ export default function CustomerLookupPage() {
       )}
 
       {accessLogged && (
-        <div className="p-3 rounded-xl bg-cyan-950/40 border border-cyan-800/60 text-cyan-300 text-xs font-mono flex items-center justify-between">
+        <div className="p-3 rounded-xl bg-[#111c33]/40 border border-blue-800/60 text-blue-300 text-xs font-mono flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileCheck className="w-4 h-4 text-cyan-400" />
+            <FileCheck className="w-4 h-4 text-blue-400" />
             <span>
               Access verified and committed to PostgreSQL <code className="text-white font-bold">access_log</code> at {accessLogged.timestamp} with purpose: <code className="text-cyan-200">{accessLogged.purposeCode}</code>.
             </span>
           </div>
           <Link
             href="/auditor/access-logs"
-            className="text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+            className="text-[11px] text-blue-400 hover:underline flex items-center gap-1"
           >
             Verify in Auditor Log &rarr;
           </Link>
@@ -202,20 +202,20 @@ export default function CustomerLookupPage() {
         <div className="space-y-6">
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-800 text-purple-400 flex items-center justify-center font-mono font-bold text-lg">
                   {result.customer.full_name?.charAt(0) || 'C'}
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-white">{result.customer.full_name}</h2>
-                  <div className="text-xs font-mono text-cyan-400">
+                  <div className="text-xs font-mono text-blue-400">
                     ID: CUST{result.customer.customer_id}
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-slate-800/80 text-xs font-mono text-slate-300">
+              <div className="space-y-2 pt-2 border-t border-[#182030] text-xs font-mono text-slate-300">
                 <div className="flex items-center gap-2">
                   <Mail className="w-3.5 h-3.5 text-slate-500" />
                   <span>{result.customer.email}</span>
@@ -235,7 +235,7 @@ export default function CustomerLookupPage() {
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
               <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider">
                 Account &amp; Compliance Status
               </h3>
@@ -272,16 +272,16 @@ export default function CustomerLookupPage() {
                   </span>
                 </div>
 
-                <div className="pt-2 border-t border-slate-800">
+                <div className="pt-2 border-t border-[#182030]">
                   <div className="text-slate-500 text-[10px]">ID Proof Hash (SHA-256):</div>
-                  <div className="p-2 mt-1 rounded bg-slate-900 border border-slate-800 text-[10px] text-cyan-300 break-all">
+                  <div className="p-2 mt-1 rounded bg-slate-900 border border-[#182030] text-[10px] text-blue-300 break-all">
                     {result.customer?.id_proof_hash}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
+            <div className="glass-panel p-6 rounded-2xl border border-[#182030] flex flex-col justify-between">
               <div>
                 <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider">
                   Portfolio Valuation
@@ -297,19 +297,19 @@ export default function CustomerLookupPage() {
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] font-mono text-slate-400">
+              <div className="p-3 rounded-xl bg-[#0c101a] border border-[#182030] text-[11px] font-mono text-slate-400">
                 Holdings across {result.holdings?.length || 0} distinct digital asset categories.
               </div>
             </div>
           </div>
 
-          <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
-            <div className="p-4 bg-slate-900/80 border-b border-slate-800 text-xs font-bold font-mono text-white">
+          <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
+            <div className="p-4 bg-[#0c101a] border-b border-[#182030] text-xs font-bold font-mono text-white">
               Customer Asset Holdings
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900/40 text-slate-400 border-b border-slate-800">
+                <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
                   <tr>
                     <th className="py-2.5 px-4">Symbol</th>
                     <th className="py-2.5 px-4">Asset Name</th>
@@ -343,13 +343,13 @@ export default function CustomerLookupPage() {
             </div>
           </div>
 
-          <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
-            <div className="p-4 bg-slate-900/80 border-b border-slate-800 text-xs font-bold font-mono text-white">
+          <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
+            <div className="p-4 bg-[#0c101a] border-b border-[#182030] text-xs font-bold font-mono text-white">
               Recent Transactions (Last 10)
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900/40 text-slate-400 border-b border-slate-800">
+                <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
                   <tr>
                     <th className="py-2.5 px-4">Tx ID</th>
                     <th className="py-2.5 px-4">Type</th>
@@ -362,7 +362,7 @@ export default function CustomerLookupPage() {
                 <tbody className="divide-y divide-slate-800/60 text-slate-300">
                   {result.transactions?.map((tx: any) => (
                     <tr key={tx.transaction_id}>
-                      <td className="py-2.5 px-4 text-cyan-400 font-bold">#{tx.transaction_id}</td>
+                      <td className="py-2.5 px-4 text-blue-400 font-bold">#{tx.transaction_id}</td>
                       <td className="py-2.5 px-4 uppercase text-[10px]">{tx.type}</td>
                       <td className="py-2.5 px-4 text-white font-bold">{tx.symbol}</td>
                       <td className="py-2.5 px-4 text-right">

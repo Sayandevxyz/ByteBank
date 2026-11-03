@@ -53,7 +53,7 @@ export default function AuditorDashboardPage() {
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-[#182030]">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-bold">
@@ -72,7 +72,7 @@ export default function AuditorDashboardPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/auditor/reports"
-            className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow transition-all"
+            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow-blue transition-all"
           >
             <BarChart3 className="w-4 h-4" />
             View Analytics Reports
@@ -81,9 +81,9 @@ export default function AuditorDashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Activity className="w-3.5 h-3.5 text-cyan-400" /> Audited Transactions
+            <Activity className="w-3.5 h-3.5 text-blue-400" /> Audited Transactions
           </div>
           <div className="text-2xl font-bold font-mono text-white">
             {totals.total_transactions || '0'}
@@ -91,7 +91,7 @@ export default function AuditorDashboardPage() {
           <div className="text-[10px] text-slate-500">Accessible via v_auditor_transactions</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <Layers className="w-3.5 h-3.5 text-emerald-400" /> Immutable Ledger Rows
           </div>
@@ -101,7 +101,7 @@ export default function AuditorDashboardPage() {
           <div className="text-[10px] text-slate-500">Trigger-guarded immutability</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <FileText className="w-3.5 h-3.5 text-purple-400" /> System Audit Logs
           </div>
@@ -111,7 +111,7 @@ export default function AuditorDashboardPage() {
           <div className="text-[10px] text-slate-500">Capture of all DB mutations</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-slate-800 space-y-1">
+        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
           <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <Eye className="w-3.5 h-3.5 text-amber-400" /> Staff Access Logs
           </div>
@@ -122,8 +122,8 @@ export default function AuditorDashboardPage() {
         </div>
       </div>
 
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2">
+      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#182030] gap-2">
           <div>
             <h2 className="text-base font-bold text-white flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -133,7 +133,7 @@ export default function AuditorDashboardPage() {
               Force-directed 3D topology of transaction flows with customer PII stripped at the database level.
             </p>
           </div>
-          <span className="text-xs font-mono text-slate-400 px-3 py-1 rounded bg-slate-900 border border-slate-800">
+          <span className="text-xs font-mono text-slate-400 px-3 py-1 rounded bg-slate-900 border border-[#182030]">
             SELECT * FROM v_auditor_transactions
           </span>
         </div>
@@ -146,7 +146,7 @@ export default function AuditorDashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link
           href="/auditor/transactions"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
         >
           <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Activity className="w-5 h-5" />
@@ -162,7 +162,7 @@ export default function AuditorDashboardPage() {
 
         <Link
           href="/auditor/audit-logs"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
         >
           <div className="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-800 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <FileText className="w-5 h-5" />
@@ -178,7 +178,7 @@ export default function AuditorDashboardPage() {
 
         <Link
           href="/auditor/access-logs"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
         >
           <div className="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-800 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <Eye className="w-5 h-5" />
@@ -194,14 +194,14 @@ export default function AuditorDashboardPage() {
 
         <Link
           href="/auditor/reports"
-          className="p-6 rounded-2xl glass-panel border border-slate-800 hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-800 text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-[#111c33] border border-blue-800 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
             <BarChart3 className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-white flex items-center justify-between">
             Compliance Analytics
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
           </h3>
           <p className="text-xs text-slate-400">
             Interactive charts on failed transaction causes, monthly volumes, and risk screening distributions.

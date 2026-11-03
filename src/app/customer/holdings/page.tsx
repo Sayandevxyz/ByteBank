@@ -40,7 +40,7 @@ export default function CustomerHoldingsPage() {
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#182030]">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Multi-Asset Holdings</h1>
           <p className="text-xs text-slate-400 mt-1">
@@ -51,14 +51,14 @@ export default function CustomerHoldingsPage() {
         <div className="flex items-center gap-3">
           <div className="text-right">
             <span className="text-[11px] text-slate-400">Total Portfolio Value</span>
-            <div className="text-xl font-bold font-mono text-cyan-400">
+            <div className="text-xl font-bold font-mono text-blue-400">
               {totalValuation.toLocaleString()} <span className="text-xs">SRU</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/40 p-4 rounded-xl border border-slate-800">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/40 p-4 rounded-xl border border-[#182030]">
         <div className="relative w-full sm:w-72">
           <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
           <input
@@ -66,7 +66,7 @@ export default function CustomerHoldingsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search asset or symbol..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-900 border border-slate-800 focus:border-cyan-500 focus:outline-none text-xs text-white placeholder-slate-500"
+            className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-900 border border-[#182030] focus:border-blue-500 focus:outline-none text-xs text-white placeholder-slate-500"
           />
         </div>
 
@@ -74,7 +74,7 @@ export default function CustomerHoldingsPage() {
           <button
             onClick={() => setFilterType('ALL')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filterType === 'ALL' ? 'bg-cyan-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+              filterType === 'ALL' ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
             }`}
           >
             All Assets ({holdings.length})
@@ -82,7 +82,7 @@ export default function CustomerHoldingsPage() {
           <button
             onClick={() => setFilterType('CRYPTO')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filterType === 'CRYPTO' ? 'bg-cyan-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+              filterType === 'CRYPTO' ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
             }`}
           >
             Crypto
@@ -90,7 +90,7 @@ export default function CustomerHoldingsPage() {
           <button
             onClick={() => setFilterType('STOCK')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filterType === 'STOCK' ? 'bg-cyan-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+              filterType === 'STOCK' ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
             }`}
           >
             Stocks (Simulated)
@@ -98,9 +98,9 @@ export default function CustomerHoldingsPage() {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/60">
+      <div className="overflow-x-auto rounded-xl border border-[#182030] bg-slate-950/60">
         <table className="w-full text-left text-xs text-slate-300">
-          <thead className="bg-slate-900/80 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-mono">
+          <thead className="bg-[#0c101a] text-slate-400 border-b border-[#182030] uppercase text-[10px] tracking-wider font-mono">
             <tr>
               <th className="py-3.5 px-4">Asset</th>
               <th className="py-3.5 px-4">Type</th>
@@ -130,13 +130,13 @@ export default function CustomerHoldingsPage() {
                 <tr key={h.symbol} className="hover:bg-slate-900/40 transition-colors">
                   <td className="py-3.5 px-4">
                     <div className="font-semibold text-white">{h.name}</div>
-                    <div className="text-[11px] font-mono text-cyan-400">{h.symbol}</div>
+                    <div className="text-[11px] font-mono text-blue-400">{h.symbol}</div>
                   </td>
                   <td className="py-3.5 px-4">
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase ${
                         h.type === 'crypto'
-                          ? 'bg-cyan-950 text-cyan-300 border border-cyan-800'
+                          ? 'bg-[#111c33] text-blue-300 border border-blue-800'
                           : 'bg-violet-950 text-violet-300 border border-violet-800'
                       }`}
                     >
@@ -162,19 +162,19 @@ export default function CustomerHoldingsPage() {
                     {h.simRefPrice.toLocaleString()} SRU
                   </td>
                   <td className="py-3.5 px-4 font-mono font-bold text-white">
-                    {h.simulatedValueSru.toLocaleString()} <span className="text-cyan-400 text-[10px]">SRU</span>
+                    {h.simulatedValueSru.toLocaleString()} <span className="text-blue-400 text-[10px]">SRU</span>
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Link
                         href={`/customer/transfer?assetId=${h.assetId}`}
-                        className="px-2.5 py-1 rounded bg-cyan-950 border border-cyan-800 hover:bg-cyan-900 text-cyan-300 font-medium text-[11px] transition-colors"
+                        className="px-2.5 py-1 rounded bg-[#111c33] border border-blue-800 hover:bg-blue-900 text-blue-300 font-medium text-[11px] transition-colors"
                       >
                         Send
                       </Link>
                       <Link
                         href={`/customer/swap?fromAsset=${h.assetId}`}
-                        className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 text-[11px] transition-colors"
+                        className="px-2.5 py-1 rounded bg-slate-900 border border-[#182030] hover:bg-slate-850 text-slate-300 text-[11px] transition-colors"
                       >
                         Swap
                       </Link>

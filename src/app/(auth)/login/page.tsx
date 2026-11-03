@@ -49,10 +49,10 @@ export default function LoginPage() {
 
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-md glass-panel p-8 rounded-2xl border border-slate-800 shadow-glass">
+      <div className="w-full max-w-md glass-panel p-8 rounded-2xl border border-[#182030] shadow-glass">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-cyan-950 border border-cyan-800 flex items-center justify-center mx-auto mb-3 shadow-glow">
-            <Lock className="w-6 h-6 text-cyan-400" />
+          <div className="w-12 h-12 rounded-xl bg-[#111c33] border border-blue-800 flex items-center justify-center mx-auto mb-3 shadow-glow-blue">
+            <Lock className="w-6 h-6 text-blue-400" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Sign In to ByteBank</h1>
           <p className="text-xs text-slate-400 mt-1">PostgreSQL Authenticated Digital Asset Account</p>
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="rishi.sharma101@email.com"
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
               />
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
               />
             </div>
           </div>
@@ -98,22 +98,22 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 mt-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow transition-all disabled:opacity-50"
+            className="w-full py-2.5 mt-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow-blue transition-all disabled:opacity-50"
           >
             <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-slate-800 text-xs">
+        <div className="mt-8 pt-6 border-t border-[#182030] text-xs">
           <span className="text-[11px] font-mono text-slate-400 block mb-2.5">CLICK TO AUTOFILL DEMO LOGIN:</span>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => setPreset('rishi.sharma101@email.com')}
-              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-cyan-500 text-left transition-colors"
+              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-blue-500 text-left transition-colors"
             >
-              <div className="font-semibold text-cyan-400">Customer</div>
+              <div className="font-semibold text-blue-400">Customer</div>
               <div className="text-[10px] text-slate-400 truncate">Rishi Sharma</div>
             </button>
 
@@ -142,7 +142,7 @@ export default function LoginPage() {
 
         <div className="mt-6 text-center text-xs text-slate-400">
           Need a new account?{' '}
-          <Link href="/register" className="text-cyan-400 hover:underline">
+          <Link href="/register" className="text-blue-400 hover:underline">
             Register with simulated KYC
           </Link>
         </div>

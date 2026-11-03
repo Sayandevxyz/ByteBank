@@ -4,7 +4,7 @@ import { Database, ShieldCheck, Scale, Cpu, Terminal, Sparkles } from 'lucide-re
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-blue-900/20 bg-[#02050e] text-slate-400 text-xs mt-auto">
+    <footer className="w-full border-t border-[#182030] bg-[#06080e] text-slate-400 text-xs mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 space-y-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 space-y-4">

@@ -50,7 +50,7 @@ export default function CustomerDashboardPage() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center py-20 text-slate-400 font-mono text-sm">
-        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse mr-2" />
+        <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse mr-2" />
         Querying PostgreSQL Portfolio State...
       </div>
     );
@@ -69,10 +69,10 @@ export default function CustomerDashboardPage() {
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-[#182030]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-800 text-cyan-400 font-bold">
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#111c33] border border-blue-800 text-blue-400 font-bold">
               {account?.account_no || 'BB-ACC-XXXX'}
             </span>
             <span
@@ -90,21 +90,21 @@ export default function CustomerDashboardPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/customer/transfer"
-            className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow transition-all"
+            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow-blue transition-all"
           >
             <ArrowRightLeft className="w-3.5 h-3.5" />
             Send Assets
           </Link>
           <Link
             href="/customer/swap"
-            className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 text-xs flex items-center gap-1.5 transition-colors"
+            className="px-4 py-2 rounded-xl bg-slate-900 border border-[#182030] hover:border-slate-700 text-slate-200 text-xs flex items-center gap-1.5 transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Swap (Simulated)
           </Link>
           <Link
             href="/customer/history"
-            className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 text-xs flex items-center gap-1.5 transition-colors"
+            className="px-4 py-2 rounded-xl bg-slate-900 border border-[#182030] hover:border-slate-700 text-slate-200 text-xs flex items-center gap-1.5 transition-colors"
           >
             <History className="w-3.5 h-3.5" />
             Statement
@@ -113,17 +113,17 @@ export default function CustomerDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <div className="p-5 rounded-2xl bg-[#0c101a] border border-[#182030]">
           <span className="text-xs font-medium text-slate-400">Net Portfolio Valuation</span>
           <div className="text-2xl font-bold font-mono text-white mt-1">
-            {totalValuation.toLocaleString()} <span className="text-xs text-cyan-400">SRU</span>
+            {totalValuation.toLocaleString()} <span className="text-xs text-blue-400">SRU</span>
           </div>
           <div className="text-[11px] text-slate-500 mt-1">Simulated Reference Units</div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <div className="p-5 rounded-2xl bg-[#0c101a] border border-[#182030]">
           <span className="text-xs font-medium text-slate-400">Crypto Allocation</span>
-          <div className="text-2xl font-bold font-mono text-cyan-400 mt-1">
+          <div className="text-2xl font-bold font-mono text-blue-400 mt-1">
             {cryptoValuation.toLocaleString()} <span className="text-xs text-slate-400">SRU</span>
           </div>
           <div className="text-[11px] text-slate-500 mt-1">
@@ -131,7 +131,7 @@ export default function CustomerDashboardPage() {
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <div className="p-5 rounded-2xl bg-[#0c101a] border border-[#182030]">
           <span className="text-xs font-medium text-slate-400">Equities / Stocks</span>
           <div className="text-2xl font-bold font-mono text-violet-400 mt-1">
             {stockValuation.toLocaleString()} <span className="text-xs text-slate-400">SRU</span>
@@ -141,11 +141,11 @@ export default function CustomerDashboardPage() {
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <div className="p-5 rounded-2xl bg-[#0c101a] border border-[#182030]">
           <span className="text-xs font-medium text-slate-400">Active Asset Holdings</span>
           <div className="text-2xl font-bold font-mono text-emerald-400 mt-1">{holdings.length}</div>
           <div className="text-[11px] text-slate-500 mt-1">
-            <Link href="/customer/holdings" className="text-cyan-400 hover:underline">
+            <Link href="/customer/holdings" className="text-blue-400 hover:underline">
               Inspect multi-asset list →
             </Link>
           </div>
@@ -164,7 +164,7 @@ export default function CustomerDashboardPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-white tracking-tight">Top Asset Positions</h2>
-            <Link href="/customer/holdings" className="text-xs text-cyan-400 hover:underline">
+            <Link href="/customer/holdings" className="text-xs text-blue-400 hover:underline">
               View All ({holdings.length})
             </Link>
           </div>
@@ -173,7 +173,7 @@ export default function CustomerDashboardPage() {
             {holdings.slice(0, 5).map((h: any) => (
               <div
                 key={h.symbol}
-                className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between text-xs"
+                className="p-3 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs"
               >
                 <div>
                   <div className="font-semibold text-white">
@@ -199,14 +199,14 @@ export default function CustomerDashboardPage() {
             <h2 className="text-lg font-bold text-white tracking-tight">Recent Account Activity</h2>
             <p className="text-xs text-slate-400">Real-time ledger events recorded in PostgreSQL</p>
           </div>
-          <Link href="/customer/history" className="text-xs text-cyan-400 hover:underline">
+          <Link href="/customer/history" className="text-xs text-blue-400 hover:underline">
             Full Transaction History →
           </Link>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/50">
+        <div className="overflow-x-auto rounded-xl border border-[#182030] bg-slate-950/50">
           <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-900/70 text-slate-400 border-b border-slate-800 uppercase text-[10px] tracking-wider font-mono">
+            <thead className="bg-[#0c101a] text-slate-400 border-b border-[#182030] uppercase text-[10px] tracking-wider font-mono">
               <tr>
                 <th className="py-3 px-4">Tx ID</th>
                 <th className="py-3 px-4">Type</th>
@@ -227,7 +227,7 @@ export default function CustomerDashboardPage() {
               ) : (
                 recentTxns.map((txn: any) => (
                   <tr key={txn.transaction_id} className="hover:bg-slate-900/40 transition-colors">
-                    <td className="py-3 px-4 font-mono font-semibold text-cyan-400">#{txn.transaction_id}</td>
+                    <td className="py-3 px-4 font-mono font-semibold text-blue-400">#{txn.transaction_id}</td>
                     <td className="py-3 px-4 capitalize font-medium">{txn.type}</td>
                     <td className="py-3 px-4 font-mono text-slate-400">
                       {txn.direction === 'DEBIT' ? (

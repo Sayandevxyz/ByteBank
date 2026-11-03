@@ -58,13 +58,13 @@ export default function AuditorAccessLogsPage() {
 
         <Link
           href="/auditor/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Auditor Dashboard
         </Link>
       </div>
 
-      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex flex-wrap items-center gap-4 text-xs font-mono">
+      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-wrap items-center gap-4 text-xs font-mono">
         <div className="flex items-center gap-1.5 text-slate-400">
           <Filter className="w-3.5 h-3.5 text-amber-400" />
           <span>Purpose Filter:</span>
@@ -73,7 +73,7 @@ export default function AuditorAccessLogsPage() {
         <select
           value={purposeFilter}
           onChange={(e) => setPurposeFilter(e.target.value)}
-          className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-amber-500"
+          className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-amber-500"
         >
           <option value="">All Purpose Codes</option>
           <option value="KYC_VERIFICATION">KYC_VERIFICATION</option>
@@ -93,7 +93,7 @@ export default function AuditorAccessLogsPage() {
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
+      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
         {loading ? (
           <div className="py-20 text-center text-slate-500 text-xs font-mono">
             <RefreshCw className="w-4 h-4 animate-spin text-amber-400 inline mr-2" />
@@ -106,7 +106,7 @@ export default function AuditorAccessLogsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/80 border-b border-slate-800 text-slate-400">
+              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                 <tr>
                   <th className="py-3 px-4 font-semibold">Access ID</th>
                   <th className="py-3 px-4 font-semibold">Staff Member</th>
@@ -131,7 +131,7 @@ export default function AuditorAccessLogsPage() {
                         {log.staff_role || 'ADMIN'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-cyan-400">
+                    <td className="py-3 px-4 text-blue-400">
                       {log.data_category || 'CUSTOMER_PII'}
                     </td>
                     <td className="py-3 px-4">

@@ -144,7 +144,7 @@ export default function ReservationsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-800 text-cyan-400 font-semibold">
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#111c33] border border-blue-800 text-blue-400 font-semibold">
               TWO-PHASE CONCURRENCY CONTROL
             </span>
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
@@ -159,7 +159,7 @@ export default function ReservationsPage() {
 
         <Link
           href="/customer/dashboard"
-          className="text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          className="text-xs font-mono text-blue-400 hover:text-blue-300"
         >
           &larr; Back to Dashboard
         </Link>
@@ -181,10 +181,10 @@ export default function ReservationsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
         <div className="lg:col-span-8 space-y-6">
-          <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden">
-            <div className="p-4 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
+          <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
+            <div className="p-4 bg-[#0c101a] border-b border-[#182030] flex items-center justify-between">
               <h2 className="text-sm font-bold text-white flex items-center gap-2">
-                <Layers className="w-4 h-4 text-cyan-400" />
+                <Layers className="w-4 h-4 text-blue-400" />
                 Active & Historical Reservations
               </h2>
               <button
@@ -197,7 +197,7 @@ export default function ReservationsPage() {
 
             {loading ? (
               <div className="py-20 text-center text-slate-500 text-xs font-mono">
-                <RefreshCw className="w-4 h-4 animate-spin text-cyan-400 inline mr-2" />
+                <RefreshCw className="w-4 h-4 animate-spin text-blue-400 inline mr-2" />
                 Querying PostgreSQL Reservation State...
               </div>
             ) : reservations.length === 0 ? (
@@ -207,7 +207,7 @@ export default function ReservationsPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-slate-900/60 border-b border-slate-800 text-slate-400">
+                  <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
                     <tr>
                       <th className="py-3 px-4 font-semibold">Res ID</th>
                       <th className="py-3 px-4 font-semibold">Asset</th>
@@ -222,7 +222,7 @@ export default function ReservationsPage() {
                       const isExpired = new Date(res.expires_at) < new Date();
                       return (
                         <tr key={res.reservation_id} className="hover:bg-slate-800/30">
-                          <td className="py-3 px-4 text-cyan-400 font-bold">
+                          <td className="py-3 px-4 text-blue-400 font-bold">
                             RES-{res.reservation_id}
                           </td>
                           <td className="py-3 px-4">
@@ -294,10 +294,10 @@ export default function ReservationsPage() {
         <div className="lg:col-span-4 space-y-6">
           <form
             onSubmit={handleCreateReservation}
-            className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-5"
+            className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-5"
           >
             <div className="flex items-center gap-2 text-white font-bold text-sm">
-              <PlusCircle className="w-4 h-4 text-cyan-400" />
+              <PlusCircle className="w-4 h-4 text-blue-400" />
               <span>Create Staged Reservation</span>
             </div>
 
@@ -306,7 +306,7 @@ export default function ReservationsPage() {
               <select
                 value={selectedAssetId}
                 onChange={(e) => setSelectedAssetId(Number(e.target.value))}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-cyan-500"
+                className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-blue-500"
               >
                 {holdings.map((h) => (
                   <option key={h.asset_id} value={h.asset_id}>
@@ -320,7 +320,7 @@ export default function ReservationsPage() {
               <div className="flex justify-between text-xs text-slate-400 font-mono">
                 <label>Reserve Quantity</label>
                 {selectedHolding && (
-                  <span className="text-cyan-400 text-[11px]">
+                  <span className="text-blue-400 text-[11px]">
                     Max: {selectedHolding.available_qty.toFixed(4)}
                   </span>
                 )}
@@ -331,7 +331,7 @@ export default function ReservationsPage() {
                 placeholder="0.00"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-cyan-500"
+                className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-blue-500"
               />
             </div>
 
@@ -345,8 +345,8 @@ export default function ReservationsPage() {
                     onClick={() => setDurationMinutes(mins)}
                     className={`py-1.5 rounded-lg text-xs font-mono transition-all ${
                       durationMinutes === mins
-                        ? 'bg-cyan-600 text-white font-bold'
-                        : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'
+                        ? 'bg-blue-600 text-white font-bold'
+                        : 'bg-slate-900 border border-[#182030] text-slate-400 hover:text-white'
                     }`}
                   >
                     {mins} mins
@@ -358,7 +358,7 @@ export default function ReservationsPage() {
             <button
               type="submit"
               disabled={creating || !quantity || parseFloat(quantity) <= 0}
-              className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold text-xs transition-all shadow-glow flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold text-xs transition-all shadow-glow-blue flex items-center justify-center gap-1.5"
             >
               {creating ? (
                 <>
@@ -374,12 +374,12 @@ export default function ReservationsPage() {
             </button>
           </form>
 
-          <div className="p-5 rounded-2xl glass-panel border border-slate-800 space-y-3 text-xs">
-            <div className="flex items-center gap-2 text-cyan-400 font-bold">
+          <div className="p-5 rounded-2xl glass-panel border border-[#182030] space-y-3 text-xs">
+            <div className="flex items-center gap-2 text-blue-400 font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>Reservation Invariant Formula</span>
             </div>
-            <div className="p-3 rounded-lg bg-slate-950 font-mono text-[11px] text-cyan-300 border border-slate-800">
+            <div className="p-3 rounded-lg bg-slate-950 font-mono text-[11px] text-blue-300 border border-[#182030]">
               available_qty = total_holding - &sum;(active_reservations)
             </div>
             <p className="text-slate-400 leading-relaxed text-[11px]">
@@ -387,7 +387,7 @@ export default function ReservationsPage() {
             </p>
             <ul className="list-disc list-inside space-y-1 text-slate-300 font-mono text-[10px]">
               <li>The holding table balance remains unchanged.</li>
-              <li>The <code className="text-cyan-300">v_available_quantity</code> view instantly drops.</li>
+              <li>The <code className="text-blue-300">v_available_quantity</code> view instantly drops.</li>
               <li>Concurrent transfers are prohibited from spending the reserved portion.</li>
               <li>Consuming the reservation decrements the holding atomically.</li>
               <li>Cancelling or expiring unlocks the balance without transaction history deletion.</li>
