@@ -1,0 +1,152 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Lock, Mail, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error?.message || 'Login failed. Check your credentials.');
+        return;
+      }
+
+      if (data.user.role === 'ADMIN') router.push('/admin/dashboard');
+      else if (data.user.role === 'AUDITOR') router.push('/auditor/dashboard');
+      else router.push('/customer/dashboard');
+
+      router.refresh();
+    } catch {
+      setError('Connection failed. Please ensure the server is running.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setPreset = (presetEmail: string) => {
+    setEmail(presetEmail);
+    setPassword('password123');
+  };
+
+  return (
+    <div className="flex-1 flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md glass-panel p-8 rounded-2xl border border-slate-800 shadow-glass">
+        <div className="text-center mb-8">
+          <div className="w-12 h-12 rounded-xl bg-cyan-950 border border-cyan-800 flex items-center justify-center mx-auto mb-3 shadow-glow">
+            <Lock className="w-6 h-6 text-cyan-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Sign In to ByteBank</h1>
+          <p className="text-xs text-slate-400 mt-1">PostgreSQL Authenticated Digital Asset Account</p>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-3 rounded-lg bg-rose-950/80 border border-rose-800 text-rose-300 text-xs">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
+            <div className="relative">
+              <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="rishi.sharma101@email.com"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
+            <div className="relative">
+              <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-900/80 border border-slate-800 focus:border-cyan-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-2.5 mt-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow transition-all disabled:opacity-50"
+          >
+            <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </form>
+
+        <div className="mt-8 pt-6 border-t border-slate-800 text-xs">
+          <span className="text-[11px] font-mono text-slate-400 block mb-2.5">CLICK TO AUTOFILL DEMO LOGIN:</span>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => setPreset('rishi.sharma101@email.com')}
+              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-cyan-500 text-left transition-colors"
+            >
+              <div className="font-semibold text-cyan-400">Customer</div>
+              <div className="text-[10px] text-slate-400 truncate">Rishi Sharma</div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPreset('admin@bytebank.test')}
+              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-amber-500 text-left transition-colors"
+            >
+              <div className="font-semibold text-amber-400">Admin</div>
+              <div className="text-[10px] text-slate-400 truncate">Vikram Desai</div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPreset('auditor@bytebank.test')}
+              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-violet-500 text-left transition-colors"
+            >
+              <div className="font-semibold text-violet-400">Auditor</div>
+              <div className="text-[10px] text-slate-400 truncate">Karthik Menon</div>
+            </button>
+          </div>
+          <div className="mt-2 text-center text-[10px] text-slate-500">
+            Password for all seeded accounts is <code className="text-slate-400">password123</code>
+          </div>
+        </div>
+
+        <div className="mt-6 text-center text-xs text-slate-400">
+          Need a new account?{' '}
+          <Link href="/register" className="text-cyan-400 hover:underline">
+            Register with simulated KYC
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
