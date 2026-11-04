@@ -7,6 +7,11 @@ import FloatingAssistant from '@/components/chat/FloatingAssistant';
 export const metadata: Metadata = {
   title: 'ByteBank | Digital Asset & Transaction Management System',
   description: 'Production-grade DBMS project featuring real PostgreSQL 16 ACID transactions, double-entry ledger bookkeeping, rule-based risk screening, and privacy-aware access logging.',
+  icons: {
+    icon: '/bytebank-icon.svg',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
+  },
 };
 
 export default function RootLayout({
@@ -16,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen flex flex-col bg-[#030712] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+      <body className="min-h-screen flex flex-col bg-[#06080e] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { User, Mail, Phone, MapPin, Calendar, FileText, Lock, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
@@ -63,6 +64,19 @@ export default function RegisterPage() {
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg glass-panel p-8 rounded-2xl border border-[#182030] shadow-glass">
+        <div className="text-center mb-6">
+          <Link href="/" className="inline-block hover:opacity-90 transition-opacity">
+            <Image
+              src="/bytebank-logo.svg"
+              alt="ByteBank Logo"
+              width={240}
+              height={75}
+              className="mx-auto"
+              priority
+            />
+          </Link>
+          <p className="text-xs text-slate-400 mt-1">Register Customer Account &bull; Simulated KYC</p>
+        </div>
 
         <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#182030] text-xs">
           <div className="flex items-center gap-2">

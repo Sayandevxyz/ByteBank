@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Wallet,
@@ -93,15 +94,15 @@ export default function Navbar() {
 
   const handleQuickSwitch = async (role: 'CUSTOMER' | 'ADMIN' | 'AUDITOR') => {
     setSwitching(true);
-    let targetEmail = 'rahul.sharma@example.com';
+    let targetEmail = 'rishi.sharma101@email.com';
     let targetPassword = 'password123';
     let redirectUrl = '/customer/dashboard';
 
     if (role === 'ADMIN') {
-      targetEmail = 'rajesh.admin@bytebank.sim';
+      targetEmail = 'admin@bytebank.test';
       redirectUrl = '/admin/dashboard';
     } else if (role === 'AUDITOR') {
-      targetEmail = 'sunita.auditor@bytebank.sim';
+      targetEmail = 'auditor@bytebank.test';
       redirectUrl = '/auditor/dashboard';
     }
 
@@ -125,13 +126,21 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#182030] bg-[#06080e]/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-glow-blue group-hover:scale-105 transition-transform">
-            <span className="font-mono font-bold text-white text-base">B</span>
-          </div>
-          <div>
-            <span className="font-bold tracking-tight text-white text-lg">
-              Byte<span className="text-blue-500">Bank</span>
+        <Link href="/" className="flex items-center gap-3 group">
+          <Image
+            src="/bytebank-icon.svg"
+            alt="ByteBank"
+            width={36}
+            height={36}
+            className="w-9 h-9 rounded-xl group-hover:scale-105 transition-transform drop-shadow"
+            priority
+          />
+          <div className="flex flex-col">
+            <span className="font-extrabold tracking-tight text-white text-lg leading-tight">
+              Byte<span className="text-blue-400">Bank</span>
+            </span>
+            <span className="text-[9px] font-mono tracking-widest text-slate-400 uppercase -mt-0.5">
+              Asset Ledger
             </span>
           </div>
         </Link>

@@ -1,20 +1,15 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import {
   MessageSquare,
   X,
   Send,
-  Sparkles,
-  Bot,
   Maximize2,
   Minimize2,
-  CheckCircle2,
-  Zap,
-  Scale,
-  ShieldCheck,
-  RefreshCw,
+  Navigation,
 } from 'lucide-react';
 
 const RobotMascotCanvas = dynamic(() => import('../canvas/RobotMascotCanvas'), {
@@ -35,7 +30,7 @@ interface ChatMessage {
 
 const KNOWLEDGE_BASE: Record<string, string> = {
   credentials:
-    "Test Accounts (password: password123):\n• Customer: rahul.sharma@example.com (BB-ACC-5002)\n• Counterparty: priya.patel@example.com (BB-ACC-5003)\n• Admin: rajesh.admin@bytebank.sim\n• Auditor: sunita.auditor@bytebank.sim",
+    "Test Accounts (password: password123):\n• Customer: rishi.sharma101@email.com (BB-ACC-5001)\n• Counterparty: rahul.verma102@email.com (BB-ACC-5002)\n• Admin: admin@bytebank.test\n• Auditor: auditor@bytebank.test",
   concurrency:
     "Concurrency Race Condition:\nIn /admin/lab, two parallel database connections attempt to transfer 0.8 BTC from a 1.0 BTC balance. PostgreSQL row-level locks (SELECT ... FOR UPDATE) serialize the requests. Thread 1 commits, Thread 2 aborts with Insufficient balance, leaving an exact 0.20000000 BTC final balance.",
   ledger:
@@ -49,12 +44,14 @@ const KNOWLEDGE_BASE: Record<string, string> = {
 export default function FloatingAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isRoaming, setIsRoaming] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
       sender: 'bot',
-      text: "Hi! You're through to ByteBank support. Ask anything about our ACID transactions, ledger reconciliation, or test credentials and we'll reply right here.",
+      text: "Hi! You're through to ByteBank support. Ask anything and we'll reply right here.",
       timestamp: 'Just now',
     },
   ]);
@@ -68,6 +65,14 @@ export default function FloatingAssistant() {
   useEffect(() => {
     if (isOpen) scrollToBottom();
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSend = (textToSend?: string) => {
     const query = textToSend || input;
@@ -110,34 +115,53 @@ export default function FloatingAssistant() {
 
       setMessages((prev) => [...prev, botMsg]);
       setIsTyping(false);
-    }, 600);
+    }, 550);
   };
 
+  const roamingOffset = isRoaming ? Math.sin(scrollY * 0.003) * 18 : 0;
+
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div
+      className="fixed bottom-6 right-6 z-50 flex flex-col items-end transition-transform duration-500"
+      style={{
+        transform: `translateY(${roamingOffset}px)`,
+      }}
+    >
       {isOpen && (
         <div
-          className={`mb-4 w-96 rounded-2xl bg-[#0c101a] border border-[#182030] shadow-2xl flex flex-col overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 ${
-            isExpanded ? 'h-[580px] w-[460px]' : 'h-[490px]'
-          }`}
+          className={`mb-4 rounded-2xl bg-[#0c101a] border border-[#182030] shadow-2xl flex flex-col overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 ${isExpanded ? 'h-[580px] w-[460px]' : 'h-[490px] w-88 sm:w-96'
+            }`}
         >
           <div className="px-4 py-3.5 bg-[#0e1422] border-b border-[#182030] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-glow-blue">
-                <Bot className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-full bg-[#162138] border border-blue-500/40 p-1 flex items-center justify-center shrink-0 shadow-glow-blue">
+                <Image
+                  src="/bytebank-icon.svg"
+                  alt="ByteBank Support"
+                  width={24}
+                  height={24}
+                  className="w-5 h-5 rounded-full"
+                />
               </div>
               <div>
                 <div className="text-sm font-bold text-white flex items-center gap-1.5">
                   ByteBank Support
                 </div>
-                <div className="text-[11px] text-emerald-400 flex items-center gap-1 font-mono">
+                <div className="text-[11px] text-emerald-400 flex items-center gap-1.5 font-mono">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
-                  We usually reply instantly · Online
+                  We usually reply within a few hours
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-1 text-slate-400">
+              <button
+                onClick={() => setIsRoaming(!isRoaming)}
+                className={`p-1.5 rounded-lg hover:bg-[#182030] transition-colors ${isRoaming ? 'text-blue-400' : 'text-slate-500'}`}
+                title={isRoaming ? 'Roaming Active' : 'Pinned'}
+              >
+                <Navigation className={`w-3.5 h-3.5 ${isRoaming ? 'rotate-45 text-blue-400' : ''}`} />
+              </button>
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="p-1.5 rounded-lg hover:bg-[#182030] hover:text-white transition-colors"
@@ -162,11 +186,10 @@ export default function FloatingAssistant() {
                 className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`p-3 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${
-                    m.sender === 'user'
+                  className={`p-3.5 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${m.sender === 'user'
                       ? 'bg-blue-600 text-white font-medium rounded-br-none'
                       : 'bg-[#121929] text-slate-200 border border-[#1d273d] rounded-bl-none shadow'
-                  }`}
+                    }`}
                 >
                   {m.text}
                 </div>
@@ -235,16 +258,16 @@ export default function FloatingAssistant() {
 
       <div className="flex items-center gap-3">
         {!isOpen && (
-          <div className="px-3 py-1.5 rounded-xl bg-[#0c101a] border border-[#182030] shadow-lg text-xs font-mono text-slate-300 hidden sm:flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            <span>ByteBank Assistant</span>
+          <div className="px-3 py-1.5 rounded-xl bg-[#0c101a] border border-[#182030] shadow-lg text-xs font-mono text-slate-300 hidden sm:flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>ByteBank Support</span>
           </div>
         )}
 
         <div className="relative group">
           <RobotMascotCanvas onClick={() => setIsOpen(!isOpen)} isDancing={true} />
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-ping" />
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950" />
+          <span className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-ping" />
+          <span className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950" />
         </div>
       </div>
     </div>

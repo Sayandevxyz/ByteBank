@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Lock, Mail, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
 
@@ -51,11 +52,17 @@ export default function LoginPage() {
     <div className="flex-1 flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md glass-panel p-8 rounded-2xl border border-[#182030] shadow-glass">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-[#111c33] border border-blue-800 flex items-center justify-center mx-auto mb-3 shadow-glow-blue">
-            <Lock className="w-6 h-6 text-blue-400" />
-          </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Sign In to ByteBank</h1>
-          <p className="text-xs text-slate-400 mt-1">PostgreSQL Authenticated Digital Asset Account</p>
+          <Link href="/" className="inline-block mb-3 hover:opacity-90 transition-opacity">
+            <Image
+              src="/bytebank-logo.svg"
+              alt="ByteBank Logo"
+              width={260}
+              height={82}
+              className="mx-auto"
+              priority
+            />
+          </Link>
+          <p className="text-xs text-slate-400">PostgreSQL Authenticated Digital Asset Account</p>
         </div>
 
         {error && (

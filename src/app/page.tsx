@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import {
   ShieldCheck,
@@ -14,9 +14,7 @@ import {
   Cpu,
   CheckCircle2,
   FlaskConical,
-  Sparkles,
   Terminal,
-  ArrowRightLeft,
   ChevronDown,
   RotateCcw,
   Scale,
@@ -27,19 +25,23 @@ import {
   Shield,
   Activity,
   FileText,
-  AlertCircle,
-  HelpCircle,
   Search,
   History,
   Clock,
   MessageSquare,
   Zap,
   ArrowUp,
+  Sparkles,
+  BarChart3,
+  QrCode,
+  Smartphone,
+  Share2,
+  UploadCloud,
 } from 'lucide-react';
 
 const RobotMascotCanvas = dynamic(() => import('@/components/canvas/RobotMascotCanvas'), {
   ssr: false,
-  loading: () => <div className="w-24 h-28 opacity-0" />,
+  loading: () => <div className="w-24 h-32 opacity-0" />,
 });
 
 interface FaqItem {
@@ -49,6 +51,10 @@ interface FaqItem {
 
 const FAQS: FaqItem[] = [
   {
+    q: 'What is ByteBank digital asset ledger architecture?',
+    a: 'ByteBank is a production-grade digital asset platform engineered directly on PostgreSQL 16. It stores and tracks simulated crypto and stock assets with strict ACID semantics, deterministic row-level locks, two-phase asset reservations, and mathematically provable double-entry ledger bookkeeping.',
+  },
+  {
     q: 'How does ByteBank prevent concurrent double-spending?',
     a: 'Transfers acquire pessimistic row-level locks on holding rows in strictly deterministic order: ORDER BY account_id, asset_id FOR UPDATE. This eliminates deadlocks and serializes simultaneous attempts. If two requests for 0.8 BTC arrive concurrently against a 1.0 BTC balance, the first commits and the second cleanly aborts with Insufficient Balance.',
   },
@@ -57,16 +63,20 @@ const FAQS: FaqItem[] = [
     a: 'Every balance movement is written as paired signed rows in ledger_entry (+credit, -debit). Database trigger trg_ledger_immutable() strictly prohibits UPDATE and DELETE statements. A mathematical invariant holds: Holding = SUM(ledger_entry). The reconciliation engine scans all 868 pairs with zero drift.',
   },
   {
-    q: 'What is the difference between transfer authorizations and idempotency keys?',
+    q: 'How is ByteBank different from standard crypto wallets or mockups?',
+    a: 'ByteBank is not a mockup or demo. Every button, form, role, and report runs against a real PostgreSQL database with versioned risk rules in assess_transfer_risk(), client-scoped idempotency keys, autonomous failure logging, and engine-enforced Row-Level Security (RLS) across Customer, Admin, and Auditor roles.',
+  },
+  {
+    q: 'Is ByteBank free to test and open source?',
+    a: 'Yes. ByteBank is fully open source under the MIT license. All assets, prices, and balances are SIMULATED and clearly labelled as such. You can run the entire platform locally with one command or explore the interactive DBMS lab.',
+  },
+  {
+    q: 'How do transfer authorizations and idempotency keys work together?',
     a: 'Transfer authorizations (issued by assess_transfer_risk()) are cryptographic tokens bound to the sender, recipient, asset, quantity, and a 15-minute validity window. Idempotency keys (in transfer_request) ensure that network retries with identical SHA-256 fingerprints return cached responses without duplicate balance debits.',
   },
   {
     q: 'How does autonomous failure logging survive a rolled-back transaction?',
     a: 'When an ACID transaction encounters an invalid transition or constraint violation, PostgreSQL automatically rolls back all internal modifications. ByteBank uses an autonomous logging connection path via the pool (recordAutonomousFailure) to commit the failed attempt, status, and failure reason independently.',
-  },
-  {
-    q: 'Are asset prices and token balances real or simulated?',
-    a: 'All balances, token quantities (BTC, ETH, SOL, USDT, AAPL, TSLA), and reference prices are SIMULATED and denominated in Simulated Reserve Units (SRU). ByteBank handles zero fiat currency or real banking rails, serving as an educational DBMS showcase.',
   },
   {
     q: 'How does Row-Level Security (RLS) isolate customer and auditor data?',
@@ -75,15 +85,18 @@ const FAQS: FaqItem[] = [
 ];
 
 export default function LandingPage() {
-  const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [loggingIn, setLoggingIn] = useState<string | null>(null);
-
   const [simAsset, setSimAsset] = useState('BTC');
   const [simAmount, setSimAmount] = useState('0.25');
-  const [simAccount, setSimAccount] = useState('BB-ACC-5003');
+  const [simAccount, setSimAccount] = useState('BB-ACC-5002');
   const [screeningActive, setScreeningActive] = useState(false);
-  const [screeningResult, setScreeningResult] = useState<any | null>(null);
+  const [screeningResult, setScreeningResult] = useState<{
+    outcome: string;
+    ruleCode: string;
+    token: string;
+    remainingBalance: string;
+    recipientMasked: string;
+  } | null>(null);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -98,37 +111,39 @@ export default function LandingPage() {
         ruleCode: 'RULE_SAFETY_V1',
         token: '7a8f9c12-34ef-4b92-8031-6ec8db911204',
         remainingBalance: '0.75000000 BTC',
-        recipientMasked: 'BB-ACC-***003 (Priya Patel)',
+        recipientMasked: 'BB-ACC-***002 (Rahul Verma)',
       });
       setScreeningActive(false);
-    }, 600);
+    }, 550);
   };
 
   return (
     <div className="flex-1 flex flex-col items-center">
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-16 flex flex-col items-center text-center space-y-6">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-12 flex flex-col items-center text-center space-y-6">
         <Link
           href="/admin/reconciliation"
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0c101a] border border-[#182030] text-xs font-mono text-slate-300 hover:border-blue-500/50 transition-all shadow-lg"
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-emerald-400 font-bold">125 Master Accounts</span>
+          <span className="text-emerald-400 font-semibold">125 accounts online</span>
           <span className="text-slate-500">&bull;</span>
-          <span>868/868 Ledger Pairs Balanced</span>
+          <span>868 ledger pairs settled</span>
           <span className="text-slate-500">&bull;</span>
-          <span className="text-blue-400 font-bold hover:underline">see stats &rarr;</span>
+          <span className="text-blue-400 font-semibold hover:underline">see stats &rarr;</span>
         </Link>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-4xl text-white">
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-5xl text-white">
           Digital Asset &amp; Transaction Management{' '}
-          <span className="text-blue-500 block sm:inline">for PostgreSQL &amp; Web3</span>
+          <span className="text-blue-500 block sm:inline">for Web3 &amp; FinTech</span>
         </h1>
 
         <p className="text-sm sm:text-lg text-[#8c9bb0] max-w-2xl leading-relaxed">
-          Store, transfer, and swap simulated crypto &amp; equity assets with atomic row locks, versioned rule screening, and immutable double-entry ledger bookkeeping.
+          Preview every transfer before signing, verify recipient safety with{' '}
+          <span className="text-white font-semibold">strict DBMS constraints</span>, and balance holdings with{' '}
+          <span className="text-white font-semibold">zero ledger drift</span>. Real PostgreSQL 16 ACID transactions with simulated assets.
         </p>
 
-        <div className="inline-flex flex-wrap items-center justify-center gap-3 sm:gap-6 px-6 py-2.5 rounded-full bg-[#0c101a] border border-[#182030] text-xs font-medium text-slate-300 shadow-xl">
+        <div className="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-6 px-6 py-2.5 rounded-full bg-[#0c101a] border border-[#182030] text-xs font-medium text-slate-300 shadow-xl">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-blue-600/20 text-blue-400 flex items-center justify-center">
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -140,7 +155,7 @@ export default function LandingPage() {
             <div className="w-6 h-6 rounded-full bg-blue-600/20 text-blue-400 flex items-center justify-center">
               <RotateCcw className="w-3.5 h-3.5" />
             </div>
-            <span>Idempotent Transfer</span>
+            <span>Idempotent Execution</span>
           </div>
           <span className="text-slate-700 hidden sm:inline">&mdash;</span>
           <div className="flex items-center gap-2">
@@ -150,71 +165,62 @@ export default function LandingPage() {
             <span>Ledger Settlement</span>
           </div>
         </div>
-
-        <div className="flex items-center gap-4 pt-2">
-          <Link
-            href="/customer/dashboard"
-            className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-glow-blue flex items-center gap-2"
-          >
-            <span>Launch Dashboard</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-
-          <Link
-            href="/admin/lab"
-            className="px-6 py-3 rounded-xl bg-[#0c101a] hover:bg-[#121929] border border-[#182030] text-slate-200 font-semibold text-sm transition-colors flex items-center gap-2"
-          >
-            <FlaskConical className="w-4 h-4 text-purple-400" />
-            <span>Open DBMS Lab</span>
-          </Link>
-        </div>
       </section>
 
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-10 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
           <div className="lg:col-span-3 space-y-3">
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-blue-400" />
-                Row-Level Locks (Pessimistic)
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <Lock className="w-4 h-4 text-blue-400 shrink-0" />
+                Pessimistic Row Locks
               </span>
-              <span className="text-[10px] text-blue-400 font-bold">ACID</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-blue-400 font-mono">ACID</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <Key className="w-4 h-4 text-emerald-400" />
-                Idempotency Fingerprint
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <Scale className="w-4 h-4 text-emerald-400 shrink-0" />
+                Double-Entry Ledger
               </span>
-              <span className="text-[10px] text-emerald-400 font-bold">SHA-256</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-emerald-400 font-mono">2-ENTRY</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-purple-400" />
-                Two-Phase Reservations
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <Database className="w-4 h-4 text-purple-400 shrink-0" />
+                Zero Decimal Drift
               </span>
-              <span className="text-[10px] text-purple-400 font-bold">STAGED</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-purple-400 font-mono">868/868</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-teal-400" />
-                Zero Negative Balances
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <Shield className="w-4 h-4 text-teal-400 shrink-0" />
+                Autonomous Audit Logs
               </span>
-              <span className="text-[10px] text-teal-400 font-bold">CHECK</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-teal-400 font-mono">APPEND</span>
             </div>
           </div>
 
-          <div className="lg:col-span-6 p-8 rounded-2xl bg-[#0c101a] border-2 border-dashed border-[#1f2b42] text-center space-y-5 relative overflow-hidden shadow-2xl">
-            <div className="w-14 h-14 rounded-2xl bg-blue-600/15 border border-blue-500/30 text-blue-400 mx-auto flex items-center justify-center shadow-glow-blue">
-              <Cpu className="w-7 h-7" />
+          <div className="lg:col-span-6 p-7 sm:p-9 rounded-3xl bg-[#0c101a] border-2 border-dashed border-[#1f2b42] text-center space-y-5 relative overflow-hidden shadow-2xl">
+            <div className="w-16 h-16 rounded-2xl bg-[#11192b] border border-[#1e2c47] p-2 mx-auto shadow-glow-blue flex items-center justify-center">
+              <Image
+                src="/bytebank-icon.svg"
+                alt="ByteBank Engine"
+                width={48}
+                height={48}
+                className="w-12 h-12"
+                priority
+              />
             </div>
 
             <div>
-              <h3 className="text-xl font-bold text-white">Live Transaction Safety Engine</h3>
-              <p className="text-xs text-[#8c9bb0] mt-1">
-                Simulate a pre-flight risk screening against PostgreSQL stored procedure <code className="text-blue-300">assess_transfer_risk()</code>.
+              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                Drop your transfer parameters here
+              </h3>
+              <p className="text-xs text-[#8c9bb0] mt-1.5 max-w-md mx-auto">
+                Evaluate PostgreSQL stored procedure <code className="text-blue-300 font-mono">assess_transfer_risk()</code> with versioned rules and pessimistic locks.
               </p>
             </div>
 
@@ -224,7 +230,7 @@ export default function LandingPage() {
                 <select
                   value={simAsset}
                   onChange={(e) => setSimAsset(e.target.value)}
-                  className="w-full bg-[#070a12] border border-[#182030] rounded-lg px-2.5 py-2 text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-[#070a12] border border-[#182030] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-blue-500"
                 >
                   <option value="BTC">BTC</option>
                   <option value="ETH">ETH</option>
@@ -239,7 +245,7 @@ export default function LandingPage() {
                   type="text"
                   value={simAmount}
                   onChange={(e) => setSimAmount(e.target.value)}
-                  className="w-full bg-[#070a12] border border-[#182030] rounded-lg px-2.5 py-2 text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-[#070a12] border border-[#182030] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -249,7 +255,7 @@ export default function LandingPage() {
                   type="text"
                   value={simAccount}
                   onChange={(e) => setSimAccount(e.target.value)}
-                  className="w-full bg-[#070a12] border border-[#182030] rounded-lg px-2.5 py-2 text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-[#070a12] border border-[#182030] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -257,7 +263,7 @@ export default function LandingPage() {
             <button
               onClick={runQuickScreening}
               disabled={screeningActive}
-              className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 text-white font-semibold text-xs transition-all shadow-glow-blue flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 text-white font-semibold text-xs transition-all shadow-glow-blue flex items-center justify-center gap-2"
             >
               {screeningActive ? (
                 <>
@@ -266,14 +272,14 @@ export default function LandingPage() {
                 </>
               ) : (
                 <>
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <ShieldCheck className="w-4 h-4" />
                   Run Live Invariant Screening
                 </>
               )}
             </button>
 
             {screeningResult && (
-              <div className="p-3.5 rounded-xl bg-[#06080e] border border-emerald-500/40 text-left font-mono text-[11px] space-y-1.5 animate-in fade-in">
+              <div className="p-3.5 rounded-xl bg-[#06080e] border border-emerald-500/40 text-left font-mono text-[11px] space-y-1 animate-in fade-in">
                 <div className="flex justify-between items-center text-emerald-400 font-bold">
                   <span>OUTCOME: {screeningResult.outcome}</span>
                   <span className="text-[10px] text-slate-500">15-Min Bound Token</span>
@@ -286,42 +292,55 @@ export default function LandingPage() {
           </div>
 
           <div className="lg:col-span-3 space-y-3">
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-blue-400" />
-                1:1 Customer Mapping
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0" />
+                Rule-Based Risk Screening
               </span>
-              <span className="text-[10px] text-blue-400 font-bold">UNIQUE</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-blue-400 font-mono">SAFETY</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <Coins className="w-4 h-4 text-emerald-400" />
-                Market Maker Swaps
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <Key className="w-4 h-4 text-emerald-400 shrink-0" />
+                Idempotent Request Keys
               </span>
-              <span className="text-[10px] text-emerald-400 font-bold">PAIRED</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-emerald-400 font-mono">RETRY</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-purple-400" />
-                Zero-PII Masked Views
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <Eye className="w-4 h-4 text-purple-400 shrink-0" />
+                Privacy-Masked Views
               </span>
-              <span className="text-[10px] text-purple-400 font-bold">RLS</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-purple-400 font-mono">NO-PII</span>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-mono text-slate-200 hover:border-[#24324c] transition-all">
-              <span className="flex items-center gap-2">
-                <Scale className="w-4 h-4 text-teal-400" />
-                Automated Reconciliation
+            <div className="p-3.5 rounded-2xl bg-[#0c101a] border border-[#182030] flex items-center justify-between text-xs font-medium text-slate-200 hover:border-[#24324c] transition-all">
+              <span className="flex items-center gap-2.5">
+                <Activity className="w-4 h-4 text-teal-400 shrink-0" />
+                100% Real PostgreSQL 16
               </span>
-              <span className="text-[10px] text-teal-400 font-bold">868/868</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#111c33] border border-[#1b2b4d] text-[10px] text-teal-400 font-mono">LIVE</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-14 space-y-6">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 text-center space-y-4">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#111c33] border border-[#1b2b4d] text-xs font-medium text-blue-400">
+          <span>For financial engineers and architects</span>
+        </div>
+        <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          Settle digital assets with{' '}
+          <span className="text-blue-500">absolute cryptographic finality</span>
+        </h2>
+        <p className="text-sm sm:text-base text-[#8c9bb0] max-w-2xl mx-auto leading-relaxed">
+          Every transfer is bounded by serializable isolation, verified against versioned risk policies, and logged to an immutable double-entry ledger. Know your balance is mathematically sound.
+        </p>
+      </section>
+
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-xl bg-blue-600/15 border border-blue-500/20 text-blue-400 flex items-center justify-center">
             <Layers className="w-5 h-5" />
@@ -338,15 +357,15 @@ export default function LandingPage() {
                 <Search className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
-                Pessimistic Row Locking
+                Automated Reconciliation
               </h3>
               <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
-                Transfers acquire row locks deterministically (<code className="text-blue-300">ORDER BY account_id, asset_id FOR UPDATE</code>). Eliminates race conditions and deadlocks under concurrent execution.
+                Scans all 868 account-asset pairs continuously. Detects any drift between customer holdings and the ledger_entry table in real time.
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
               <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
-              <span>Prevents parallel double-spends</span>
+              <span>Zero reconciliation drift</span>
             </div>
           </div>
 
@@ -356,10 +375,10 @@ export default function LandingPage() {
                 <History className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
-                Immutable Ledger History
+                Immutable Double-Entry Ledger
               </h3>
               <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
-                Every balance change produces paired signed rows in <code className="text-blue-300">ledger_entry</code>. Database trigger strictly prohibits <code className="text-blue-300">UPDATE</code> and <code className="text-blue-300">DELETE</code> operations.
+                Every asset movement inserts signed debit and credit ledger rows. Trigger trg_ledger_immutable() strictly prevents UPDATE and DELETE.
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
@@ -374,21 +393,21 @@ export default function LandingPage() {
                 <RotateCcw className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
-                Automated Reconciliation
+                Idempotent Replay Protection
               </h3>
               <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
-                Automated procedure compares holdings against summed ledger entries across all 868 accounts, creating linked reconciliation issues without mutating ledger history.
+                Transfers require client-scoped idempotency keys with SHA-256 fingerprints. Network retries return identical results without duplicate debits.
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
               <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
-              <span>868/868 accounts verified</span>
+              <span>Zero duplicate charges</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-6 relative">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6 relative">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600/15 border border-blue-500/20 text-blue-400 flex items-center justify-center">
@@ -423,7 +442,7 @@ export default function LandingPage() {
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
               <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
-              <span>Staged balance protection</span>
+              <span>Available = Total - Reserved</span>
             </div>
           </div>
 
@@ -433,37 +452,100 @@ export default function LandingPage() {
                 <Users className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
-                Role-Based Separation
+                Engine-Enforced RLS
               </h3>
               <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
-                PostgreSQL database engine roles <code className="text-blue-300">bytebank_customer</code>, <code className="text-blue-300">bytebank_admin</code>, and <code className="text-blue-300">bytebank_auditor</code> isolate database operations via RLS.
+                PostgreSQL database engine roles bytebank_customer, bytebank_admin, and bytebank_auditor isolate database operations via RLS.
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
               <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
-              <span>Engine-enforced Row-Level Security</span>
+              <span>Zero cross-account leaks</span>
             </div>
           </div>
 
           <div className="p-7 rounded-2xl bg-[#0c101a] border border-[#182030] flex flex-col justify-between hover:border-[#24324c] transition-all relative overflow-hidden">
-            <div className="absolute right-3 top-3 w-16 h-20 opacity-90 pointer-events-none">
-              <RobotMascotCanvas isDancing={true} />
-            </div>
-
             <div>
               <div className="w-12 h-12 rounded-xl bg-[#121929] border border-[#1d273d] text-blue-400 flex items-center justify-center mb-5">
                 <MessageSquare className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
-                Purpose-Coded Access Logs
+                Rule-Based Risk Screening
               </h3>
-              <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6 pr-14">
-                Staff lookups require explicit business justification codes written to append-only logs. Auditors query masked views with zero customer PII.
+              <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
+                Pre-flight evaluation of versioned risk rules in assess_transfer_risk(). Prevents unverified KYC, frozen accounts, and suspicious transaction velocities.
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
               <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
-              <span>Zero-PII masked auditor views</span>
+              <span>Versioned rule engines</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6 relative">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-xl bg-blue-600/15 border border-blue-500/20 text-blue-400 flex items-center justify-center">
+            <Activity className="w-5 h-5" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Auditing &amp; Security Telemetry
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="p-7 rounded-2xl bg-[#0c101a] border border-[#182030] flex flex-col justify-between hover:border-[#24324c] transition-all">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-[#121929] border border-[#1d273d] text-blue-400 flex items-center justify-center mb-5">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
+                Real-Time Ledger Telemetry
+              </h3>
+              <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
+                Server-Sent Events stream live transaction confirmations, simulated price ticks, and system health directly to connected dashboards.
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
+              <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
+              <span>Sub-10ms event pipeline</span>
+            </div>
+          </div>
+
+          <div className="p-7 rounded-2xl bg-[#0c101a] border border-[#182030] flex flex-col justify-between hover:border-[#24324c] transition-all">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-[#121929] border border-[#1d273d] text-blue-400 flex items-center justify-center mb-5">
+                <Lock className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
+                Privacy-Masked Auditor Portal
+              </h3>
+              <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
+                Auditors receive read-only access to transactions with masked account IDs, zero PII, and SHA-256 hashed customer identification proofs.
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
+              <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
+              <span>Strict compliance masking</span>
+            </div>
+          </div>
+
+          <div className="p-7 rounded-2xl bg-[#0c101a] border border-[#182030] flex flex-col justify-between hover:border-[#24324c] transition-all">
+            <div>
+              <div className="w-12 h-12 rounded-xl bg-[#121929] border border-[#1d273d] text-blue-400 flex items-center justify-center mb-5">
+                <FileText className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2 tracking-tight">
+                Autonomous Failure Logging
+              </h3>
+              <p className="text-sm text-[#8c9bb0] leading-relaxed mb-6">
+                Failed attempts and security violations survive transaction rollbacks via independent database connection pooling.
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#111c33] text-blue-400 border border-[#1b2b4d] w-fit">
+              <Zap className="w-3.5 h-3.5 text-blue-400 fill-blue-400" />
+              <span>Tamper-proof security audit</span>
             </div>
           </div>
         </div>
@@ -472,7 +554,7 @@ export default function LandingPage() {
       <section className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-16 space-y-8">
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-extrabold text-white">Frequently Asked Questions</h2>
-          <p className="text-xs text-[#8c9bb0]">Common questions about the ByteBank PostgreSQL architecture.</p>
+          <p className="text-xs text-[#8c9bb0]">Common questions about managing assets and ledger safety</p>
         </div>
 
         <div className="space-y-3">
@@ -489,9 +571,8 @@ export default function LandingPage() {
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180 text-blue-400' : ''
-                    }`}
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-blue-400' : ''
+                      }`}
                   />
                 </button>
                 {isOpen && (
@@ -505,22 +586,22 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-14">
+      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-14">
         <div className="p-10 sm:p-14 rounded-3xl bg-[#0c101a] border border-[#182030] text-center space-y-6 shadow-2xl relative overflow-hidden">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Experience the PostgreSQL Transaction Engine Today
+            Send your next transfer with full confidence
           </h2>
 
           <p className="text-xs sm:text-sm text-[#8c9bb0] max-w-xl mx-auto leading-relaxed">
-            Test ACID concurrency race conditions, inspect the pre-seeded 125 master customer dataset, and review real-time ledger reconciliation.
+            Upload transfer parameters and get a cryptographic authorization token. Free simulator plan, zero credit card required.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link
-              href="/customer/dashboard"
+              href="/register"
               className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-glow-blue"
             >
-              Launch Customer Terminal
+              Create a free account
             </Link>
             <Link
               href="/admin/lab"

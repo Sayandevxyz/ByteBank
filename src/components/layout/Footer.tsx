@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Database, ShieldCheck, Scale, Cpu, Terminal, Sparkles } from 'lucide-react';
 
 export default function Footer() {
@@ -8,13 +9,22 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 space-y-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold shadow-glow-blue">
-                B
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/bytebank-icon.svg"
+                alt="ByteBank Logo"
+                width={36}
+                height={36}
+                className="w-9 h-9 rounded-xl"
+              />
+              <div className="flex flex-col">
+                <span className="font-extrabold text-white text-lg tracking-tight leading-tight">
+                  Byte<span className="text-blue-400">Bank</span>
+                </span>
+                <span className="text-[9px] font-mono tracking-widest text-slate-400 uppercase -mt-0.5">
+                  Digital Asset Ledger
+                </span>
               </div>
-              <span className="font-extrabold text-white text-lg tracking-tight">
-                Byte<span className="text-blue-500">Bank</span>
-              </span>
             </Link>
 
             <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
