@@ -1,3 +1,4 @@
+import { ZodError } from 'zod';
 
 export type ErrorCode =
   | 'UNAUTHORIZED'
@@ -38,6 +39,17 @@ export function formatErrorResponse(err: unknown) {
         details: err.details,
       },
       status: err.statusCode,
+    };
+  }
+
+  if (err instanceof ZodError) {
+    return {
+      error: {
+        code: 'VALIDATION_ERROR' as ErrorCode,
+        message: err.issues.map((i) => `${i.path.join('.') || 'field'}: ${i.message}`).join(', '),
+        details: err.issues,
+      },
+      status: 400,
     };
   }
 

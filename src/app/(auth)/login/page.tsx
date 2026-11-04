@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
+import { Lock, Mail, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim(), password }),
       });
       const data = await res.json();
 
@@ -73,15 +73,15 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Email Address</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1.5">Email Address or Username</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
               <input
-                type="email"
+                type="text"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="rishi.sharma101@email.com"
+                placeholder="rishi.sharma101@email.com or admin"
                 className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
               />
             </div>
@@ -142,15 +142,12 @@ export default function LoginPage() {
               <div className="text-[10px] text-slate-400 truncate">Karthik Menon</div>
             </button>
           </div>
-          <div className="mt-2 text-center text-[10px] text-slate-500">
-            Password for all seeded accounts is <code className="text-slate-400">password123</code>
-          </div>
         </div>
 
         <div className="mt-6 text-center text-xs text-slate-400">
-          Need a new account?{' '}
-          <Link href="/register" className="text-blue-400 hover:underline">
-            Register with simulated KYC
+          Need an account?{' '}
+          <Link href="/register" className="text-blue-400 hover:underline font-medium">
+            Register new customer
           </Link>
         </div>
       </div>

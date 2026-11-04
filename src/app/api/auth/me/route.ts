@@ -1,18 +1,16 @@
-
 import { NextResponse } from 'next/server';
-import { requireAuth, getUserById } from '@/lib/auth';
-import { formatErrorResponse } from '@/lib/errors';
+import { getSession, getUserById } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const session = await requireAuth();
-    const user = await getUserById(session.userId);
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ user: null });
+    }
 
+    const user = await getUserById(session.userId);
     if (!user) {
-      return NextResponse.json(
-        { error: { code: 'NOT_FOUND', message: 'User record not found' } },
-        { status: 404 }
-      );
+      return NextResponse.json({ user: null });
     }
 
     return NextResponse.json({
@@ -30,8 +28,7 @@ export async function GET() {
         kycStatus: user.kyc_status,
       },
     });
-  } catch (err) {
-    const { error, status } = formatErrorResponse(err);
-    return NextResponse.json({ error }, { status });
+  } catch {
+    return NextResponse.json({ user: null });
   }
 }

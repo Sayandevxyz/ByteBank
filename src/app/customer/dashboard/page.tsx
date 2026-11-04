@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import {
   Wallet,
@@ -22,6 +23,7 @@ const PortfolioOrbCanvas = dynamic(() => import('../../../components/canvas/Port
 });
 
 export default function CustomerDashboardPage() {
+  const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [recentTxns, setRecentTxns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +34,10 @@ export default function CustomerDashboardPage() {
       fetch('/api/customer/transactions?limit=6').then((r) => r.json()),
     ])
       .then(([holdingsData, txnData]) => {
+        if (holdingsData?.error?.code === 'UNAUTHORIZED') {
+          router.push('/login');
+          return;
+        }
         setData(holdingsData);
         if (txnData?.transactions) setRecentTxns(txnData.transactions);
       })

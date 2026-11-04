@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { query } from '@/lib/db';
@@ -6,14 +5,24 @@ import { verifyPassword, createAccessToken, createRefreshToken, setAuthCookies }
 import { formatErrorResponse } from '@/lib/errors';
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().optional(),
+  username: z.string().optional(),
+  identifier: z.string().optional(),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, password } = loginSchema.parse(body);
+    const parsed = loginSchema.parse(body);
+
+    const identifier = (parsed.email || parsed.username || parsed.identifier || '').trim();
+    if (!identifier) {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: 'Email or username is required' } },
+        { status: 400 }
+      );
+    }
 
     const res = await query(
       `SELECT u.user_id, u.username, u.email, u.password_hash, u.role, u.customer_id, u.staff_id,
@@ -23,8 +32,8 @@ export async function POST(req: NextRequest) {
        LEFT JOIN customer c ON c.customer_id = u.customer_id
        LEFT JOIN account a ON a.customer_id = c.customer_id
        LEFT JOIN staff s ON s.staff_id = u.staff_id
-       WHERE LOWER(u.email) = LOWER($1);`,
-      [email]
+       WHERE LOWER(u.email) = LOWER($1) OR LOWER(u.username) = LOWER($1);`,
+      [identifier]
     );
 
     const user = res.rows[0];
@@ -35,7 +44,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const isValid = await verifyPassword(password, user.password_hash);
+    const isValid = await verifyPassword(parsed.password, user.password_hash);
     if (!isValid) {
       return NextResponse.json(
         { error: { code: 'UNAUTHORIZED', message: 'Invalid email or password' } },
