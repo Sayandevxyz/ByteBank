@@ -380,7 +380,7 @@ export default function RoamingMascot() {
                 </div>
                 <div>
                   <div className="text-xs font-bold leading-tight flex items-center gap-1.5 text-white">
-
+                    ByteBank Support
                   </div>
                   {isOnline ? (
                     <div className="text-[10px] text-[#1FD6A0] font-medium flex items-center gap-1">
@@ -421,8 +421,8 @@ export default function RoamingMascot() {
                 >
                   <div
                     className={`p-3 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${m.sender === 'user'
-                        ? 'bg-[#0B4FFF] text-white font-medium rounded-br-none shadow-sm'
-                        : 'bg-white text-[#2B2F4A] border border-[#E8ECF6] rounded-bl-none shadow-sm'
+                      ? 'bg-[#0B4FFF] text-white font-medium rounded-br-none shadow-sm'
+                      : 'bg-white text-[#2B2F4A] border border-[#E8ECF6] rounded-bl-none shadow-sm'
                       }`}
                   >
                     <div>{m.text}</div>
@@ -524,7 +524,7 @@ export default function RoamingMascot() {
             {isOnline && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#1FD6A0] animate-pulse" />
             )}
-            <span>ByteBank Support</span>
+            <span></span>
           </button>
         )}
       </div>
