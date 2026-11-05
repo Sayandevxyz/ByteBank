@@ -1,17 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
-import { Terminal, Copy, Check, Code2, Cpu } from 'lucide-react';
-
-const RobotMascotCanvas = dynamic(() => import('../canvas/RobotMascotCanvas'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-20 h-24 flex items-center justify-center">
-      <div className="w-6 h-6 rounded-full bg-blue-600/30 animate-pulse" />
-    </div>
-  ),
-});
+import { Copy, Check, Cpu } from 'lucide-react';
 
 const CODE_EXAMPLES = {
   curl: `curl -X POST http://localhost:3000/api/customer/transfer \\
@@ -21,8 +11,7 @@ const CODE_EXAMPLES = {
   -d '{
     "toAccountNo": "BB-ACC-5002",
     "symbol": "BTC",
-    "quantity": "0.10000000",
-    "note": "Payment for software license"
+    "quantity": "0.10000000"
   }'`,
   node: `const response = await fetch('http://localhost:3000/api/customer/transfer', {
   method: 'POST',
@@ -34,7 +23,7 @@ const CODE_EXAMPLES = {
   body: JSON.stringify({
     toAccountNo: 'BB-ACC-5002',
     symbol: 'ETH',
-    quantity: '1.500000000000000000'
+    quantity: '1.50000000'
   })
 });
 const data = await response.json();`,
@@ -45,7 +34,7 @@ SELECT holding.quantity - COALESCE(SUM(ar.quantity), 0)
   LEFT JOIN asset_reservation ar 
     ON ar.account_id = holding.account_id 
    AND ar.asset_id = holding.asset_id 
-   AND ar.status = 'ACTIVE'
+   AND ar.status = 'active'
  WHERE holding.account_id = 5001 AND holding.asset_id = 1
  FOR UPDATE;
 
@@ -65,59 +54,52 @@ export default function ApiCliSection() {
   };
 
   return (
-    <section className="relative w-full py-20 px-4 sm:px-6 lg:px-8 bg-[#060911] border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto space-y-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="max-w-2xl space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600/10 border border-blue-500/30 text-[11px] font-mono text-blue-400">
-              <Cpu className="w-3.5 h-3.5" />
-              <span>Developer-First Platform</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Execute transfers from Console, the CLI or an AI agent
-            </h2>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Automate digital asset movements via REST API, query live holdings through Server-Sent Events, or test
-              row-level locking concurrency directly in PostgreSQL 16.
-            </p>
+    <section className="relative w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#E8ECF6]">
+      <div className="max-w-5xl mx-auto space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3F7FF] border border-[#E8ECF6] text-xs font-semibold text-[#0B4FFF]">
+            <Cpu className="w-3.5 h-3.5" />
+            <span>Developer-First Platform</span>
           </div>
-
-          <div className="hidden md:block">
-            <RobotMascotCanvas isDancing={true} className="w-24 h-28" />
-          </div>
+          <h2 className="text-3xl font-extrabold text-[#1B0B5C] uppercase tracking-tight font-sans">
+            TRANSACTION API &amp; POSTGRESQL DRIVER
+          </h2>
+          <p className="text-sm text-[#6B7090] leading-relaxed">
+            Execute transfers through standard REST routes or interface directly with PostgreSQL 16 using parameterized transactions and row-level locks.
+          </p>
         </div>
 
-        <div className="rounded-2xl bg-[#0c1220] border border-white/[0.08] shadow-2xl overflow-hidden">
-          <div className="px-4 py-3 bg-[#080d17] border-b border-white/[0.06] flex items-center justify-between">
+        <div className="rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white overflow-hidden">
+          <div className="px-5 py-3.5 bg-[#F3F7FF] border-b border-[#E8ECF6] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              <span className="text-xs font-mono text-slate-400 ml-2">bash &mdash; bytebank-client</span>
+              <span className="w-3 h-3 rounded-full bg-[#FFAB2E]" />
+              <span className="w-3 h-3 rounded-full bg-[#1FD6A0]" />
+              <span className="w-3 h-3 rounded-full bg-[#3B5BFF]" />
+              <span className="text-xs font-mono text-[#6B7090] ml-2">bash &mdash; bytebank-client</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 bg-[#05070d] p-1 rounded-xl border border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#E8ECF6]">
                 <button
                   onClick={() => setActiveTab('curl')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
-                    activeTab === 'curl' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-400 hover:text-white'
+                  className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
+                    activeTab === 'curl' ? 'bg-[#0B4FFF] text-white font-semibold' : 'text-[#6B7090] hover:text-[#1B0B5C]'
                   }`}
                 >
                   cURL
                 </button>
                 <button
                   onClick={() => setActiveTab('node')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
-                    activeTab === 'node' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-400 hover:text-white'
+                  className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
+                    activeTab === 'node' ? 'bg-[#0B4FFF] text-white font-semibold' : 'text-[#6B7090] hover:text-[#1B0B5C]'
                   }`}
                 >
                   TypeScript
                 </button>
                 <button
                   onClick={() => setActiveTab('sql')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
-                    activeTab === 'sql' ? 'bg-blue-600 text-white font-semibold' : 'text-slate-400 hover:text-white'
+                  className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
+                    activeTab === 'sql' ? 'bg-[#0B4FFF] text-white font-semibold' : 'text-[#6B7090] hover:text-[#1B0B5C]'
                   }`}
                 >
                   Raw SQL
@@ -126,20 +108,19 @@ export default function ApiCliSection() {
 
               <button
                 onClick={handleCopy}
-                className="p-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-slate-400 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg bg-white border border-[#E8ECF6] text-[#6B7090] hover:text-[#1B0B5C] transition-colors"
                 title="Copy snippet"
               >
-                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-4 h-4 text-[#1FD6A0]" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
           </div>
 
-          <div className="p-6 font-mono text-xs text-slate-300 overflow-x-auto leading-relaxed bg-[#090e1a]">
-            <pre className="text-blue-300/90">{CODE_EXAMPLES[activeTab]}</pre>
+          <div className="p-6 font-mono text-xs text-[#1B0B5C] overflow-x-auto leading-relaxed bg-[#F6F8FF]">
+            <pre className="text-[#0B4FFF] font-semibold">{CODE_EXAMPLES[activeTab]}</pre>
           </div>
         </div>
       </div>
     </section>
   );
 }
-

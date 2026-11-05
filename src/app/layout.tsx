@@ -14,7 +14,7 @@ const jost = Jost({
 
 export const metadata: Metadata = {
   title: 'ByteBank | Digital Asset & Transaction Management System',
-  description: 'Production-grade DBMS project featuring real PostgreSQL 16 ACID transactions, double-entry ledger bookkeeping, rule-based risk screening, and privacy-aware access logging.',
+  description: 'Production-grade DBMS project featuring real PostgreSQL 16 ACID transactions, double-entry ledger bookkeeping, and rule-based risk screening.',
   icons: {
     icon: '/bytebank-icon.svg',
     shortcut: '/favicon.ico',
@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={jost.variable}>
-      <body className={`${jost.className} min-h-screen flex flex-col bg-[#060911] text-white antialiased selection:bg-blue-600 selection:text-white`}>
+      <body className={`${jost.className} min-h-screen flex flex-col bg-white text-[#2B2F4A] antialiased selection:bg-[#0B4FFF] selection:text-white`}>
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />

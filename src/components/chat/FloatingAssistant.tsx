@@ -16,7 +16,7 @@ const RobotMascotCanvas = dynamic(() => import('../canvas/RobotMascotCanvas'), {
   ssr: false,
   loading: () => (
     <div className="w-24 h-28 flex items-center justify-center">
-      <div className="w-8 h-8 rounded-full bg-blue-600/30 animate-pulse" />
+      <div className="w-8 h-8 rounded-full bg-[#0B4FFF]/20 animate-pulse" />
     </div>
   ),
 });
@@ -129,12 +129,13 @@ export default function FloatingAssistant() {
     >
       {isOpen && (
         <div
-          className={`mb-4 rounded-2xl bg-[#0c101a] border border-[#182030] shadow-2xl flex flex-col overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 ${isExpanded ? 'h-[580px] w-[460px]' : 'h-[490px] w-88 sm:w-96'
-            }`}
+          className={`mb-4 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white flex flex-col overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 ${
+            isExpanded ? 'h-[580px] w-[460px]' : 'h-[490px] w-88 sm:w-96'
+          }`}
         >
-          <div className="px-4 py-3.5 bg-[#0e1422] border-b border-[#182030] flex items-center justify-between">
+          <div className="px-4 py-3.5 bg-white border-b border-[#E8ECF6] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#162138] border border-blue-500/40 p-1 flex items-center justify-center shrink-0 shadow-glow-blue">
+              <div className="w-8 h-8 rounded-full bg-[#F3F7FF] border border-[#E8ECF6] p-1 flex items-center justify-center shrink-0">
                 <Image
                   src="/bytebank-icon.svg"
                   alt="ByteBank Support"
@@ -144,34 +145,34 @@ export default function FloatingAssistant() {
                 />
               </div>
               <div>
-                <div className="text-sm font-bold text-white flex items-center gap-1.5">
+                <div className="text-sm font-bold text-[#1B0B5C] flex items-center gap-1.5">
                   ByteBank Support
                 </div>
-                <div className="text-[11px] text-emerald-400 flex items-center gap-1.5 font-mono">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+                <div className="text-[11px] text-[#1FD6A0] flex items-center gap-1.5 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1FD6A0] inline-block animate-pulse" />
                   We usually reply within a few hours
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-1 text-slate-400">
+            <div className="flex items-center gap-1 text-[#6B7090]">
               <button
                 onClick={() => setIsRoaming(!isRoaming)}
-                className={`p-1.5 rounded-lg hover:bg-[#182030] transition-colors ${isRoaming ? 'text-blue-400' : 'text-slate-500'}`}
+                className={`p-1.5 rounded-lg hover:bg-[#F3F7FF] transition-colors ${isRoaming ? 'text-[#0B4FFF]' : 'text-[#6B7090]'}`}
                 title={isRoaming ? 'Roaming Active' : 'Pinned'}
               >
-                <Navigation className={`w-3.5 h-3.5 ${isRoaming ? 'rotate-45 text-blue-400' : ''}`} />
+                <Navigation className={`w-3.5 h-3.5 ${isRoaming ? 'rotate-45 text-[#0B4FFF]' : ''}`} />
               </button>
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-1.5 rounded-lg hover:bg-[#182030] hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-[#F3F7FF] hover:text-[#1B0B5C] transition-colors"
                 title={isExpanded ? 'Minimize' : 'Expand'}
               >
                 {isExpanded ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-[#182030] hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-[#F3F7FF] hover:text-[#1B0B5C] transition-colors"
                 title="Close Support"
               >
                 <X className="w-4 h-4" />
@@ -179,50 +180,51 @@ export default function FloatingAssistant() {
             </div>
           </div>
 
-          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs">
+          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs bg-[#FAFCFF]">
             {messages.map((m) => (
               <div
                 key={m.id}
                 className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`p-3.5 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${m.sender === 'user'
-                      ? 'bg-blue-600 text-white font-medium rounded-br-none'
-                      : 'bg-[#121929] text-slate-200 border border-[#1d273d] rounded-bl-none shadow'
-                    }`}
+                  className={`p-3.5 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${
+                    m.sender === 'user'
+                      ? 'bg-[#0B4FFF] text-white font-medium rounded-br-none shadow-sm'
+                      : 'bg-white text-[#2B2F4A] border border-[#E8ECF6] rounded-bl-none shadow-sm'
+                  }`}
                 >
                   {m.text}
                 </div>
-                <span className="text-[10px] text-slate-500 mt-1 px-1">{m.timestamp}</span>
+                <span className="text-[10px] text-[#6B7090] mt-1 px-1">{m.timestamp}</span>
               </div>
             ))}
 
             {isTyping && (
-              <div className="flex items-center gap-1.5 p-3 rounded-2xl bg-[#121929] text-slate-400 text-xs w-20">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" />
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:0.2s]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:0.4s]" />
+              <div className="flex items-center gap-1.5 p-3 rounded-2xl bg-white border border-[#E8ECF6] text-[#6B7090] text-xs w-20 shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0B4FFF] animate-bounce" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0B4FFF] animate-bounce [animation-delay:0.2s]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0B4FFF] animate-bounce [animation-delay:0.4s]" />
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="px-3 py-2 bg-[#090d16] border-t border-[#182030] flex gap-1.5 overflow-x-auto text-[11px] font-mono scrollbar-none">
+          <div className="px-3 py-2 bg-[#F3F7FF] border-t border-[#E8ECF6] flex gap-1.5 overflow-x-auto text-[11px] font-mono scrollbar-none">
             <button
               onClick={() => handleSend('Test credentials')}
-              className="px-2.5 py-1 rounded-full bg-[#111c33] hover:bg-[#182747] border border-[#1b2b4d] text-blue-400 shrink-0 transition-colors"
+              className="px-2.5 py-1 rounded-full bg-white hover:bg-[#EBF2FF] border border-[#E8ECF6] text-[#0B4FFF] shrink-0 transition-colors shadow-2xs"
             >
               Credentials
             </button>
             <button
               onClick={() => handleSend('Concurrency race test')}
-              className="px-2.5 py-1 rounded-full bg-[#111c33] hover:bg-[#182747] border border-[#1b2b4d] text-blue-400 shrink-0 transition-colors"
+              className="px-2.5 py-1 rounded-full bg-white hover:bg-[#EBF2FF] border border-[#E8ECF6] text-[#0B4FFF] shrink-0 transition-colors shadow-2xs"
             >
               Concurrency Lab
             </button>
             <button
               onClick={() => handleSend('Ledger invariant formula')}
-              className="px-2.5 py-1 rounded-full bg-[#111c33] hover:bg-[#182747] border border-[#1b2b4d] text-blue-400 shrink-0 transition-colors"
+              className="px-2.5 py-1 rounded-full bg-white hover:bg-[#EBF2FF] border border-[#E8ECF6] text-[#0B4FFF] shrink-0 transition-colors shadow-2xs"
             >
               Ledger Invariant
             </button>
@@ -233,22 +235,22 @@ export default function FloatingAssistant() {
               e.preventDefault();
               handleSend();
             }}
-            className="p-3 bg-[#0c101a] border-t border-[#182030] flex items-center gap-2"
+            className="p-3 bg-white border-t border-[#E8ECF6] flex items-center gap-2"
           >
-            <div className="flex-1 flex items-center gap-2 bg-[#06080e] border border-[#182030] rounded-xl px-3 py-2">
-              <MessageSquare className="w-4 h-4 text-slate-500 shrink-0" />
+            <div className="flex-1 flex items-center gap-2 bg-[#F3F7FF] border border-[#E8ECF6] rounded-full px-4 py-2">
+              <MessageSquare className="w-4 h-4 text-[#6B7090] shrink-0" />
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Describe what you need..."
-                className="w-full bg-transparent border-0 text-white placeholder-slate-500 text-xs focus:outline-none"
+                className="w-full bg-transparent border-0 text-[#2B2F4A] placeholder-[#6B7090] text-xs focus:outline-none"
               />
             </div>
             <button
               type="submit"
               disabled={!input.trim()}
-              className="w-9 h-9 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white flex items-center justify-center transition-all shadow-glow-blue shrink-0"
+              className="w-9 h-9 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] disabled:opacity-40 text-white flex items-center justify-center transition-all shadow-md shrink-0"
             >
               <Send className="w-3.5 h-3.5" />
             </button>
@@ -258,16 +260,16 @@ export default function FloatingAssistant() {
 
       <div className="flex items-center gap-3">
         {!isOpen && (
-          <div className="px-3 py-1.5 rounded-xl bg-[#0c101a] border border-[#182030] shadow-lg text-xs font-mono text-slate-300 hidden sm:flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="px-3.5 py-2 rounded-full bg-white border border-[#E8ECF6] shadow-card-white text-xs font-semibold text-[#1B0B5C] hidden sm:flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#1FD6A0] animate-pulse" />
             <span>ByteBank Support</span>
           </div>
         )}
 
-        <div className="relative group">
+        <div className="relative group filter drop-shadow-md">
           <RobotMascotCanvas onClick={() => setIsOpen(!isOpen)} isDancing={true} />
-          <span className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-ping" />
-          <span className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950" />
+          <span className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-[#1FD6A0] border-2 border-white animate-ping" />
+          <span className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-[#1FD6A0] border-2 border-white" />
         </div>
       </div>
     </div>
