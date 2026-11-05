@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, ArrowRight } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import BrandLogo from '@/components/ui/BrandLogo';
+import AuthCard from '@/components/auth/AuthCard';
+import TextField from '@/components/auth/TextField';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,6 +17,11 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim() || !password) {
+      setError('Please enter your email and password');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -31,8 +38,8 @@ export default function LoginPage() {
         return;
       }
 
-      if (data.user.role === 'ADMIN') router.push('/admin/dashboard');
-      else if (data.user.role === 'AUDITOR') router.push('/auditor/dashboard');
+      if (data.user?.role === 'ADMIN') router.push('/admin/dashboard');
+      else if (data.user?.role === 'AUDITOR') router.push('/auditor/dashboard');
       else router.push('/customer/dashboard');
 
       router.refresh();
@@ -46,111 +53,141 @@ export default function LoginPage() {
   const setPreset = (presetEmail: string) => {
     setEmail(presetEmail);
     setPassword('password123');
+    setError(null);
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-md glass-panel p-8 rounded-2xl border border-[#182030] shadow-glass">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-block mb-3 hover:opacity-90 transition-opacity">
-            <Image
-              src="/bytebank-logo.svg"
-              alt="ByteBank Logo"
-              width={260}
-              height={82}
-              className="mx-auto"
-              priority
-            />
-          </Link>
-          <p className="text-xs text-slate-400">PostgreSQL Authenticated Digital Asset Account</p>
+    <div className="min-h-screen bg-[#F3F7FF] flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <AuthCard maxWidth="max-w-[480px]">
+        <div className="text-center mb-6">
+          <BrandLogo className="mx-auto mb-2" />
+          <p className="text-xs text-[#6B7090] font-medium">
+            PostgreSQL Authenticated Digital Asset Account
+          </p>
+        </div>
+
+        <div className="mb-6">
+          <h1 className="text-xl font-bold text-[#1B0B5C] tracking-tight">
+            Sign In to ByteBank
+          </h1>
+          <p className="text-sm text-[#6B7090] mt-1">
+            Access your simulated digital ledger and transaction console.
+          </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 rounded-lg bg-rose-950/80 border border-rose-800 text-rose-300 text-xs">
+          <div
+            role="alert"
+            className="mb-6 p-3.5 rounded-xl bg-[#FFF1F2] border border-[#FECDD3] text-[#D6204F] text-xs leading-relaxed"
+          >
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Email Address or Username</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-              <input
-                type="text"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="rishi.sharma101@email.com or admin"
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
-              />
-            </div>
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <TextField
+            id="loginEmail"
+            label="Email Address or Username"
+            value={email}
+            onChangeValue={setEmail}
+            placeholder="rishi.sharma101@email.com or admin"
+            autoComplete="username"
+            required
+            icon={Mail}
+          />
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500 transition-colors"
-              />
-            </div>
-          </div>
+          <TextField
+            id="loginPassword"
+            type="password"
+            label="Password"
+            value={password}
+            onChangeValue={setPassword}
+            placeholder="••••••••"
+            autoComplete="current-password"
+            required
+            icon={Lock}
+          />
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-2.5 mt-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow-blue transition-all disabled:opacity-50"
+            disabled={loading || !email.trim() || !password}
+            className={`w-full h-[52px] rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-all mt-6 shadow-md ${!loading && email.trim() && password
+                ? 'bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white hover:-translate-y-0.5'
+                : 'bg-[#B9C6FF] text-white cursor-not-allowed'
+              }`}
           >
-            <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
-            <ArrowRight className="w-4 h-4" />
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Authenticating...</span>
+              </>
+            ) : (
+              <>
+                <span>Sign In</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-[#182030] text-xs">
-          <span className="text-[11px] font-mono text-slate-400 block mb-2.5">CLICK TO AUTOFILL PRESET CREDENTIALS:</span>
+        <div className="mt-8 pt-6 border-t border-[#E8ECF6] text-xs">
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#6B7090] mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-[#0B4FFF]" />
+            <span>Click to Autofill Demo Roles:</span>
+          </div>
+
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => setPreset('rishi.sharma101@email.com')}
-              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-blue-500 text-left transition-colors"
+              className="p-2.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] hover:border-[#0B4FFF] text-left transition-colors group"
             >
-              <div className="font-semibold text-blue-400">Customer</div>
-              <div className="text-[10px] text-slate-400 truncate">Rishi Sharma</div>
+              <div className="font-bold text-xs text-[#0B4FFF] group-hover:underline">
+                Customer
+              </div>
+              <div className="text-[10px] text-[#6B7090] truncate mt-0.5">
+                Rishi Sharma
+              </div>
             </button>
 
             <button
               type="button"
               onClick={() => setPreset('admin@bytebank.test')}
-              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-amber-500 text-left transition-colors"
+              className="p-2.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] hover:border-[#FFAB2E] text-left transition-colors group"
             >
-              <div className="font-semibold text-amber-400">Admin</div>
-              <div className="text-[10px] text-slate-400 truncate">Vikram Desai</div>
+              <div className="font-bold text-xs text-[#FFAB2E] group-hover:underline">
+                Admin
+              </div>
+              <div className="text-[10px] text-[#6B7090] truncate mt-0.5">
+                Vikram Desai
+              </div>
             </button>
 
             <button
               type="button"
               onClick={() => setPreset('auditor@bytebank.test')}
-              className="p-2 rounded bg-slate-900 border border-slate-850 hover:border-violet-500 text-left transition-colors"
+              className="p-2.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] hover:border-[#7C3AED] text-left transition-colors group"
             >
-              <div className="font-semibold text-violet-400">Auditor</div>
-              <div className="text-[10px] text-slate-400 truncate">Karthik Menon</div>
+              <div className="font-bold text-xs text-[#7C3AED] group-hover:underline">
+                Auditor
+              </div>
+              <div className="text-[10px] text-[#6B7090] truncate mt-0.5">
+                Karthik Menon
+              </div>
             </button>
           </div>
         </div>
 
-        <div className="mt-6 text-center text-xs text-slate-400">
+        <div className="mt-6 text-center text-xs text-[#6B7090]">
           Need an account?{' '}
-          <Link href="/register" className="text-blue-400 hover:underline font-medium">
+          <Link
+            href="/register"
+            className="text-[#0B4FFF] font-semibold hover:underline"
+          >
             Register new customer
           </Link>
         </div>
-      </div>
+      </AuthCard>
     </div>
   );
 }

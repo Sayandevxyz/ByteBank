@@ -2,293 +2,463 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Phone, MapPin, Calendar, FileText, Lock, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { z } from 'zod';
+import { User, Mail, MapPin, Lock, FileText, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
+import BrandLogo from '@/components/ui/BrandLogo';
+import AuthCard from '@/components/auth/AuthCard';
+import Stepper from '@/components/auth/Stepper';
+import TextField from '@/components/auth/TextField';
+import DateField, { checkIsAdult } from '@/components/auth/DateField';
+
+const step1Schema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, 'Full legal name must be between 2 and 80 characters')
+    .max(80, 'Full legal name must be between 2 and 80 characters'),
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Email address is required')
+    .email('Please enter a valid email address'),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\d{10}$/, 'Mobile number must be exactly 10 digits'),
+  address: z
+    .string()
+    .trim()
+    .min(10, 'Physical address must be at least 10 characters'),
+  dateOfBirth: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Please enter a valid date in DD-MM-YYYY format')
+    .refine((dob) => checkIsAdult(dob), 'You must be at least 18 years old to register'),
+});
+
+const step2Schema = z.object({
+  idProofNumber: z
+    .string()
+    .trim()
+    .min(6, 'ID proof number must be at least 6 characters'),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters'),
+});
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [generalError, setGeneralError] = useState<string | null>(null);
 
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('2000-01-15');
-  const [idType, setIdType] = useState('PAN');
-  const [idProofNumber, setIdProofNumber] = useState('PAN-ABCDE1234F');
-  const [password, setPassword] = useState('password123');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [idType, setIdType] = useState('PAN');
+  const [idProofNumber, setIdProofNumber] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const validateField = (fieldName: string, value: string) => {
+    try {
+      if (fieldName === 'fullName') {
+        step1Schema.shape.fullName.parse(value);
+      } else if (fieldName === 'email') {
+        step1Schema.shape.email.parse(value);
+      } else if (fieldName === 'phone') {
+        step1Schema.shape.phone.parse(value);
+      } else if (fieldName === 'address') {
+        step1Schema.shape.address.parse(value);
+      } else if (fieldName === 'dateOfBirth') {
+        step1Schema.shape.dateOfBirth.parse(value);
+      } else if (fieldName === 'idProofNumber') {
+        step2Schema.shape.idProofNumber.parse(value);
+      } else if (fieldName === 'password') {
+        step2Schema.shape.password.parse(value);
+      }
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[fieldName];
+        return next;
+      });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          [fieldName]: err.issues[0]?.message || 'Invalid value',
+        }));
+      }
+    }
+  };
+
+  const handleBlur = (fieldName: string, value: string) => {
+    setTouched((prev) => ({ ...prev, [fieldName]: true }));
+    validateField(fieldName, value);
+  };
+
+  const handleStep1Continue = (e: React.FormEvent) => {
     e.preventDefault();
-    if (step < 2) {
-      setStep(2);
+    setGeneralError(null);
+
+    const result = step1Schema.safeParse({
+      fullName,
+      email,
+      phone,
+      address,
+      dateOfBirth,
+    });
+
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.issues.forEach((err: z.ZodIssue) => {
+        const key = err.path[0] as string;
+        if (!errors[key]) errors[key] = err.message;
+      });
+      setFieldErrors(errors);
+      setTouched({
+        fullName: true,
+        email: true,
+        phone: true,
+        address: true,
+        dateOfBirth: true,
+      });
+      return;
+    }
+
+    setStep(2);
+  };
+
+  const handleStep2Submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setGeneralError(null);
+
+    const step2Result = step2Schema.safeParse({ idProofNumber, password });
+    if (!step2Result.success) {
+      const errors: Record<string, string> = {};
+      step2Result.error.issues.forEach((err: z.ZodIssue) => {
+        const key = err.path[0] as string;
+        if (!errors[key]) errors[key] = err.message;
+      });
+      setFieldErrors((prev) => ({ ...prev, ...errors }));
+      setTouched((prev) => ({ ...prev, idProofNumber: true, password: true }));
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fullName,
-          phone,
-          email,
-          address,
+          fullName: fullName.trim(),
+          phone: phone.trim(),
+          email: email.trim().toLowerCase(),
+          address: address.trim(),
           dateOfBirth,
-          idProofNumber,
+          idProofNumber: `${idType}-${idProofNumber.trim()}`,
           password,
         }),
       });
 
       const data = await res.json();
+
       if (!res.ok) {
-        setError(data.error?.message || 'Registration failed');
+        const message = data.error?.message || 'Registration failed';
+
+        if (message.toLowerCase().includes('email')) {
+          setFieldErrors((prev) => ({
+            ...prev,
+            email: 'This email is already registered',
+          }));
+          setStep(1);
+        } else if (message.toLowerCase().includes('phone')) {
+          setFieldErrors((prev) => ({
+            ...prev,
+            phone: 'This phone number is already registered',
+          }));
+          setStep(1);
+        } else {
+          setGeneralError(message);
+        }
         return;
       }
 
       router.push('/customer/dashboard');
       router.refresh();
     } catch {
-      setError('Connection failed. Please check backend server.');
+      setGeneralError('Connection failed. Please ensure the server is running.');
     } finally {
       setLoading(false);
     }
   };
 
+  const isStep1Valid =
+    fullName.trim().length >= 2 &&
+    email.trim().length > 0 &&
+    phone.trim().length === 10 &&
+    address.trim().length >= 10 &&
+    checkIsAdult(dateOfBirth);
+
+  const isStep2Valid = idProofNumber.trim().length >= 6 && password.length >= 6;
+
   return (
-    <div className="flex-1 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-lg glass-panel p-8 rounded-2xl border border-[#182030] shadow-glass">
+    <div className="min-h-screen bg-[#F3F7FF] flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <AuthCard maxWidth="max-w-[560px]">
         <div className="text-center mb-6">
-          <Link href="/" className="inline-block hover:opacity-90 transition-opacity">
-            <Image
-              src="/bytebank-logo.svg"
-              alt="ByteBank Logo"
-              width={240}
-              height={75}
-              className="mx-auto"
-              priority
-            />
-          </Link>
-          <p className="text-xs text-slate-400 mt-1">Register Customer Account &bull; Simulated KYC</p>
-        </div>
-
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#182030] text-xs">
-          <div className="flex items-center gap-2">
-            <span
-              className={`w-6 h-6 rounded-full flex items-center justify-center font-bold font-mono ${
-                step >= 1 ? 'bg-blue-500 text-black' : 'bg-slate-800 text-slate-400'
-              }`}
-            >
-              1
-            </span>
-            <span className={step >= 1 ? 'text-white font-semibold' : 'text-slate-400'}>Account Details</span>
-          </div>
-          <div className="h-0.5 w-12 bg-slate-800" />
-          <div className="flex items-center gap-2">
-            <span
-              className={`w-6 h-6 rounded-full flex items-center justify-center font-bold font-mono ${
-                step >= 2 ? 'bg-blue-500 text-black' : 'bg-slate-800 text-slate-400'
-              }`}
-            >
-              2
-            </span>
-            <span className={step >= 2 ? 'text-white font-semibold' : 'text-slate-400'}>Simulated KYC</span>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Open ByteBank Account</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            {step === 1 ? 'Step 1: Master profile information' : 'Step 2: Identity document hash & security credentials'}
+          <BrandLogo className="mx-auto mb-2" />
+          <p className="text-xs text-[#6B7090] font-medium">
+            Simulated Digital Asset &amp; Transaction Ledger
           </p>
         </div>
 
-        {error && (
-          <div className="mb-6 p-3 rounded-lg bg-rose-950/80 border border-rose-800 text-rose-300 text-xs">
-            {error}
+        <Stepper currentStep={step} />
+
+        <div className="mb-6">
+          {step === 1 ? (
+            <div>
+              <h1 className="text-xl font-bold text-[#1B0B5C] tracking-tight">
+                Step 1: Master profile information
+              </h1>
+              <p className="text-sm text-[#6B7090] mt-1">
+                Tell us who you are. All data is synthetic.
+              </p>
+            </div>
+          ) : (
+            <div>
+              <h1 className="text-xl font-bold text-[#1B0B5C] tracking-tight">
+                Step 2: Simulated KYC verification
+              </h1>
+              <p className="text-sm text-[#6B7090] mt-1">
+                Privacy-preserving identity simulation. No real PII stored.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {generalError && (
+          <div
+            role="alert"
+            className="mb-6 p-3.5 rounded-xl bg-[#FFF1F2] border border-[#FECDD3] text-[#D6204F] text-xs leading-relaxed"
+          >
+            {generalError}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {step === 1 ? (
-            <>
+        {step === 1 ? (
+          <form onSubmit={handleStep1Continue} className="space-y-4" noValidate>
+            <TextField
+              id="fullName"
+              label="Full Legal Name"
+              value={fullName}
+              onChangeValue={(val) => {
+                setFullName(val);
+                if (touched.fullName) validateField('fullName', val);
+              }}
+              onBlur={() => handleBlur('fullName', fullName)}
+              placeholder="Your full name"
+              autoComplete="name"
+              required
+              error={touched.fullName ? fieldErrors.fullName : undefined}
+              icon={User}
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <TextField
+                id="email"
+                type="email"
+                label="Email Address"
+                value={email}
+                onChangeValue={(val) => {
+                  setEmail(val);
+                  if (touched.email) validateField('email', val);
+                }}
+                onBlur={() => handleBlur('email', email)}
+                placeholder="name@example.com"
+                autoComplete="email"
+                required
+                error={touched.email ? fieldErrors.email : undefined}
+                icon={Mail}
+              />
+
+              <TextField
+                id="phone"
+                type="tel"
+                inputMode="tel"
+                label="Mobile Number"
+                value={phone}
+                onChangeValue={(val) => {
+                  const digits = val.replace(/\D/g, '').slice(0, 10);
+                  setPhone(digits);
+                  if (touched.phone) validateField('phone', digits);
+                }}
+                onBlur={() => handleBlur('phone', phone)}
+                placeholder="10-digit mobile number"
+                prefixText="+91"
+                autoComplete="tel"
+                required
+                maxLength={10}
+                error={touched.phone ? fieldErrors.phone : undefined}
+              />
+            </div>
+
+            <TextField
+              id="address"
+              label="Physical Address"
+              value={address}
+              onChangeValue={(val) => {
+                setAddress(val);
+                if (touched.address) validateField('address', val);
+              }}
+              onBlur={() => handleBlur('address', address)}
+              placeholder="House no, street, city, PIN"
+              autoComplete="street-address"
+              required
+              error={touched.address ? fieldErrors.address : undefined}
+              icon={MapPin}
+            />
+
+            <DateField
+              id="dateOfBirth"
+              label="Date of Birth (DD-MM-YYYY)"
+              isoValue={dateOfBirth}
+              onChangeIso={(val) => {
+                setDateOfBirth(val);
+                if (touched.dateOfBirth) validateField('dateOfBirth', val);
+              }}
+              onBlur={() => handleBlur('dateOfBirth', dateOfBirth)}
+              required
+              error={touched.dateOfBirth ? fieldErrors.dateOfBirth : undefined}
+            />
+
+            <button
+              type="submit"
+              disabled={!isStep1Valid}
+              className={`w-full h-[52px] rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-all mt-6 shadow-md ${
+                isStep1Valid
+                  ? 'bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white hover:-translate-y-0.5'
+                  : 'bg-[#B9C6FF] text-white cursor-not-allowed'
+              }`}
+            >
+              <span>Continue to Simulated KYC</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleStep2Submit} className="space-y-4" noValidate>
+            <div className="p-3.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] text-xs text-[#2B2F4A] space-y-1.5">
+              <div className="flex items-center gap-2 font-bold text-[#0B4FFF]">
+                <ShieldCheck className="w-4 h-4" />
+                <span>Privacy-Preserving KYC Simulation</span>
+              </div>
+              <p className="text-[11px] text-[#6B7090] leading-relaxed">
+                ByteBank stores only cryptographic SHA-256 hashes and the non-sensitive last 4 digits (e.g. <code>9901</code>) in the database to prevent PII exposure.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Full Legal Name</label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Aditya Sharma"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
-                  />
-                </div>
+                <label
+                  htmlFor="idType"
+                  className="block text-sm font-semibold text-[#2B2F4A] mb-1.5"
+                >
+                  ID Document Type
+                </label>
+                <select
+                  id="idType"
+                  value={idType}
+                  onChange={(e) => setIdType(e.target.value)}
+                  className="w-full h-12 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] hover:border-[#B9C6FF] px-3.5 text-sm text-[#1B0B5C] focus:outline-none focus:border-[#0B4FFF] focus:ring-3 focus:ring-[#0B4FFF]/18 transition-all"
+                >
+                  <option value="PAN">PAN Card</option>
+                  <option value="AADHAAR">Aadhaar Card</option>
+                  <option value="PASSPORT">Passport</option>
+                </select>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Email (Unique)</label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="aditya@example.com"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
-                    />
-                  </div>
-                </div>
+              <TextField
+                id="idProofNumber"
+                label="Simulated ID Number"
+                value={idProofNumber}
+                onChangeValue={(val) => {
+                  setIdProofNumber(val);
+                  if (touched.idProofNumber) validateField('idProofNumber', val);
+                }}
+                onBlur={() => handleBlur('idProofNumber', idProofNumber)}
+                placeholder="e.g. ABCDE1234F"
+                required
+                error={touched.idProofNumber ? fieldErrors.idProofNumber : undefined}
+                icon={FileText}
+              />
+            </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Phone Number (Unique)</label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="9876543999"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
-                    />
-                  </div>
-                </div>
-              </div>
+            <TextField
+              id="password"
+              type="password"
+              label="Account Password"
+              value={password}
+              onChangeValue={(val) => {
+                setPassword(val);
+                if (touched.password) validateField('password', val);
+              }}
+              onBlur={() => handleBlur('password', password)}
+              placeholder="Create a secure password"
+              autoComplete="new-password"
+              required
+              error={touched.password ? fieldErrors.password : undefined}
+              icon={Lock}
+            />
 
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Physical Address</label>
-                <div className="relative">
-                  <MapPin className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    required
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="25 MG Road, Bengaluru 560001"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white placeholder-slate-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Date of Birth</label>
-                <div className="relative">
-                  <Calendar className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="date"
-                    required
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white"
-                  />
-                </div>
-              </div>
-
+            <div className="flex items-center gap-3 pt-3">
               <button
                 type="button"
-                onClick={() => {
-                  if (fullName && email && phone && address) setStep(2);
-                  else setError('Please complete all personal fields before proceeding');
-                }}
-                className="w-full py-2.5 mt-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow-blue transition-all"
+                onClick={() => setStep(1)}
+                className="h-[52px] px-6 rounded-full bg-[#F6F8FF] border border-[#E1E6F5] text-sm font-semibold text-[#2B2F4A] hover:bg-[#EBF2FF] hover:border-[#B9C6FF] transition-all"
               >
-                <span>Continue to Simulated KYC</span>
-                <ArrowRight className="w-4 h-4" />
+                Back
               </button>
-            </>
-          ) : (
-            <>
-              <div className="p-4 rounded-xl bg-[#111c33]/30 border border-blue-800/60 text-xs text-slate-300 space-y-2">
-                <div className="flex items-center gap-2 font-semibold text-blue-400">
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Privacy-Preserving KYC Simulation</span>
-                </div>
-                <p className="text-[11px] leading-relaxed">
-                  ByteBank stores only cryptographic SHA-256 hashes and the non-sensitive last 4 digits (e.g. <code>9901</code>)
-                  in the customer table to prevent PII exposure.
-                </p>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">ID Document Type</label>
-                  <select
-                    value={idType}
-                    onChange={(e) => setIdType(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] text-sm text-white focus:outline-none focus:border-blue-500"
-                  >
-                    <option value="PAN">PAN Card</option>
-                    <option value="AADHAAR">Aadhaar Card</option>
-                    <option value="PASSPORT">Passport</option>
-                  </select>
-                </div>
+              <button
+                type="submit"
+                disabled={loading || !isStep2Valid}
+                className={`flex-1 h-[52px] rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-all shadow-md ${
+                  !loading && isStep2Valid
+                    ? 'bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white hover:-translate-y-0.5'
+                    : 'bg-[#B9C6FF] text-white cursor-not-allowed'
+                }`}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Creating Account...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Complete Registration</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        )}
 
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Simulated ID Number</label>
-                  <input
-                    type="text"
-                    required
-                    value={idProofNumber}
-                    onChange={(e) => setIdProofNumber(e.target.value)}
-                    placeholder="PAN-ABCDE1234F"
-                    className="w-full px-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Account Password</label>
-                <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[#0c101a] border border-[#182030] focus:border-blue-500 focus:outline-none text-sm text-white"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-4">
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="flex-1 py-2.5 rounded-lg bg-slate-900 border border-[#182030] text-slate-300 hover:text-white text-sm"
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-glow-blue disabled:opacity-50"
-                >
-                  <span>{loading ? 'Creating Account...' : 'Complete Registration'}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </>
-          )}
-        </form>
-
-        <div className="mt-6 text-center text-xs text-slate-400">
+        <div className="mt-8 text-center text-xs text-[#6B7090]">
           Already have an account?{' '}
-          <Link href="/login" className="text-blue-400 hover:underline">
+          <Link
+            href="/login"
+            className="text-[#0B4FFF] font-semibold hover:underline"
+          >
             Sign In
           </Link>
         </div>
-      </div>
+      </AuthCard>
     </div>
   );
 }
