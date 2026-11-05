@@ -13,7 +13,15 @@ const loginSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON request payload' } },
+        { status: 400 }
+      );
+    }
     const parsed = loginSchema.parse(body);
 
     const identifier = (parsed.email || parsed.username || parsed.identifier || '').trim();
