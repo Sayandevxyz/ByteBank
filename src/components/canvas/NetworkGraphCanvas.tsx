@@ -2,7 +2,7 @@
 
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, Line, Text } from '@react-three/drei';
+import { Sphere, Line, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface AccountNode {
@@ -52,20 +52,19 @@ function GraphScene() {
 
   return (
     <group ref={groupRef}>
-
       {edges.map((edge, idx) => {
         const color =
           edge.status === 'success'
-            ? '#10b981'
+            ? '#0E9F73'
             : edge.status === 'failed'
-            ? '#ef4444'
-            : '#f59e0b';
+            ? '#D6204F'
+            : '#FFAB2E';
         return (
           <Line
             key={idx}
             points={[edge.from, edge.to]}
             color={color}
-            lineWidth={edge.status === 'failed' ? 2 : 1}
+            lineWidth={edge.status === 'failed' ? 2 : 1.5}
             dashed={edge.status === 'failed'}
             dashScale={2}
           />
@@ -74,10 +73,10 @@ function GraphScene() {
 
       {nodes.map((node) => {
         const nodeColor = node.isSystem
-          ? '#eab308'
+          ? '#FFAB2E'
           : node.status === 'frozen'
-          ? '#ef4444'
-          : '#0ea5e9';
+          ? '#F43F6E'
+          : '#0B4FFF';
 
         return (
           <group key={node.id} position={node.position}>
@@ -85,13 +84,16 @@ function GraphScene() {
               <meshStandardMaterial
                 color={nodeColor}
                 emissive={nodeColor}
-                emissiveIntensity={0.8}
-                metalness={0.9}
+                emissiveIntensity={0.6}
+                roughness={0.2}
+                metalness={0.7}
               />
             </Sphere>
-            <Text position={[0, -0.4, 0]} fontSize={0.16} color="#e2e8f0" anchorX="center">
-              {node.label}
-            </Text>
+            <Html center position={[0, -0.42, 0]} distanceFactor={8} zIndexRange={[100, 0]}>
+              <div className="px-2 py-0.5 rounded-full bg-white/95 backdrop-blur-xs border border-[#E8ECF6] shadow-xs text-[10px] font-mono font-bold text-[#1B0B5C] whitespace-nowrap pointer-events-none select-none">
+                {node.label}
+              </div>
+            </Html>
           </group>
         );
       })}
@@ -101,18 +103,18 @@ function GraphScene() {
 
 export default function NetworkGraphCanvas() {
   return (
-    <div className="w-full h-80 relative rounded-xl bg-slate-950/70 border border-slate-800">
+    <div className="w-full h-80 relative rounded-2xl bg-gradient-to-b from-[#F3F7FF] via-white to-[#EAF1FF] border border-[#E8ECF6] overflow-hidden">
       <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ antialias: true, alpha: true }}>
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[5, 10, 5]} intensity={1.5} />
-        <pointLight position={[-5, -5, -3]} intensity={1} color="#38bdf8" />
+        <ambientLight intensity={1.2} />
+        <directionalLight position={[5, 10, 5]} intensity={1.8} color="#ffffff" />
+        <pointLight position={[-5, -5, -3]} intensity={1.2} color="#0B4FFF" />
         <GraphScene />
       </Canvas>
-      <div className="absolute bottom-2 left-3 flex gap-4 text-[11px] font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded border border-slate-800">
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" /> Success</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-400" /> Insufficient/Rejected</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" /> System/Treasury</span>
-        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-sky-400" /> Active Customer</span>
+      <div className="absolute bottom-3 left-3 flex flex-wrap gap-2 text-[11px] font-mono text-[#2B2F4A] bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-full border border-[#E8ECF6] shadow-xs">
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#1FD6A0]" /> Success</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#F43F6E]" /> Insufficient/Rejected</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#FFAB2E]" /> System/Treasury</span>
+        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#0B4FFF]" /> Active Customer</span>
       </div>
     </div>
   );

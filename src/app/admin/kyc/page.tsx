@@ -3,18 +3,18 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  ShieldCheck,
   ShieldAlert,
   XCircle,
   CheckCircle2,
   RefreshCw,
-  Search,
-  Filter,
-  FileText,
   AlertCircle,
   Hash,
   UserCheck,
+  ArrowLeft,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import StatusChip from '../../../components/app/StatusChip';
 
 export default function AdminKycPage() {
   const [customers, setCustomers] = useState<any[]>([]);
@@ -79,59 +79,48 @@ export default function AdminKycPage() {
   };
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-purple-950/80 border border-purple-800 text-purple-400 font-semibold">
-              COMPLIANCE QUEUE
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              Audit Triggers Active
-            </span>
-          </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">KYC Verification Operations</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Review synthetic customer identification hashes, verify documentation, and approve account trading capabilities.
-          </p>
-        </div>
-
-        <Link
-          href="/admin/dashboard"
-          className="text-xs font-mono text-blue-400 hover:text-blue-300"
-        >
-          &larr; Back to Admin Dashboard
-        </Link>
-      </div>
+    <AppShell>
+      <PageHeader
+        title="KYC Verification Operations"
+        subtitle="Review synthetic customer identification hashes, verify documentation, and approve account trading capabilities."
+        actions={
+          <Link
+            href="/admin/dashboard"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-[#EEF3FF] border border-[#E8ECF6] text-[#0B4FFF] text-xs font-semibold transition-colors shadow-2xs h-11"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Admin Dashboard</span>
+          </Link>
+        }
+      />
 
       {message && (
         <div
-          className={`p-4 rounded-xl text-xs flex items-center gap-2 ${
+          className={`p-4 rounded-2xl text-xs flex items-center gap-2.5 border ${
             message.type === 'success'
-              ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-300'
-              : 'bg-rose-950/60 border border-rose-800 text-rose-300'
+              ? 'bg-[#E6FBF4] border-[#99F6E4] text-[#0E9F73]'
+              : 'bg-[#FFE9EF] border-[#FECDD3] text-[#D6204F]'
           }`}
         >
           {message.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0E9F73] shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-[#D6204F] shrink-0" />
           )}
-          <span>{message.text}</span>
+          <span className="font-medium">{message.text}</span>
         </div>
       )}
 
-      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex items-center justify-between">
-        <div className="flex rounded-xl bg-slate-900 border border-[#182030] p-1">
+      <div className="p-4 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-[#EEF1FA]">
           {(['pending', 'verified', 'rejected', 'all'] as const).map((st) => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${
+              className={`px-4 py-2 rounded-lg text-xs font-bold capitalize transition-all ${
                 statusFilter === st
-                  ? 'bg-purple-600 text-white font-bold shadow-glow-blue'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#0B4FFF] text-white shadow-xs'
+                  : 'text-[#6B7090] hover:text-[#1B0B5C]'
               }`}
             >
               {st}
@@ -141,75 +130,63 @@ export default function AdminKycPage() {
 
         <button
           onClick={fetchKycList}
-          className="text-xs font-mono text-slate-400 hover:text-white flex items-center gap-1.5"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#F6F8FF] hover:bg-[#EEF3FF] border border-[#E8ECF6] text-xs font-mono text-[#0B4FFF] font-semibold transition-colors"
         >
-          <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span>Refresh Queue</span>
         </button>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
+      <div className="rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white overflow-hidden">
         {loading ? (
-          <div className="py-20 text-center text-slate-500 text-xs font-mono">
-            <RefreshCw className="w-4 h-4 animate-spin text-purple-400 inline mr-2" />
+          <div className="py-20 text-center text-[#6B7090] text-xs font-mono">
+            <RefreshCw className="w-4 h-4 animate-spin text-[#0B4FFF] inline mr-2" />
             Querying PostgreSQL Customer Registry...
           </div>
         ) : customers.length === 0 ? (
-          <div className="py-20 text-center text-slate-500 text-xs font-mono">
+          <div className="py-20 text-center text-[#6B7090] text-xs font-mono">
             No customers found matching filter &quot;{statusFilter}&quot;.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold font-mono">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">Cust ID</th>
-                  <th className="py-3 px-4 font-semibold">Full Name</th>
-                  <th className="py-3 px-4 font-semibold">Contact</th>
-                  <th className="py-3 px-4 font-semibold">ID Proof (SHA-256)</th>
-                  <th className="py-3 px-4 font-semibold">Status</th>
-                  <th className="py-3 px-4 font-semibold">Registered</th>
-                  <th className="py-3 px-4 font-semibold text-right">Actions</th>
+                  <th className="py-3.5 px-4">Cust ID</th>
+                  <th className="py-3.5 px-4">Full Name</th>
+                  <th className="py-3.5 px-4">Contact</th>
+                  <th className="py-3.5 px-4">ID Proof (SHA-256)</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-4">Registered</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
                 {customers.map((c) => (
-                  <tr key={c.customer_id} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-blue-400 font-bold">
+                  <tr key={c.customer_id} className="hover:bg-[#F6F8FF] transition-colors h-14">
+                    <td className="py-3 px-4 font-mono font-bold text-[#0B4FFF]">
                       CUST{c.customer_id}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="text-white font-medium">{c.full_name}</div>
-                      <div className="text-[10px] text-slate-500">DOB: {c.dob}</div>
+                      <div className="text-[#1B0B5C] font-semibold">{c.full_name}</div>
+                      <div className="text-[10px] text-[#6B7090] font-mono">DOB: {c.dob}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="text-slate-300">{c.email}</div>
-                      <div className="text-[10px] text-slate-500">{c.phone}</div>
+                      <div className="text-[#2B2F4A]">{c.email}</div>
+                      <div className="text-[10px] text-[#6B7090] font-mono">{c.phone}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex items-center gap-1.5 text-slate-400">
-                        <Hash className="w-3 h-3 text-blue-400 shrink-0" />
-                        <span className="font-mono text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-[#182030] truncate max-w-[140px]">
+                      <div className="flex items-center gap-1.5 text-[#6B7090]">
+                        <Hash className="w-3.5 h-3.5 text-[#0B4FFF] shrink-0" />
+                        <span className="font-mono text-[10px] bg-[#EEF3FF] text-[#0B4FFF] px-2 py-0.5 rounded-full border border-[#B9C6FF] truncate max-w-[140px]">
                           {c.id_proof_hash}
                         </span>
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase inline-flex items-center gap-1 ${
-                          c.kyc_status === 'verified'
-                            ? 'bg-emerald-950/70 border border-emerald-800 text-emerald-400'
-                            : c.kyc_status === 'pending'
-                            ? 'bg-amber-950/70 border border-amber-800 text-amber-400'
-                            : 'bg-rose-950/70 border border-rose-800 text-rose-400'
-                        }`}
-                      >
-                        {c.kyc_status === 'verified' && <CheckCircle2 className="w-2.5 h-2.5" />}
-                        {c.kyc_status === 'pending' && <ShieldAlert className="w-2.5 h-2.5" />}
-                        {c.kyc_status === 'rejected' && <XCircle className="w-2.5 h-2.5" />}
-                        {c.kyc_status}
-                      </span>
+                      <StatusChip status={c.kyc_status} />
                     </td>
-                    <td className="py-3 px-4 text-slate-500 text-[11px]">
+                    <td className="py-3 px-4 text-[#6B7090] text-[11px] font-mono">
                       {new Date(c.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -218,22 +195,22 @@ export default function AdminKycPage() {
                           <button
                             onClick={() => handleUpdateStatus(c.customer_id, 'verified')}
                             disabled={processingId === c.customer_id}
-                            className="px-2.5 py-1 rounded bg-emerald-900/60 hover:bg-emerald-800 border border-emerald-700 text-emerald-200 text-[10px] font-mono transition-colors inline-flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-full bg-[#1FD6A0] hover:bg-[#19b98a] text-white text-[11px] font-bold font-mono transition-colors inline-flex items-center gap-1 shadow-2xs disabled:opacity-50"
                           >
                             <UserCheck className="w-3 h-3" />
-                            Approve
+                            <span>Approve</span>
                           </button>
                           <button
                             onClick={() => setRejectModalCustomer(c)}
                             disabled={processingId === c.customer_id}
-                            className="px-2.5 py-1 rounded bg-rose-900/60 hover:bg-rose-800 border border-rose-700 text-rose-200 text-[10px] font-mono transition-colors inline-flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-full bg-[#F43F6E] hover:bg-[#d6204f] text-white text-[11px] font-bold font-mono transition-colors inline-flex items-center gap-1 shadow-2xs disabled:opacity-50"
                           >
                             <XCircle className="w-3 h-3" />
-                            Reject
+                            <span>Reject</span>
                           </button>
                         </div>
                       ) : (
-                        <span className="text-slate-600 text-[10px] font-mono">Processed</span>
+                        <span className="text-[#6B7090] text-[11px] font-mono">Processed</span>
                       )}
                     </td>
                   </tr>
@@ -245,14 +222,14 @@ export default function AdminKycPage() {
       </div>
 
       {rejectModalCustomer && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-panel p-6 rounded-2xl border border-rose-800/80 bg-slate-950 max-w-md w-full space-y-4">
-            <div className="flex items-center gap-2 text-rose-400 font-bold text-sm">
-              <ShieldAlert className="w-4 h-4" />
+        <div className="fixed inset-0 z-50 bg-[#1B0B5C]/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-2xl max-w-md w-full space-y-4">
+            <div className="flex items-center gap-2 text-[#D6204F] font-bold text-sm">
+              <ShieldAlert className="w-5 h-5" />
               <span>Reject KYC for {rejectModalCustomer.full_name}</span>
             </div>
 
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-[#6B7090] leading-relaxed">
               Provide a formal compliance rejection reason. This reason will be written to the database audit log and visible to the customer.
             </p>
 
@@ -261,7 +238,7 @@ export default function AdminKycPage() {
               placeholder="e.g. ID proof hash unreadable or expired document."
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
-              className="w-full bg-slate-900 border border-[#182030] rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-rose-500"
+              className="w-full bg-[#F6F8FF] border border-[#E1E6F5] focus:border-[#0B4FFF] rounded-xl p-3 text-[#1B0B5C] font-mono text-xs focus:outline-none focus:ring-2 focus:ring-[#0B4FFF]/20"
             />
 
             <div className="flex items-center justify-end gap-3 pt-2">
@@ -271,7 +248,7 @@ export default function AdminKycPage() {
                   setRejectModalCustomer(null);
                   setRejectionReason('');
                 }}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono"
+                className="px-4 py-2 rounded-full bg-[#F6F8FF] hover:bg-[#EEF1FA] text-[#2B2F4A] text-xs font-semibold transition-colors"
               >
                 Cancel
               </button>
@@ -285,7 +262,7 @@ export default function AdminKycPage() {
                   )
                 }
                 disabled={processingId === rejectModalCustomer.customer_id}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono shadow-glow-blue"
+                className="px-5 py-2 rounded-full bg-[#F43F6E] hover:bg-[#d6204f] text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50"
               >
                 Confirm Rejection
               </button>
@@ -293,6 +270,6 @@ export default function AdminKycPage() {
           </div>
         </div>
       )}
-    </div>
+    </AppShell>
   );
 }

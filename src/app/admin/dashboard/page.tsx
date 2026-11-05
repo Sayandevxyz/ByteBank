@@ -10,19 +10,20 @@ import {
   Activity,
   Layers,
   CheckCircle2,
-  AlertTriangle,
   ArrowRight,
-  RefreshCw,
-  Search,
   Scale,
   Sliders,
   FlaskConical,
+  Search,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import SectionCard from '../../../components/app/SectionCard';
 
 const NetworkGraphCanvas = dynamic(() => import('../../../components/canvas/NetworkGraphCanvas'), {
   ssr: false,
   loading: () => (
-    <div className="h-80 w-full flex items-center justify-center text-slate-500 text-xs font-mono">
+    <div className="h-80 w-full flex items-center justify-center text-[#6B7090] text-xs font-mono bg-[#F6F8FF] rounded-2xl border border-[#E8ECF6]">
       Initializing 3D Transaction Network Graph...
     </div>
   ),
@@ -65,207 +66,188 @@ export default function AdminDashboardPage() {
   const totals = stats?.totals || {};
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-[#182030]">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-purple-950/80 border border-purple-800 text-purple-400 font-bold">
-              ROLE: BYTEBANK_ADMIN
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              ACID &amp; RLS Superuser
-            </span>
+    <AppShell>
+      <PageHeader
+        title="Administrative Control Center"
+        subtitle="Real-time telemetry, transaction network graph, compliance reviews, and database orchestration."
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/admin/lab"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white text-xs font-bold transition-all shadow-xs h-11"
+            >
+              <FlaskConical className="w-4 h-4" />
+              <span>Open DBMS Lab</span>
+            </Link>
+            <Link
+              href="/admin/reconciliation"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-[#EEF3FF] border border-[#0B4FFF] text-[#0B4FFF] text-xs font-bold transition-all shadow-xs h-11"
+            >
+              <Scale className="w-4 h-4" />
+              <span>Run Reconciliation</span>
+            </Link>
           </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Administrative Control Center</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Real-time telemetry, transaction network graph, compliance reviews, and database orchestration.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Link
-            href="/admin/lab"
-            className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow-blue transition-all"
-          >
-            <FlaskConical className="w-4 h-4" />
-            Open DBMS Lab
-          </Link>
-          <Link
-            href="/admin/reconciliation"
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
-          >
-            <Scale className="w-4 h-4 text-blue-400" />
-            Run Reconciliation
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Users className="w-3.5 h-3.5 text-blue-400" /> Total Customers
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#0B4FFF] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#0B4FFF]" /> Total Customers
           </div>
-          <div className="text-xl font-bold font-mono text-white">
+          <div className="text-2xl font-bold font-mono text-[#1B0B5C] tabular-nums">
             {totals.customer_count || '125'}
           </div>
-          <div className="text-[10px] text-slate-500">Seeded CUST101-225</div>
+          <div className="text-[11px] text-[#6B7090]">Seeded CUST101-225</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Wallet className="w-3.5 h-3.5 text-emerald-400" /> Customer Accounts
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#1FD6A0] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Wallet className="w-3.5 h-3.5 text-[#0E9F73]" /> Accounts
           </div>
-          <div className="text-xl font-bold font-mono text-white">
+          <div className="text-2xl font-bold font-mono text-[#1B0B5C] tabular-nums">
             {totals.account_count || '125'}
           </div>
-          <div className="text-[10px] text-slate-500">1:1 Customer mapping</div>
+          <div className="text-[11px] text-[#6B7090]">1:1 Customer mapping</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" /> Pending KYC
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#FFAB2E] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <ShieldAlert className="w-3.5 h-3.5 text-[#FFAB2E]" /> Pending KYC
           </div>
-          <div className="text-xl font-bold font-mono text-amber-400">
+          <div className="text-2xl font-bold font-mono text-[#D97706] tabular-nums">
             {pendingKycCount}
           </div>
-          <Link href="/admin/kyc" className="text-[10px] text-blue-400 hover:underline">
+          <Link href="/admin/kyc" className="text-[11px] font-semibold text-[#0B4FFF] hover:underline">
             Review queue &rarr;
           </Link>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Activity className="w-3.5 h-3.5 text-purple-400" /> Total Txns
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#8B5CF6] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Activity className="w-3.5 h-3.5 text-[#8B5CF6]" /> Total Txns
           </div>
-          <div className="text-xl font-bold font-mono text-white">
+          <div className="text-2xl font-bold font-mono text-[#1B0B5C] tabular-nums">
             {totals.total_transactions || '0'}
           </div>
-          <div className="text-[10px] text-slate-500">
+          <div className="text-[11px] text-[#6B7090]">
             {totals.total_ledger_entries || '0'} Ledger rows
           </div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Scale className="w-3.5 h-3.5 text-teal-400" /> Reconciliation
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#1FD6A0] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Scale className="w-3.5 h-3.5 text-[#0E9F73]" /> Reconciliation
           </div>
-          <div className="text-xl font-bold font-mono text-emerald-400 flex items-center gap-1">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <div className="text-xl font-bold font-mono text-[#0E9F73] flex items-center gap-1 tabular-nums">
+            <CheckCircle2 className="w-4 h-4 text-[#0E9F73]" />
             {reconciliation?.mismatched_pairs === '0' || !reconciliation?.mismatched_pairs
               ? 'Balanced'
               : `${reconciliation?.mismatched_pairs} Drift`}
           </div>
-          <div className="text-[10px] text-slate-500">
+          <div className="text-[11px] text-[#6B7090]">
             {reconciliation?.matched_pairs || '868'} pairs checked
           </div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Layers className="w-3.5 h-3.5 text-rose-400" /> Audit Triggers
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#F43F6E] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Layers className="w-3.5 h-3.5 text-[#F43F6E]" /> Audit Triggers
           </div>
-          <div className="text-xl font-bold font-mono text-white">
+          <div className="text-2xl font-bold font-mono text-[#1B0B5C] tabular-nums">
             {totals.total_audit_logs || '0'}
           </div>
-          <div className="text-[10px] text-slate-500">Automated change capture</div>
+          <div className="text-[11px] text-[#6B7090]">Automated change capture</div>
         </div>
       </div>
 
-      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#182030] gap-2">
-          <div>
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Activity className="w-4 h-4 text-blue-400" />
-              Live Transaction Flow Network (3D Topology)
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Force-directed 3D visualization of account nodes, Treasury liquidity distribution, and active transfer edges.
-            </p>
-          </div>
+      <SectionCard
+        title="Live Transaction Flow Network (3D Topology)"
+        subtitle="Force-directed 3D visualization of account nodes, Treasury liquidity distribution, and active transfer edges."
+        action={
           <div className="flex items-center gap-4 text-xs font-mono">
-            <span className="flex items-center gap-1.5 text-blue-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block shadow-glow-blue" /> System Treasury
+            <span className="flex items-center gap-1.5 text-[#FFAB2E] font-medium">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FFAB2E] inline-block shadow-xs" /> System Treasury
             </span>
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block shadow-glow-blue" /> Verified Customers
+            <span className="flex items-center gap-1.5 text-[#0E9F73] font-medium">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#1FD6A0] inline-block shadow-xs" /> Verified Customers
             </span>
-            <span className="flex items-center gap-1.5 text-rose-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block shadow-glow-blue" /> Frozen / Flagged
+            <span className="flex items-center gap-1.5 text-[#D6204F] font-medium">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#F43F6E] inline-block shadow-xs" /> Frozen / Flagged
             </span>
           </div>
-        </div>
-
-        <div className="h-96 w-full rounded-xl overflow-hidden bg-slate-950/60 border border-slate-900 relative">
+        }
+      >
+        <div className="h-96 w-full rounded-2xl overflow-hidden relative">
           <NetworkGraphCanvas />
         </div>
-      </div>
+      </SectionCard>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link
           href="/admin/kyc"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-[#111c33] border border-blue-800 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <ShieldAlert className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#EEF3FF] border border-[#B9C6FF] text-[#0B4FFF] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <ShieldAlert className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            KYC Review Queue
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>KYC Review Queue</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Inspect pending customer onboarding, verify SHA-256 ID proof hashes, approve or reject with audit triggers.
           </p>
         </Link>
 
         <Link
           href="/admin/accounts"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-800 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Wallet className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#F5F3FF] border border-[#DDD6FE] text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Wallet className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            Account Management
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>Account Management</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Freeze and unfreeze accounts with mandatory reason codes, view ledger balances, and enforce compliance holds.
           </p>
         </Link>
 
         <Link
           href="/admin/assets"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Sliders className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#E6FBF4] border border-[#99F6E4] text-[#0E9F73] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Sliders className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            Assets &amp; Prices
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>Assets &amp; Prices</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Configure precision scales, define new crypto/stock pairs, and adjust simulated reference exchange rates with live SSE broadcast.
           </p>
         </Link>
 
         <Link
           href="/admin/customer-lookup"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-blue-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-800 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Search className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#FEF3C7] border border-[#FDE68A] text-[#D97706] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Search className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            Controlled Staff Lookup
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>Controlled Staff Lookup</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Secure customer data viewer enforcing mandatory purpose codes, automatically recording access logs.
           </p>
         </Link>
       </div>
-    </div>
+    </AppShell>
   );
 }

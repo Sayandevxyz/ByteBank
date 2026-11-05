@@ -17,7 +17,12 @@ import {
   Lock,
   CheckCircle2,
   FileCheck,
+  ArrowLeft,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import SectionCard from '../../../components/app/SectionCard';
+import StatusChip from '../../../components/app/StatusChip';
 
 const PURPOSE_OPTIONS = [
   { code: 'KYC_VERIFICATION', label: 'KYC Verification (Document Authenticity Check)' },
@@ -86,39 +91,28 @@ export default function CustomerLookupPage() {
   };
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <AppShell>
+      <PageHeader
+        title="Customer Profile & KYC Lookup"
+        subtitle="Access customer PII and portfolio history through a controlled, purpose-coded database API path."
+        actions={
+          <Link
+            href="/admin/dashboard"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-[#EEF3FF] border border-[#E8ECF6] text-[#0B4FFF] text-xs font-semibold transition-colors shadow-2xs h-11"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Admin Dashboard</span>
+          </Link>
+        }
+      />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-amber-950/80 border border-amber-800 text-amber-400 font-semibold">
-              CONTROLLED STAFF ACCESS PATH
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              Mandatory access_log Auditing
-            </span>
-          </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Customer Profile &amp; KYC Lookup</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Access customer PII and portfolio history through a controlled, purpose-coded database API path.
-          </p>
-        </div>
-
-        <Link
-          href="/admin/dashboard"
-          className="text-xs font-mono text-blue-400 hover:text-blue-300"
-        >
-          &larr; Back to Admin Dashboard
-        </Link>
-      </div>
-
-      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-6">
-        <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-800/40 text-amber-200/90 text-xs flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+      <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white space-y-6">
+        <div className="p-4 rounded-xl bg-[#FEF3C7]/50 border border-[#FDE68A] text-[#92400E] text-xs flex items-start gap-3">
+          <ShieldAlert className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <div className="font-bold text-amber-300">Privacy &amp; Compliance Requirement:</div>
-            <p className="text-[11px] leading-relaxed text-amber-200/70">
-              By submitting this query, your staff session credentials and specified purpose code will be immutably recorded into the PostgreSQL <code className="text-amber-300 font-mono">access_log</code> table for independent audit by regulatory compliance officers.
+            <div className="font-bold text-[#B45309]">Privacy &amp; Compliance Requirement:</div>
+            <p className="text-[11px] leading-relaxed text-[#92400E]">
+              By submitting this query, your staff session credentials and specified purpose code will be immutably recorded into the PostgreSQL <code className="text-[#0B4FFF] font-mono font-bold">access_log</code> table for independent audit by regulatory compliance officers.
             </p>
           </div>
         </div>
@@ -126,28 +120,28 @@ export default function CustomerLookupPage() {
         <form onSubmit={handleLookup} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-7 space-y-1.5">
-              <label className="text-xs text-slate-400 font-mono">
+              <label className="text-xs font-semibold text-[#2B2F4A]">
                 Customer Identifier (Customer ID, Account No, or Email)
               </label>
               <div className="relative">
-                <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-[#6B7090] absolute left-3 top-3" />
                 <input
                   type="text"
                   required
                   placeholder="e.g. CUST101, BB-ACC-5001, or rahul.sharma@example.com"
                   value={queryInput}
                   onChange={(e) => setQueryInput(e.target.value)}
-                  className="w-full bg-slate-900 border border-[#182030] rounded-xl pl-9 pr-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-amber-500"
+                  className="w-full bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl pl-9 pr-3 py-2.5 text-[#1B0B5C] font-mono text-xs focus:outline-none focus:border-[#0B4FFF] focus:ring-2 focus:ring-[#0B4FFF]/20"
                 />
               </div>
             </div>
 
             <div className="md:col-span-5 space-y-1.5">
-              <label className="text-xs text-slate-400 font-mono">Mandatory Access Purpose Code</label>
+              <label className="text-xs font-semibold text-[#2B2F4A]">Mandatory Access Purpose Code</label>
               <select
                 value={purposeCode}
                 onChange={(e) => setPurposeCode(e.target.value)}
-                className="w-full bg-slate-900 border border-[#182030] rounded-xl px-3 py-2 text-white font-mono text-xs focus:outline-none focus:border-amber-500"
+                className="w-full bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-3 py-2.5 text-[#1B0B5C] text-xs focus:outline-none focus:border-[#0B4FFF] focus:ring-2 focus:ring-[#0B4FFF]/20"
               >
                 {PURPOSE_OPTIONS.map((opt) => (
                   <option key={opt.code} value={opt.code}>
@@ -158,15 +152,15 @@ export default function CustomerLookupPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2">
-            <div className="text-[11px] font-mono text-slate-500">
-              Try seeded master accounts: <span className="text-blue-400">CUST101</span>, <span className="text-blue-400">CUST104</span>, or <span className="text-blue-400">BB-ACC-5004</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+            <div className="text-xs font-mono text-[#6B7090]">
+              Try seeded master accounts: <span className="text-[#0B4FFF] font-bold">CUST101</span>, <span className="text-[#0B4FFF] font-bold">CUST104</span>, or <span className="text-[#0B4FFF] font-bold">BB-ACC-5004</span>
             </div>
 
             <button
               type="submit"
               disabled={loading || !queryInput.trim()}
-              className="px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 text-white font-semibold text-xs font-mono shadow-glow-blue transition-all flex items-center gap-2"
+              className="px-6 py-2.5 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] disabled:opacity-50 text-white font-bold text-xs transition-all shadow-xs flex items-center justify-center gap-2 h-11"
             >
               {loading ? 'Logging & Querying...' : 'Execute Logged Lookup'}
             </button>
@@ -175,23 +169,23 @@ export default function CustomerLookupPage() {
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-800 text-rose-300 text-xs flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
-          <span>{error}</span>
+        <div className="p-4 rounded-2xl bg-[#FFE9EF] border border-[#FECDD3] text-[#D6204F] text-xs flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-[#D6204F] shrink-0" />
+          <span className="font-medium">{error}</span>
         </div>
       )}
 
       {accessLogged && (
-        <div className="p-3 rounded-xl bg-[#111c33]/40 border border-blue-800/60 text-blue-300 text-xs font-mono flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-[#EEF3FF] border border-[#B9C6FF] text-[#0B4FFF] text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <FileCheck className="w-4 h-4 text-blue-400" />
+            <FileCheck className="w-4 h-4 text-[#0B4FFF] shrink-0" />
             <span>
-              Access verified and committed to PostgreSQL <code className="text-white font-bold">access_log</code> at {accessLogged.timestamp} with purpose: <code className="text-cyan-200">{accessLogged.purposeCode}</code>.
+              Access verified and committed to PostgreSQL <code className="font-bold">access_log</code> at {accessLogged.timestamp} with purpose: <code className="font-bold">{accessLogged.purposeCode}</code>.
             </span>
           </div>
           <Link
             href="/auditor/access-logs"
-            className="text-[11px] text-blue-400 hover:underline flex items-center gap-1"
+            className="text-xs text-[#0B4FFF] font-bold hover:underline flex items-center gap-1 shrink-0"
           >
             Verify in Auditor Log &rarr;
           </Link>
@@ -200,140 +194,120 @@ export default function CustomerLookupPage() {
 
       {result && result.customer && (
         <div className="space-y-6">
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
+            <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-800 text-purple-400 flex items-center justify-center font-mono font-bold text-lg">
+                <div className="w-12 h-12 rounded-2xl bg-[#EEF3FF] border border-[#B9C6FF] text-[#0B4FFF] flex items-center justify-center font-mono font-bold text-lg">
                   {result.customer.full_name?.charAt(0) || 'C'}
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-white">{result.customer.full_name}</h2>
-                  <div className="text-xs font-mono text-blue-400">
+                  <h2 className="text-base font-bold text-[#1B0B5C]">{result.customer.full_name}</h2>
+                  <div className="text-xs font-mono text-[#0B4FFF] font-bold">
                     ID: CUST{result.customer.customer_id}
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2 pt-2 border-t border-[#182030] text-xs font-mono text-slate-300">
+              <div className="space-y-2 pt-3 border-t border-[#EEF1FA] text-xs font-mono text-[#2B2F4A]">
                 <div className="flex items-center gap-2">
-                  <Mail className="w-3.5 h-3.5 text-slate-500" />
+                  <Mail className="w-3.5 h-3.5 text-[#6B7090]" />
                   <span>{result.customer.email}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Phone className="w-3.5 h-3.5 text-slate-500" />
+                  <Phone className="w-3.5 h-3.5 text-[#6B7090]" />
                   <span>{result.customer.phone}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                  <Calendar className="w-3.5 h-3.5 text-[#6B7090]" />
                   <span>DOB: {result.customer.dob}</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
-                  <span className="text-slate-400 text-[11px]">{result.customer.address}</span>
+                  <MapPin className="w-3.5 h-3.5 text-[#6B7090] shrink-0 mt-0.5" />
+                  <span className="text-[#6B7090] text-[11px]">{result.customer.address}</span>
                 </div>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
-              <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+            <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white space-y-4">
+              <h3 className="text-xs font-mono text-[#6B7090] uppercase tracking-wider font-bold">
                 Account &amp; Compliance Status
               </h3>
 
               <div className="space-y-3 font-mono text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">Account No:</span>
-                  <span className="text-white font-bold">{result.account?.account_no}</span>
+                  <span className="text-[#6B7090]">Account No:</span>
+                  <span className="text-[#1B0B5C] font-bold">{result.account?.account_no}</span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">Account Status:</span>
-                  <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                      result.account?.status === 'active'
-                        ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                        : 'bg-rose-950 text-rose-400 border border-rose-800'
-                    }`}
-                  >
-                    {result.account?.status}
-                  </span>
+                  <span className="text-[#6B7090]">Account Status:</span>
+                  <StatusChip status={result.account?.status} />
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">KYC Status:</span>
-                  <span
-                    className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                      result.customer?.kyc_status === 'verified'
-                        ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                        : 'bg-amber-950 text-amber-400 border border-amber-800'
-                    }`}
-                  >
-                    {result.customer?.kyc_status}
-                  </span>
+                  <span className="text-[#6B7090]">KYC Status:</span>
+                  <StatusChip status={result.customer?.kyc_status} />
                 </div>
 
-                <div className="pt-2 border-t border-[#182030]">
-                  <div className="text-slate-500 text-[10px]">ID Proof Hash (SHA-256):</div>
-                  <div className="p-2 mt-1 rounded bg-slate-900 border border-[#182030] text-[10px] text-blue-300 break-all">
+                <div className="pt-2 border-t border-[#EEF1FA]">
+                  <div className="text-[#6B7090] text-[10px]">ID Proof Hash (SHA-256):</div>
+                  <div className="p-2 mt-1 rounded-xl bg-[#F6F8FF] border border-[#E8ECF6] text-[10px] text-[#0B4FFF] break-all font-mono">
                     {result.customer?.id_proof_hash}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-[#182030] flex flex-col justify-between">
+            <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white flex flex-col justify-between">
               <div>
-                <h3 className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                <h3 className="text-xs font-mono text-[#6B7090] uppercase tracking-wider font-bold">
                   Portfolio Valuation
                 </h3>
-                <div className="text-2xl font-extrabold text-white font-mono mt-3">
+                <div className="text-3xl font-extrabold text-[#1B0B5C] font-mono mt-3 tabular-nums">
                   ${result.holdings?.reduce((acc: number, h: any) => acc + (parseFloat(h.quantity) * parseFloat(h.sim_ref_price)), 0).toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
                 </div>
-                <div className="text-[11px] text-slate-500 font-mono mt-1">
+                <div className="text-[11px] text-[#6B7090] font-mono mt-1">
                   Simulated Reference Valuation
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#0c101a] border border-[#182030] text-[11px] font-mono text-slate-400">
+              <div className="p-3 rounded-xl bg-[#F6F8FF] border border-[#E8ECF6] text-[11px] font-mono text-[#6B7090]">
                 Holdings across {result.holdings?.length || 0} distinct digital asset categories.
               </div>
             </div>
           </div>
 
-          <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
-            <div className="p-4 bg-[#0c101a] border-b border-[#182030] text-xs font-bold font-mono text-white">
-              Customer Asset Holdings
-            </div>
-            <div className="overflow-x-auto">
+          <SectionCard title="Customer Asset Holdings">
+            <div className="overflow-x-auto -mx-6 -mb-6">
               <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
+                <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold">
                   <tr>
-                    <th className="py-2.5 px-4">Symbol</th>
-                    <th className="py-2.5 px-4">Asset Name</th>
-                    <th className="py-2.5 px-4">Asset Class</th>
-                    <th className="py-2.5 px-4 text-right">Total Quantity</th>
-                    <th className="py-2.5 px-4 text-right">Available Qty</th>
-                    <th className="py-2.5 px-4 text-right">Simulated Ref Price</th>
+                    <th className="py-3 px-4">Symbol</th>
+                    <th className="py-3 px-4">Asset Name</th>
+                    <th className="py-3 px-4">Asset Class</th>
+                    <th className="py-3 px-4 text-right">Total Quantity</th>
+                    <th className="py-3 px-4 text-right">Available Qty</th>
+                    <th className="py-3 px-4 text-right">Simulated Ref Price</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
                   {result.holdings?.map((h: any) => (
-                    <tr key={h.asset_id}>
-                      <td className="py-2.5 px-4 font-bold text-white">{h.symbol}</td>
-                      <td className="py-2.5 px-4 text-slate-400">{h.name}</td>
-                      <td className="py-2.5 px-4 uppercase text-[10px]">{h.type}</td>
-                      <td className="py-2.5 px-4 text-right font-bold text-white">
+                    <tr key={h.asset_id} className="hover:bg-[#F6F8FF] transition-colors h-12">
+                      <td className="py-2.5 px-4 font-bold text-[#1B0B5C]">{h.symbol}</td>
+                      <td className="py-2.5 px-4 text-[#6B7090]">{h.name}</td>
+                      <td className="py-2.5 px-4 uppercase text-[10px] font-bold">{h.type}</td>
+                      <td className="py-2.5 px-4 text-right font-bold text-[#1B0B5C] tabular-nums">
                         {parseFloat(h.quantity).toLocaleString(undefined, { maximumFractionDigits: 6 })}
                       </td>
-                      <td className="py-2.5 px-4 text-right text-emerald-400 font-bold">
+                      <td className="py-2.5 px-4 text-right text-[#0E9F73] font-bold tabular-nums">
                         {parseFloat(h.available_qty || h.quantity).toLocaleString(undefined, {
                           maximumFractionDigits: 6,
                         })}
                       </td>
-                      <td className="py-2.5 px-4 text-right text-slate-400">
+                      <td className="py-2.5 px-4 text-right text-[#6B7090] tabular-nums">
                         ${parseFloat(h.sim_ref_price).toLocaleString()}
                       </td>
                     </tr>
@@ -341,45 +315,34 @@ export default function CustomerLookupPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </SectionCard>
 
-          <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
-            <div className="p-4 bg-[#0c101a] border-b border-[#182030] text-xs font-bold font-mono text-white">
-              Recent Transactions (Last 10)
-            </div>
-            <div className="overflow-x-auto">
+          <SectionCard title="Recent Transactions (Last 10)">
+            <div className="overflow-x-auto -mx-6 -mb-6">
               <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
+                <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold">
                   <tr>
-                    <th className="py-2.5 px-4">Tx ID</th>
-                    <th className="py-2.5 px-4">Type</th>
-                    <th className="py-2.5 px-4">Asset</th>
-                    <th className="py-2.5 px-4 text-right">Quantity</th>
-                    <th className="py-2.5 px-4">Status</th>
-                    <th className="py-2.5 px-4 text-right">Timestamp</th>
+                    <th className="py-3 px-4">Tx ID</th>
+                    <th className="py-3 px-4">Type</th>
+                    <th className="py-3 px-4">Asset</th>
+                    <th className="py-3 px-4 text-right">Quantity</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4 text-right">Timestamp</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
                   {result.transactions?.map((tx: any) => (
-                    <tr key={tx.transaction_id}>
-                      <td className="py-2.5 px-4 text-blue-400 font-bold">#{tx.transaction_id}</td>
-                      <td className="py-2.5 px-4 uppercase text-[10px]">{tx.type}</td>
-                      <td className="py-2.5 px-4 text-white font-bold">{tx.symbol}</td>
-                      <td className="py-2.5 px-4 text-right">
+                    <tr key={tx.transaction_id} className="hover:bg-[#F6F8FF] transition-colors h-12">
+                      <td className="py-2.5 px-4 text-[#0B4FFF] font-bold">#{tx.transaction_id}</td>
+                      <td className="py-2.5 px-4 uppercase text-[10px] font-bold">{tx.type}</td>
+                      <td className="py-2.5 px-4 text-[#1B0B5C] font-bold">{tx.symbol}</td>
+                      <td className="py-2.5 px-4 text-right tabular-nums font-bold">
                         {parseFloat(tx.quantity).toLocaleString(undefined, { maximumFractionDigits: 6 })}
                       </td>
                       <td className="py-2.5 px-4">
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            tx.status === 'success'
-                              ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                              : 'bg-rose-950 text-rose-400 border border-rose-800'
-                          }`}
-                        >
-                          {tx.status}
-                        </span>
+                        <StatusChip status={tx.status} />
                       </td>
-                      <td className="py-2.5 px-4 text-right text-slate-500 text-[10px]">
+                      <td className="py-2.5 px-4 text-right text-[#6B7090] text-[10px]">
                         {new Date(tx.created_at).toLocaleString()}
                       </td>
                     </tr>
@@ -387,9 +350,9 @@ export default function CustomerLookupPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </SectionCard>
         </div>
       )}
-    </div>
+    </AppShell>
   );
 }

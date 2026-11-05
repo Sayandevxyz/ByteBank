@@ -5,17 +5,15 @@ import Link from 'next/link';
 import {
   Activity,
   Filter,
-  Search,
   RefreshCw,
   EyeOff,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  AlertTriangle,
   ChevronLeft,
   ChevronRight,
-  ShieldCheck,
+  ArrowLeft,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import StatusChip from '../../../components/app/StatusChip';
 
 export default function AuditorTransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -68,35 +66,24 @@ export default function AuditorTransactionsPage() {
   }, [page, assetId, status]);
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <AppShell>
+      <PageHeader
+        title="Masked Transaction Explorer"
+        subtitle="Zero-PII compliance view. Customer identifiers are masked; only transaction quantities, asset types, and execution outcomes are accessible."
+        actions={
+          <Link
+            href="/auditor/dashboard"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-[#EEF3FF] border border-[#E8ECF6] text-[#0B4FFF] text-xs font-semibold transition-colors shadow-2xs h-11"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Auditor Dashboard</span>
+          </Link>
+        }
+      />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-semibold">
-              MASKED REGULATORY VIEW
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              v_auditor_transactions
-            </span>
-          </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Masked Transaction Explorer</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Zero-PII compliance view. Customer identifiers are masked; only transaction quantities, asset types, and execution outcomes are accessible.
-          </p>
-        </div>
-
-        <Link
-          href="/auditor/dashboard"
-          className="text-xs font-mono text-blue-400 hover:text-blue-300"
-        >
-          &larr; Back to Auditor Dashboard
-        </Link>
-      </div>
-
-      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-wrap items-center gap-4 text-xs font-mono">
-        <div className="flex items-center gap-1.5 text-slate-400">
-          <Filter className="w-3.5 h-3.5 text-emerald-400" />
+      <div className="p-4 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white flex flex-wrap items-center gap-4 text-xs font-mono">
+        <div className="flex items-center gap-1.5 text-[#6B7090] font-bold">
+          <Filter className="w-3.5 h-3.5 text-[#0B4FFF]" />
           <span>Filters:</span>
         </div>
 
@@ -106,7 +93,7 @@ export default function AuditorTransactionsPage() {
             setAssetId(e.target.value);
             setPage(1);
           }}
-          className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-emerald-500"
+          className="bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-3 py-2 text-[#1B0B5C] focus:outline-none focus:border-[#0B4FFF]"
         >
           <option value="">All Assets</option>
           {assets.map((a) => (
@@ -122,7 +109,7 @@ export default function AuditorTransactionsPage() {
             setStatus(e.target.value);
             setPage(1);
           }}
-          className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 focus:border-emerald-500"
+          className="bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-3 py-2 text-[#1B0B5C] focus:outline-none focus:border-[#0B4FFF]"
         >
           <option value="">All Statuses</option>
           <option value="success">Success</option>
@@ -134,93 +121,80 @@ export default function AuditorTransactionsPage() {
         <div className="ml-auto flex items-center gap-2">
           <button
             onClick={fetchMaskedTransactions}
-            className="text-xs text-slate-400 hover:text-white flex items-center gap-1"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#F6F8FF] hover:bg-[#EEF3FF] border border-[#E8ECF6] text-xs font-mono text-[#0B4FFF] font-semibold transition-colors"
           >
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Refresh</span>
           </button>
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
+      <div className="rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white overflow-hidden">
         {loading ? (
-          <div className="py-20 text-center text-slate-500 text-xs font-mono">
-            <RefreshCw className="w-4 h-4 animate-spin text-emerald-400 inline mr-2" />
+          <div className="py-20 text-center text-[#6B7090] text-xs font-mono">
+            <RefreshCw className="w-4 h-4 animate-spin text-[#0B4FFF] inline mr-2" />
             Querying PostgreSQL Masked View v_auditor_transactions...
           </div>
         ) : transactions.length === 0 ? (
-          <div className="py-20 text-center text-slate-500 text-xs font-mono">
+          <div className="py-20 text-center text-[#6B7090] text-xs font-mono">
             No masked transactions found for selected filter criteria.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
+              <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">Tx ID</th>
-                  <th className="py-3 px-4 font-semibold">Masked Sender</th>
-                  <th className="py-3 px-4 font-semibold">Masked Receiver</th>
-                  <th className="py-3 px-4 font-semibold">Asset</th>
-                  <th className="py-3 px-4 font-semibold text-right">Quantity</th>
-                  <th className="py-3 px-4 font-semibold">Type</th>
-                  <th className="py-3 px-4 font-semibold">Outcome Status</th>
-                  <th className="py-3 px-4 font-semibold text-right">Created At</th>
+                  <th className="py-3.5 px-4">Tx ID</th>
+                  <th className="py-3.5 px-4">Masked Sender</th>
+                  <th className="py-3.5 px-4">Masked Receiver</th>
+                  <th className="py-3.5 px-4">Asset</th>
+                  <th className="py-3.5 px-4 text-right">Quantity</th>
+                  <th className="py-3.5 px-4">Type</th>
+                  <th className="py-3.5 px-4">Outcome Status</th>
+                  <th className="py-3.5 px-4 text-right">Created At</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
                 {transactions.map((tx) => (
-                  <tr key={tx.transaction_id} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-emerald-400 font-bold">
+                  <tr key={tx.transaction_id} className="hover:bg-[#F6F8FF] transition-colors h-14">
+                    <td className="py-3 px-4 text-[#0B4FFF] font-bold">
                       TXN-{tx.transaction_id}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex items-center gap-1.5 text-slate-300">
-                        <EyeOff className="w-3 h-3 text-slate-500" />
+                      <div className="flex items-center gap-1.5 text-[#2B2F4A]">
+                        <EyeOff className="w-3.5 h-3.5 text-[#6B7090]" />
                         <span>{tx.sender_account_no}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex items-center gap-1.5 text-slate-300">
-                        <EyeOff className="w-3 h-3 text-slate-500" />
+                      <div className="flex items-center gap-1.5 text-[#2B2F4A]">
+                        <EyeOff className="w-3.5 h-3.5 text-[#6B7090]" />
                         <span>{tx.receiver_account_no}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="font-bold text-white">{tx.symbol}</span>{' '}
-                      <span className="text-[10px] text-slate-500">({tx.asset_name})</span>
+                      <span className="font-bold text-[#1B0B5C]">{tx.symbol}</span>{' '}
+                      <span className="text-[10px] text-[#6B7090]">({tx.asset_name})</span>
                     </td>
-                    <td className="py-3 px-4 text-right font-bold text-white">
+                    <td className="py-3 px-4 text-right font-bold text-[#1B0B5C] tabular-nums">
                       {parseFloat(tx.quantity).toLocaleString(undefined, {
                         maximumFractionDigits: 8,
                       })}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 uppercase text-[10px]">
+                      <span className="px-2.5 py-1 rounded-full bg-[#EEF1FA] text-[#1B0B5C] uppercase text-[10px] font-bold">
                         {tx.type}
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase inline-flex items-center gap-1 ${
-                          tx.status === 'success'
-                            ? 'bg-emerald-950/70 border border-emerald-800 text-emerald-400'
-                            : tx.status === 'pending'
-                            ? 'bg-amber-950/70 border border-amber-800 text-amber-400'
-                            : 'bg-rose-950/70 border border-rose-800 text-rose-400'
-                        }`}
-                      >
-                        {tx.status === 'success' && <CheckCircle2 className="w-2.5 h-2.5" />}
-                        {tx.status === 'pending' && <Clock className="w-2.5 h-2.5" />}
-                        {tx.status === 'failed' && <XCircle className="w-2.5 h-2.5" />}
-                        {tx.status === 'rejected' && <AlertTriangle className="w-2.5 h-2.5" />}
-                        {tx.status}
-                      </span>
+                      <StatusChip status={tx.status} />
                       {tx.failure_reason && (
-                        <div className="text-[9px] text-rose-400 mt-0.5 max-w-xs truncate">
+                        <div className="text-[10px] text-[#D6204F] mt-1 max-w-xs truncate font-medium">
                           {tx.failure_reason}
                         </div>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-right text-slate-500 text-[11px]">
+                    <td className="py-3 px-4 text-right text-[#6B7090] text-[11px]">
                       {new Date(tx.created_at).toLocaleString()}
                     </td>
                   </tr>
@@ -230,8 +204,8 @@ export default function AuditorTransactionsPage() {
           </div>
         )}
 
-        <div className="p-4 bg-[#0c101a] border-t border-[#182030] flex items-center justify-between text-xs font-mono">
-          <span className="text-slate-500">
+        <div className="p-4 bg-[#F6F8FF] border-t border-[#E8ECF6] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+          <span className="text-[#6B7090]">
             Page {page} of {totalPages} ({total} masked transactions)
           </span>
 
@@ -239,20 +213,20 @@ export default function AuditorTransactionsPage() {
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 disabled:opacity-40 text-slate-300 hover:text-white flex items-center gap-1"
+              className="px-3.5 py-1.5 rounded-full bg-white border border-[#E8ECF6] disabled:opacity-40 text-[#2B2F4A] hover:bg-[#EEF1FA] transition-colors flex items-center gap-1 font-semibold"
             >
               <ChevronLeft className="w-3.5 h-3.5" /> Prev
             </button>
             <button
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 disabled:opacity-40 text-slate-300 hover:text-white flex items-center gap-1"
+              className="px-3.5 py-1.5 rounded-full bg-white border border-[#E8ECF6] disabled:opacity-40 text-[#2B2F4A] hover:bg-[#EEF1FA] transition-colors flex items-center gap-1 font-semibold"
             >
               Next <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </AppShell>
   );
 }

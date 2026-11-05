@@ -11,9 +11,12 @@ import {
   Wrench,
   ShieldCheck,
   History,
-  Layers,
-  FileCheck,
+  ArrowLeft,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import SectionCard from '../../../components/app/SectionCard';
+import StatusChip from '../../../components/app/StatusChip';
 
 export default function AdminReconciliationPage() {
   const [summary, setSummary] = useState<any>(null);
@@ -108,106 +111,94 @@ export default function AdminReconciliationPage() {
   const isMismatched = summary && parseInt(summary.mismatched_pairs, 10) > 0;
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-teal-950/80 border border-teal-800 text-teal-400 font-semibold">
-              LEDGER VERIFICATION SUITE
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              run_reconciliation() &bull; reconcile_fix_issue()
-            </span>
+    <AppShell>
+      <PageHeader
+        title="Ledger Reconciliation Dashboard"
+        subtitle="Compare every account/asset holding against the sum of double-entry ledger records. Invariant: holding = ∑ ledger_entry"
+        actions={
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleRunReconciliation}
+              disabled={runningRecon}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] disabled:opacity-50 text-white font-bold text-xs transition-all shadow-xs h-11"
+            >
+              {runningRecon ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Scanning Pairs...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3.5 h-3.5" />
+                  <span>Run Reconciliation Now</span>
+                </>
+              )}
+            </button>
+            <Link
+              href="/admin/dashboard"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-[#EEF3FF] border border-[#E8ECF6] text-[#0B4FFF] text-xs font-semibold transition-colors shadow-2xs h-11"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Admin Dashboard</span>
+            </Link>
           </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Ledger Reconciliation Dashboard</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Compare every account/asset holding against the sum of double-entry ledger records. Invariant: <code className="text-teal-300">holding = &sum; ledger_entry</code>.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleRunReconciliation}
-            disabled={runningRecon}
-            className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 disabled:bg-slate-800 text-white font-bold text-xs font-mono shadow-glow-blue transition-all flex items-center gap-2"
-          >
-            {runningRecon ? (
-              <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                Scanning All Pairs...
-              </>
-            ) : (
-              <>
-                <Play className="w-3.5 h-3.5" />
-                Run Reconciliation Now
-              </>
-            )}
-          </button>
-
-          <Link
-            href="/admin/dashboard"
-            className="text-xs font-mono text-blue-400 hover:text-blue-300"
-          >
-            &larr; Back to Admin Dashboard
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {message && (
         <div
-          className={`p-4 rounded-xl text-xs flex items-center gap-2 ${
+          className={`p-4 rounded-2xl text-xs flex items-center gap-2.5 border ${
             message.type === 'success'
-              ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-300'
-              : 'bg-rose-950/60 border border-rose-800 text-rose-300'
+              ? 'bg-[#E6FBF4] border-[#99F6E4] text-[#0E9F73]'
+              : 'bg-[#FFE9EF] border-[#FECDD3] text-[#D6204F]'
           }`}
         >
           {message.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0E9F73] shrink-0" />
           ) : (
-            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-[#D6204F] shrink-0" />
           )}
-          <span>{message.text}</span>
+          <span className="font-medium">{message.text}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-2">
-          <div className="text-xs font-mono text-slate-400">Total Account/Asset Pairs</div>
-          <div className="text-3xl font-extrabold text-white font-mono">
+        <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#0B4FFF] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090]">Total Account/Asset Pairs</div>
+          <div className="text-3xl font-extrabold text-[#1B0B5C] font-mono tabular-nums">
             {summary?.total_pairs || '868'}
           </div>
-          <div className="text-[11px] text-slate-500">Across all customer and system accounts</div>
+          <div className="text-[11px] text-[#6B7090]">Across all customer and system accounts</div>
         </div>
 
-        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-2">
-          <div className="text-xs font-mono text-slate-400">Balanced Pairs (100% Match)</div>
-          <div className="text-3xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
-            <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+        <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#1FD6A0] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090]">Balanced Pairs (100% Match)</div>
+          <div className="text-3xl font-extrabold text-[#0E9F73] font-mono flex items-center gap-2 tabular-nums">
+            <CheckCircle2 className="w-6 h-6 text-[#0E9F73]" />
             {summary?.matched_pairs || '868'}
           </div>
-          <div className="text-[11px] text-slate-500">Holding perfectly equals &sum;(ledger_entry)</div>
+          <div className="text-[11px] text-[#6B7090]">Holding perfectly equals &sum;(ledger_entry)</div>
         </div>
 
         <div
-          className={`glass-panel p-6 rounded-2xl border space-y-2 ${
-            isMismatched ? 'border-rose-800/80 bg-rose-950/20' : 'border-[#182030]'
+          className={`p-6 rounded-2xl bg-white border shadow-card-white border-t-4 space-y-1 ${
+            isMismatched ? 'border-t-[#F43F6E] border-[#FECDD3]' : 'border-t-[#1FD6A0] border-[#E8ECF6]'
           }`}
         >
-          <div className="text-xs font-mono text-slate-400">Mismatched Pairs (Drift)</div>
+          <div className="text-xs font-mono text-[#6B7090]">Mismatched Pairs (Drift)</div>
           <div
-            className={`text-3xl font-extrabold font-mono flex items-center gap-2 ${
-              isMismatched ? 'text-rose-400' : 'text-slate-400'
+            className={`text-3xl font-extrabold font-mono flex items-center gap-2 tabular-nums ${
+              isMismatched ? 'text-[#D6204F]' : 'text-[#0E9F73]'
             }`}
           >
             {isMismatched ? (
-              <AlertTriangle className="w-6 h-6 text-rose-400 animate-pulse" />
+              <AlertTriangle className="w-6 h-6 text-[#D6204F] animate-pulse" />
             ) : (
-              <ShieldCheck className="w-6 h-6 text-emerald-400" />
+              <ShieldCheck className="w-6 h-6 text-[#0E9F73]" />
             )}
             {summary?.mismatched_pairs || '0'}
           </div>
-          <div className="text-[11px] text-slate-500">
+          <div className="text-[11px] text-[#6B7090]">
             {isMismatched
               ? 'Drift detected! Open issue recorded below.'
               : 'Zero drift detected. High integrity.'}
@@ -215,88 +206,71 @@ export default function AdminReconciliationPage() {
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4">
-        <div className="p-4 bg-[#0c101a] border-b border-[#182030] flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              Reconciliation Issues Log (reconciliation_issue)
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              History is never rewritten: any mismatch is resolved via linked compensating adjustment transactions.
-            </p>
-          </div>
-        </div>
-
+      <SectionCard
+        title="Reconciliation Issues Log (reconciliation_issue)"
+        subtitle="History is never rewritten: any mismatch is resolved via linked compensating adjustment transactions."
+      >
         {issues.length === 0 ? (
-          <div className="py-12 text-center text-slate-500 text-xs font-mono">
+          <div className="py-12 text-center text-[#6B7090] text-xs font-mono">
             No active or historical reconciliation issues recorded. All ledger entries match holding balances.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-6 -mb-6">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
+              <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">Issue ID</th>
-                  <th className="py-3 px-4 font-semibold">Account No</th>
-                  <th className="py-3 px-4 font-semibold">Asset</th>
-                  <th className="py-3 px-4 font-semibold text-right">Holding Qty</th>
-                  <th className="py-3 px-4 font-semibold text-right">Ledger Qty</th>
-                  <th className="py-3 px-4 font-semibold text-right">Variance</th>
-                  <th className="py-3 px-4 font-semibold">Status</th>
-                  <th className="py-3 px-4 font-semibold text-right">Compensating Action</th>
+                  <th className="py-3 px-4">Issue ID</th>
+                  <th className="py-3 px-4">Account No</th>
+                  <th className="py-3 px-4">Asset</th>
+                  <th className="py-3 px-4 text-right">Holding Qty</th>
+                  <th className="py-3 px-4 text-right">Ledger Qty</th>
+                  <th className="py-3 px-4 text-right">Variance</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Compensating Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
                 {issues.map((issue) => (
-                  <tr key={issue.issue_id} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-blue-400 font-bold">
+                  <tr key={issue.issue_id} className="hover:bg-[#F6F8FF] transition-colors h-14">
+                    <td className="py-3 px-4 text-[#0B4FFF] font-bold">
                       ISSUE-{issue.issue_id}
                     </td>
-                    <td className="py-3 px-4 font-bold text-white">{issue.account_no}</td>
+                    <td className="py-3 px-4 font-bold text-[#1B0B5C]">{issue.account_no}</td>
                     <td className="py-3 px-4">{issue.symbol}</td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3 px-4 text-right tabular-nums">
                       {parseFloat(issue.holding_qty).toLocaleString(undefined, {
                         maximumFractionDigits: 6,
                       })}
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3 px-4 text-right tabular-nums">
                       {parseFloat(issue.ledger_qty).toLocaleString(undefined, {
                         maximumFractionDigits: 6,
                       })}
                     </td>
-                    <td className="py-3 px-4 text-right font-bold text-rose-400">
+                    <td className="py-3 px-4 text-right font-bold text-[#D6204F] tabular-nums">
                       {parseFloat(issue.variance).toLocaleString(undefined, {
                         maximumFractionDigits: 6,
                       })}
                     </td>
                     <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                          issue.status === 'open'
-                            ? 'bg-rose-950 text-rose-400 border border-rose-800'
-                            : 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                        }`}
-                      >
-                        {issue.status}
-                      </span>
+                      <StatusChip status={issue.status} />
                     </td>
                     <td className="py-3 px-4 text-right">
                       {issue.status === 'open' ? (
                         <button
                           onClick={() => handleFixIssue(issue.issue_id)}
                           disabled={fixingIssueId === issue.issue_id}
-                          className="px-3 py-1 rounded bg-teal-900/60 hover:bg-teal-800 border border-teal-700 text-teal-200 text-[10px] font-mono transition-colors inline-flex items-center gap-1.5"
+                          className="px-3.5 py-1.5 rounded-full bg-[#1FD6A0] hover:bg-[#19b98a] text-white text-[11px] font-mono font-bold transition-all inline-flex items-center gap-1.5 shadow-2xs disabled:opacity-50"
                         >
                           {fixingIssueId === issue.issue_id ? (
                             <RefreshCw className="w-3 h-3 animate-spin" />
                           ) : (
                             <Wrench className="w-3 h-3" />
                           )}
-                          Execute Compensating Reversal
+                          <span>Compensating Reversal</span>
                         </button>
                       ) : (
-                        <span className="text-slate-500 text-[10px]">
+                        <span className="text-[#6B7090] text-[11px]">
                           Resolved {new Date(issue.resolved_at).toLocaleTimeString()}
                         </span>
                       )}
@@ -307,59 +281,55 @@ export default function AdminReconciliationPage() {
             </table>
           </div>
         )}
-      </div>
+      </SectionCard>
 
-      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4">
-        <div className="p-4 bg-[#0c101a] border-b border-[#182030] text-xs font-bold font-mono text-white flex items-center gap-2">
-          <History className="w-4 h-4 text-blue-400" />
-          Recent Automated Reconciliation Runs (reconciliation_run)
-        </div>
-
-        <div className="overflow-x-auto">
+      <SectionCard
+        title="Recent Automated Reconciliation Runs (reconciliation_run)"
+        subtitle="Snapshot history of verification jobs executed across all account balances."
+      >
+        <div className="overflow-x-auto -mx-6 -mb-6">
           <table className="w-full text-left text-xs font-mono">
-            <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
+            <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold">
               <tr>
-                <th className="py-2.5 px-4">Run ID</th>
-                <th className="py-2.5 px-4">Started At</th>
-                <th className="py-2.5 px-4">Finished At</th>
-                <th className="py-2.5 px-4 text-right">Pairs Audited</th>
-                <th className="py-2.5 px-4 text-right">Issues Detected</th>
-                <th className="py-2.5 px-4 text-right">Audit Status</th>
+                <th className="py-3 px-4">Run ID</th>
+                <th className="py-3 px-4">Started At</th>
+                <th className="py-3 px-4">Finished At</th>
+                <th className="py-3 px-4 text-right">Pairs Audited</th>
+                <th className="py-3 px-4 text-right">Issues Detected</th>
+                <th className="py-3 px-4 text-right">Audit Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
               {runs.map((r) => (
-                <tr key={r.run_id}>
-                  <td className="py-2.5 px-4 text-blue-400 font-bold">RUN-{r.run_id}</td>
-                  <td className="py-2.5 px-4 text-slate-400">
+                <tr key={r.run_id} className="hover:bg-[#F6F8FF] transition-colors h-12">
+                  <td className="py-2.5 px-4 text-[#0B4FFF] font-bold">RUN-{r.run_id}</td>
+                  <td className="py-2.5 px-4 text-[#6B7090]">
                     {new Date(r.started_at).toLocaleString()}
                   </td>
-                  <td className="py-2.5 px-4 text-slate-400">
+                  <td className="py-2.5 px-4 text-[#6B7090]">
                     {r.finished_at ? new Date(r.finished_at).toLocaleString() : 'Running...'}
                   </td>
-                  <td className="py-2.5 px-4 text-right font-bold text-white">
+                  <td className="py-2.5 px-4 text-right font-bold text-[#1B0B5C] tabular-nums">
                     {r.pairs_checked}
                   </td>
-                  <td className="py-2.5 px-4 text-right">
+                  <td className="py-2.5 px-4 text-right tabular-nums">
                     <span
                       className={`font-bold ${
-                        r.issues_found > 0 ? 'text-rose-400' : 'text-emerald-400'
+                        r.issues_found > 0 ? 'text-[#D6204F]' : 'text-[#0E9F73]'
                       }`}
                     >
                       {r.issues_found}
                     </span>
                   </td>
                   <td className="py-2.5 px-4 text-right">
-                    <span className="px-2 py-0.5 rounded bg-slate-800 text-emerald-400 text-[10px] font-bold">
-                      COMPLETED
-                    </span>
+                    <StatusChip status="success" label="COMPLETED" />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+      </SectionCard>
+    </AppShell>
   );
 }

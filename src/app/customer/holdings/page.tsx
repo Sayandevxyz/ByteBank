@@ -2,10 +2,26 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRightLeft, RefreshCw, Lock, ShieldCheck, Search } from 'lucide-react';
+import { ArrowRightLeft, RefreshCw, Lock, Search, Wallet } from 'lucide-react';
+import AppShell from '@/components/app/AppShell';
+import PageHeader from '@/components/app/PageHeader';
+import DataTable, { Column } from '@/components/app/DataTable';
+import StatusChip from '@/components/app/StatusChip';
+
+interface HoldingRecord {
+  assetId: number;
+  symbol: string;
+  name: string;
+  type: string;
+  totalQuantity: number;
+  availableQuantity: number;
+  reservedQuantity: number;
+  simRefPrice: number;
+  simulatedValueSru: number;
+}
 
 export default function CustomerHoldingsPage() {
-  const [holdings, setHoldings] = useState<any[]>([]);
+  const [holdings, setHoldings] = useState<HoldingRecord[]>([]);
   const [totalValuation, setTotalValuation] = useState(0);
   const [account, setAccount] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -37,155 +53,179 @@ export default function CustomerHoldingsPage() {
     return matchesSearch && matchesType;
   });
 
-  return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#182030]">
+  const columns: Column<HoldingRecord>[] = [
+    {
+      key: 'asset',
+      header: 'Asset',
+      render: (h) => (
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Multi-Asset Holdings</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Dedicated Holding Table (<code>account_id</code>, <code>asset_id</code>, <code>quantity &gt;= 0</code>). Materialized projection of double-entry ledger.
-          </p>
+          <div className="font-bold text-[#1B0B5C] text-sm leading-tight">{h.name}</div>
+          <div className="text-xs font-mono font-semibold text-[#0B4FFF] mt-0.5">{h.symbol}</div>
         </div>
+      ),
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      render: (h) => (
+        <span
+          className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
+            h.type === 'crypto'
+              ? 'bg-[#EEF3FF] text-[#0B4FFF] border border-[#D9E4FF]'
+              : 'bg-[#F5F0FF] text-[#8B5CF6] border border-[#E9D8FF]'
+          }`}
+        >
+          {h.type}
+        </span>
+      ),
+    },
+    {
+      key: 'totalQuantity',
+      header: 'Total Balance',
+      align: 'right',
+      render: (h) => (
+        <span className="font-mono font-medium text-[#2B2F4A] tabular-nums">
+          {h.totalQuantity} <span className="text-xs text-[#6B7090]">{h.symbol}</span>
+        </span>
+      ),
+    },
+    {
+      key: 'availableQuantity',
+      header: 'Available',
+      align: 'right',
+      render: (h) => (
+        <span className="font-mono font-bold text-[#0E9F73] tabular-nums">
+          {h.availableQuantity}
+        </span>
+      ),
+    },
+    {
+      key: 'reservedQuantity',
+      header: 'Reserved',
+      align: 'right',
+      render: (h) =>
+        h.reservedQuantity > 0 ? (
+          <span className="font-mono font-semibold text-[#D97706] inline-flex items-center gap-1 tabular-nums">
+            <Lock className="w-3 h-3" /> {h.reservedQuantity}
+          </span>
+        ) : (
+          <span className="font-mono text-[#6B7090]">0.00</span>
+        ),
+    },
+    {
+      key: 'simRefPrice',
+      header: 'Unit Price',
+      align: 'right',
+      render: (h) => (
+        <span className="font-mono text-[#6B7090] tabular-nums">
+          {h.simRefPrice.toLocaleString()} SRU
+        </span>
+      ),
+    },
+    {
+      key: 'simulatedValueSru',
+      header: 'Total Value',
+      align: 'right',
+      render: (h) => (
+        <span className="font-mono font-bold text-[#1B0B5C] tabular-nums">
+          {h.simulatedValueSru.toLocaleString()}{' '}
+          <span className="text-xs text-[#0B4FFF] font-normal">SRU</span>
+        </span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      align: 'right',
+      render: (h) => (
+        <div className="flex items-center justify-end gap-2">
+          <Link
+            href={`/customer/transfer?assetId=${h.assetId}`}
+            className="px-3 py-1 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white font-semibold text-xs transition-colors"
+          >
+            Send
+          </Link>
+          <Link
+            href={`/customer/swap?fromAsset=${h.assetId}`}
+            className="px-3 py-1 rounded-full bg-white border border-[#0B4FFF] text-[#0B4FFF] hover:bg-[#EEF3FF] font-semibold text-xs transition-colors"
+          >
+            Swap
+          </Link>
+        </div>
+      ),
+    },
+  ];
 
-        <div className="flex items-center gap-3">
-          <div className="text-right">
-            <span className="text-[11px] text-slate-400">Total Portfolio Value</span>
-            <div className="text-xl font-bold font-mono text-blue-400">
-              {totalValuation.toLocaleString()} <span className="text-xs">SRU</span>
-            </div>
+  return (
+    <AppShell>
+      <PageHeader
+        title="Multi-Asset Holdings"
+        subtitle="Recorded in PostgreSQL"
+        accountNo={account?.account_no}
+        accountStatus={account?.status}
+        badge={
+          <div className="px-3 py-1 rounded-full bg-white border border-[#E8ECF6] shadow-xs text-xs font-semibold text-[#1B0B5C]">
+            Total Value:{' '}
+            <span className="font-mono text-[#0B4FFF] font-bold">
+              {totalValuation.toLocaleString()} SRU
+            </span>
           </div>
-        </div>
-      </div>
+        }
+      />
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/40 p-4 rounded-xl border border-[#182030]">
-        <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8ECF6] shadow-[0_8px_30px_rgba(27,11,92,0.08)] flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 text-[#6B7090] absolute left-3.5 top-3.5" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search asset or symbol..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-900 border border-[#182030] focus:border-blue-500 focus:outline-none text-xs text-white placeholder-slate-500"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] focus:border-[#0B4FFF] focus:ring-3 focus:ring-[rgba(11,79,255,0.18)] focus:outline-none text-xs text-[#1B0B5C] placeholder-[#8A90B0] transition-all"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center p-1 rounded-full bg-[#EEF1FA] border border-[#E8ECF6] w-full sm:w-auto">
           <button
             onClick={() => setFilterType('ALL')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filterType === 'ALL' ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              filterType === 'ALL'
+                ? 'bg-[#0B4FFF] text-white shadow-xs'
+                : 'text-[#6B7090] hover:text-[#1B0B5C]'
             }`}
           >
             All Assets ({holdings.length})
           </button>
           <button
             onClick={() => setFilterType('CRYPTO')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filterType === 'CRYPTO' ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              filterType === 'CRYPTO'
+                ? 'bg-[#0B4FFF] text-white shadow-xs'
+                : 'text-[#6B7090] hover:text-[#1B0B5C]'
             }`}
           >
             Crypto
           </button>
           <button
             onClick={() => setFilterType('STOCK')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filterType === 'STOCK' ? 'bg-blue-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'
+            className={`flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              filterType === 'STOCK'
+                ? 'bg-[#0B4FFF] text-white shadow-xs'
+                : 'text-[#6B7090] hover:text-[#1B0B5C]'
             }`}
           >
-            Stocks (Simulated)
+            Equities (Simulated)
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-[#182030] bg-slate-950/60">
-        <table className="w-full text-left text-xs text-slate-300">
-          <thead className="bg-[#0c101a] text-slate-400 border-b border-[#182030] uppercase text-[10px] tracking-wider font-mono">
-            <tr>
-              <th className="py-3.5 px-4">Asset</th>
-              <th className="py-3.5 px-4">Type</th>
-              <th className="py-3.5 px-4">Total Balance</th>
-              <th className="py-3.5 px-4">Available Qty</th>
-              <th className="py-3.5 px-4">Reserved Qty</th>
-              <th className="py-3.5 px-4">Reference Price (SRU)</th>
-              <th className="py-3.5 px-4">Total Value</th>
-              <th className="py-3.5 px-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-850">
-            {loading ? (
-              <tr>
-                <td colSpan={8} className="py-12 text-center text-slate-500 font-mono">
-                  Loading multi-asset balances from PostgreSQL...
-                </td>
-              </tr>
-            ) : filtered.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="py-12 text-center text-slate-500 font-mono">
-                  No assets match current criteria.
-                </td>
-              </tr>
-            ) : (
-              filtered.map((h: any) => (
-                <tr key={h.symbol} className="hover:bg-slate-900/40 transition-colors">
-                  <td className="py-3.5 px-4">
-                    <div className="font-semibold text-white">{h.name}</div>
-                    <div className="text-[11px] font-mono text-blue-400">{h.symbol}</div>
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase ${
-                        h.type === 'crypto'
-                          ? 'bg-[#111c33] text-blue-300 border border-blue-800'
-                          : 'bg-violet-950 text-violet-300 border border-violet-800'
-                      }`}
-                    >
-                      {h.type}
-                    </span>
-                  </td>
-                  <td className="py-3.5 px-4 font-mono font-medium text-white">
-                    {h.totalQuantity} <span className="text-[10px] text-slate-500">{h.symbol}</span>
-                  </td>
-                  <td className="py-3.5 px-4 font-mono font-semibold text-emerald-400">
-                    {h.availableQuantity}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-amber-400">
-                    {h.reservedQuantity > 0 ? (
-                      <span className="flex items-center gap-1">
-                        <Lock className="w-3 h-3" /> {h.reservedQuantity}
-                      </span>
-                    ) : (
-                      '0.00'
-                    )}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-slate-300">
-                    {h.simRefPrice.toLocaleString()} SRU
-                  </td>
-                  <td className="py-3.5 px-4 font-mono font-bold text-white">
-                    {h.simulatedValueSru.toLocaleString()} <span className="text-blue-400 text-[10px]">SRU</span>
-                  </td>
-                  <td className="py-3.5 px-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link
-                        href={`/customer/transfer?assetId=${h.assetId}`}
-                        className="px-2.5 py-1 rounded bg-[#111c33] border border-blue-800 hover:bg-blue-900 text-blue-300 font-medium text-[11px] transition-colors"
-                      >
-                        Send
-                      </Link>
-                      <Link
-                        href={`/customer/swap?fromAsset=${h.assetId}`}
-                        className="px-2.5 py-1 rounded bg-slate-900 border border-[#182030] hover:bg-slate-850 text-slate-300 text-[11px] transition-colors"
-                      >
-                        Swap
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <DataTable
+        columns={columns}
+        data={filtered}
+        keyExtractor={(h) => h.symbol}
+        loading={loading}
+        emptyMessage="No asset holdings match your filter criteria."
+      />
+    </AppShell>
   );
 }

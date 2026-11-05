@@ -8,23 +8,18 @@ import MarketingNavbar from './MarketingNavbar';
 import {
   Wallet,
   ArrowRightLeft,
+  RefreshCw,
   History,
-  Shield,
-  Layers,
-  FileText,
-  Users,
-  CheckCircle2,
-  AlertTriangle,
   Lock,
   LogOut,
-  Bell,
-  RefreshCw,
-  FlaskConical,
-  Activity,
-  Sliders,
+  Users,
+  ShieldCheck,
   Scale,
-  Search,
-  Sparkles,
+  FlaskConical,
+  Menu,
+  X,
+  User,
+  Layers,
 } from 'lucide-react';
 
 interface UserSession {
@@ -44,10 +39,19 @@ export default function Navbar() {
   if (pathname === '/' || pathname === '/about' || pathname === '/download') {
     return <MarketingNavbar />;
   }
+
   const [user, setUser] = useState<UserSession | null>(null);
-  const [notifications, setNotifications] = useState<any[]>([]);
-  const [showNotifs, setShowNotifs] = useState(false);
   const [switching, setSwitching] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -57,38 +61,6 @@ export default function Navbar() {
       })
       .catch(() => {});
   }, [pathname]);
-
-  useEffect(() => {
-    const sse = new EventSource('/api/realtime/sse');
-
-    sse.addEventListener('TRANSFER_RECEIVED', (e) => {
-      const data = JSON.parse(e.data);
-      setNotifications((prev) => [
-        {
-          id: Date.now(),
-          title: 'Asset Received',
-          body: `Received ${data.quantity} ${data.symbol} from ${data.sender_account_no}`,
-          time: new Date().toLocaleTimeString(),
-        },
-        ...prev,
-      ]);
-    });
-
-    sse.addEventListener('TRANSACTION_UPDATE', (e) => {
-      const data = JSON.parse(e.data);
-      setNotifications((prev) => [
-        {
-          id: Date.now(),
-          title: `Transaction ${data.status.toUpperCase()}`,
-          body: `${data.type.toUpperCase()}: ${data.quantity} ${data.symbol}`,
-          time: new Date().toLocaleTimeString(),
-        },
-        ...prev,
-      ]);
-    });
-
-    return () => sse.close();
-  }, []);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -128,248 +100,95 @@ export default function Navbar() {
     }
   };
 
+  const customerNav = [
+    { href: '/customer/dashboard', label: 'Dashboard' },
+    { href: '/customer/holdings', label: 'Holdings' },
+    { href: '/customer/transfer', label: 'Transfer' },
+    { href: '/customer/swap', label: 'Swap' },
+    { href: '/customer/history', label: 'History' },
+    { href: '/customer/reservations', label: 'Reservations' },
+  ];
+
+  const adminNav = [
+    { href: '/admin/dashboard', label: 'Dashboard' },
+    { href: '/admin/kyc', label: 'KYC Review' },
+    { href: '/admin/accounts', label: 'Accounts' },
+    { href: '/admin/assets', label: 'Assets' },
+    { href: '/admin/reconciliation', label: 'Reconciliation' },
+    { href: '/admin/customer-lookup', label: 'Customer Search' },
+    { href: '/admin/lab', label: 'DBMS Lab' },
+  ];
+
+  const auditorNav = [
+    { href: '/auditor/dashboard', label: 'Dashboard' },
+    { href: '/auditor/transactions', label: 'Masked Txns' },
+    { href: '/auditor/audit-logs', label: 'Audit Trail' },
+    { href: '/auditor/access-logs', label: 'Access Logs' },
+    { href: '/auditor/reports', label: 'Reports' },
+  ];
+
+  const activeNavList =
+    user?.role === 'ADMIN'
+      ? adminNav
+      : user?.role === 'AUDITOR'
+      ? auditorNav
+      : customerNav;
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#182030] bg-[#06080e]/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <Image
-            src="/bytebank-icon.svg"
-            alt="ByteBank"
-            width={36}
-            height={36}
-            className="w-9 h-9 rounded-xl group-hover:scale-105 transition-transform drop-shadow"
-            priority
-          />
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-200 border-b border-[#E8ECF6] ${
+        scrolled
+          ? 'bg-white/95 backdrop-blur-md shadow-[0_4px_20px_rgba(27,11,92,0.04)]'
+          : 'bg-white/90 backdrop-blur-sm'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          <div className="relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0">
+            <Image
+              src="/bytebank-icon.svg"
+              alt="ByteBank"
+              width={32}
+              height={32}
+              className="w-8 h-8 object-contain group-hover:scale-105 transition-transform"
+              priority
+            />
+          </div>
           <div className="flex flex-col">
-            <span className="font-extrabold tracking-tight text-white text-lg leading-tight">
-              Byte<span className="text-blue-400">Bank</span>
-            </span>
-            <span className="text-[9px] font-mono tracking-widest text-slate-400 uppercase -mt-0.5">
-              Asset Ledger
+            <span className="text-xl font-bold tracking-tight text-[#1B0B5C] uppercase font-sans">
+              Byte<span className="text-[#0B4FFF]">Bank</span>
             </span>
           </div>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1.5 text-xs font-medium">
-          {user?.role === 'CUSTOMER' && (
-            <>
+        <nav className="hidden lg:flex items-center gap-1.5 text-xs font-medium">
+          {activeNavList.map((item) => {
+            const isActive = pathname === item.href;
+            return (
               <Link
-                href="/customer/dashboard"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/customer/dashboard'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
+                key={item.href}
+                href={item.href}
+                className={`px-3.5 py-1.5 rounded-full transition-all text-xs ${
+                  isActive
+                    ? 'bg-[#0B4FFF] text-white font-semibold shadow-[0_4px_14px_rgba(11,79,255,0.28)]'
+                    : 'text-[#2B2F4A] hover:text-[#0B4FFF] hover:bg-[#EEF3FF]'
                 }`}
               >
-                Dashboard
+                {item.label}
               </Link>
-              <Link
-                href="/customer/holdings"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/customer/holdings'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Holdings
-              </Link>
-              <Link
-                href="/customer/transfer"
-                className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
-                  pathname === '/customer/transfer'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                <ArrowRightLeft className="w-3.5 h-3.5" />
-                Transfer
-              </Link>
-              <Link
-                href="/customer/swap"
-                className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
-                  pathname === '/customer/swap'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                Swap
-              </Link>
-              <Link
-                href="/customer/history"
-                className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
-                  pathname === '/customer/history'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                <History className="w-3.5 h-3.5" />
-                History
-              </Link>
-              <Link
-                href="/customer/reservations"
-                className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
-                  pathname === '/customer/reservations'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                <Lock className="w-3.5 h-3.5" />
-                Reservations
-              </Link>
-            </>
-          )}
-
-          {user?.role === 'ADMIN' && (
-            <>
-              <Link
-                href="/admin/dashboard"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/admin/dashboard'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Admin
-              </Link>
-              <Link
-                href="/admin/kyc"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/admin/kyc'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                KYC Review
-              </Link>
-              <Link
-                href="/admin/accounts"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/admin/accounts'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Accounts
-              </Link>
-              <Link
-                href="/admin/assets"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/admin/assets'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Assets
-              </Link>
-              <Link
-                href="/admin/reconciliation"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/admin/reconciliation'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Reconciliation
-              </Link>
-              <Link
-                href="/admin/lab"
-                className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
-                  pathname === '/admin/lab'
-                    ? 'text-white bg-purple-600 shadow-glow font-bold'
-                    : 'text-purple-300 hover:text-white hover:bg-purple-950/40'
-                }`}
-              >
-                <FlaskConical className="w-3.5 h-3.5" />
-                DBMS Lab
-              </Link>
-            </>
-          )}
-
-          {user?.role === 'AUDITOR' && (
-            <>
-              <Link
-                href="/auditor/dashboard"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/auditor/dashboard'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Auditor
-              </Link>
-              <Link
-                href="/auditor/transactions"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/auditor/transactions'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Masked Txns
-              </Link>
-              <Link
-                href="/auditor/audit-logs"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/auditor/audit-logs'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Audit Trail
-              </Link>
-              <Link
-                href="/auditor/access-logs"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/auditor/access-logs'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Access Logs
-              </Link>
-              <Link
-                href="/auditor/reports"
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  pathname === '/auditor/reports'
-                    ? 'text-white bg-blue-600 shadow-glow-blue font-bold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-900'
-                }`}
-              >
-                Reports
-              </Link>
-            </>
-          )}
-
-          {!user && (
-            <div className="flex items-center gap-1 font-mono text-[11px] text-slate-400">
-              <Link href="/admin/lab" className="px-2.5 py-1 rounded-md hover:text-white transition-colors">
-                DBMS Lab
-              </Link>
-              <Link href="/docs" className="px-2.5 py-1 rounded-md hover:text-white transition-colors">
-                API Docs
-              </Link>
-            </div>
-          )}
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/admin/reconciliation"
-            className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0c101a] border border-[#182030] text-[11px] font-mono text-slate-300 hover:border-blue-500/50 transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>15/15 Invariants PASS</span>
-          </Link>
-
-          <div className="hidden sm:flex items-center rounded-xl bg-[#0c101a] border border-[#182030] p-0.5 text-xs font-mono">
+          <div className="hidden sm:inline-flex items-center p-1 rounded-full bg-[#EEF1FA] border border-[#E8ECF6] text-xs font-semibold">
             <button
               onClick={() => handleQuickSwitch('CUSTOMER')}
               disabled={switching}
-              className={`px-2 py-1 rounded-lg transition-all ${
+              className={`px-3 py-1 rounded-full transition-all text-xs ${
                 user?.role === 'CUSTOMER'
-                  ? 'bg-blue-600 text-white font-bold shadow-glow-blue'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#0B4FFF] text-white shadow-xs'
+                  : 'text-[#6B7090] hover:text-[#1B0B5C]'
               }`}
             >
               Cust
@@ -377,10 +196,10 @@ export default function Navbar() {
             <button
               onClick={() => handleQuickSwitch('ADMIN')}
               disabled={switching}
-              className={`px-2 py-1 rounded-lg transition-all ${
+              className={`px-3 py-1 rounded-full transition-all text-xs ${
                 user?.role === 'ADMIN'
-                  ? 'bg-blue-600 text-white font-bold shadow-glow-blue'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#0B4FFF] text-white shadow-xs'
+                  : 'text-[#6B7090] hover:text-[#1B0B5C]'
               }`}
             >
               Admin
@@ -388,10 +207,10 @@ export default function Navbar() {
             <button
               onClick={() => handleQuickSwitch('AUDITOR')}
               disabled={switching}
-              className={`px-2 py-1 rounded-lg transition-all ${
+              className={`px-3 py-1 rounded-full transition-all text-xs ${
                 user?.role === 'AUDITOR'
-                  ? 'bg-blue-600 text-white font-bold shadow-glow-blue'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-[#0B4FFF] text-white shadow-xs'
+                  : 'text-[#6B7090] hover:text-[#1B0B5C]'
               }`}
             >
               Audit
@@ -408,36 +227,139 @@ export default function Navbar() {
                     ? '/auditor/dashboard'
                     : '/customer/dashboard'
                 }
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-glow-blue flex items-center gap-1.5"
+                className="hidden sm:inline-flex px-4 py-2 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white font-semibold text-xs transition-all shadow-[0_4px_16px_rgba(11,79,255,0.3)] items-center gap-1.5"
               >
                 <span>Dashboard</span>
               </Link>
+
               <button
                 onClick={handleLogout}
-                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-rose-400 transition-colors"
+                className="p-2 rounded-full bg-white hover:bg-[#FFE9EF] border border-[#E8ECF6] hover:border-[#FED0DC] text-[#6B7090] hover:text-[#D6204F] transition-all"
                 title="Log out"
+                aria-label="Log out"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="w-4 h-4" />
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <Link
                 href="/login"
-                className="px-3.5 py-1.5 text-xs text-slate-300 hover:text-white font-medium transition-colors"
+                className="px-3.5 py-1.5 text-xs text-[#2B2F4A] hover:text-[#0B4FFF] font-semibold transition-colors"
               >
                 Sign in
               </Link>
               <Link
-                href="/customer/dashboard"
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all shadow-glow-blue flex items-center gap-1.5"
+                href="/register"
+                className="btn-pill-primary px-4 py-2 text-xs"
               >
-                <span>Launch App</span>
+                Get Started
               </Link>
             </div>
           )}
+
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden p-2 rounded-xl text-[#1B0B5C] hover:bg-[#EEF3FF] transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
+
+      {mobileOpen && (
+        <div className="lg:hidden border-t border-[#E8ECF6] bg-white px-4 py-5 space-y-4 shadow-lg animate-in slide-in-from-top-2">
+          <div className="flex items-center justify-between pb-3 border-b border-[#EEF1FA]">
+            <span className="text-xs font-bold text-[#6B7090] uppercase tracking-wider">
+              Switch Role
+            </span>
+            <div className="inline-flex items-center p-0.5 rounded-full bg-[#EEF1FA] border border-[#E8ECF6] text-xs font-semibold">
+              <button
+                onClick={() => {
+                  handleQuickSwitch('CUSTOMER');
+                  setMobileOpen(false);
+                }}
+                className={`px-2.5 py-1 rounded-full text-xs ${
+                  user?.role === 'CUSTOMER'
+                    ? 'bg-[#0B4FFF] text-white'
+                    : 'text-[#6B7090]'
+                }`}
+              >
+                Cust
+              </button>
+              <button
+                onClick={() => {
+                  handleQuickSwitch('ADMIN');
+                  setMobileOpen(false);
+                }}
+                className={`px-2.5 py-1 rounded-full text-xs ${
+                  user?.role === 'ADMIN'
+                    ? 'bg-[#0B4FFF] text-white'
+                    : 'text-[#6B7090]'
+                }`}
+              >
+                Admin
+              </button>
+              <button
+                onClick={() => {
+                  handleQuickSwitch('AUDITOR');
+                  setMobileOpen(false);
+                }}
+                className={`px-2.5 py-1 rounded-full text-xs ${
+                  user?.role === 'AUDITOR'
+                    ? 'bg-[#0B4FFF] text-white'
+                    : 'text-[#6B7090]'
+                }`}
+              >
+                Audit
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {activeNavList.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                    isActive
+                      ? 'bg-[#0B4FFF] text-white'
+                      : 'text-[#2B2F4A] hover:bg-[#EEF3FF] hover:text-[#0B4FFF]'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="pt-2 border-t border-[#EEF1FA] flex items-center justify-between text-xs">
+            {user ? (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileOpen(false);
+                }}
+                className="w-full py-2.5 rounded-xl border border-[#FED0DC] bg-[#FFE9EF] text-[#D6204F] font-semibold text-center hover:bg-[#FDD5DF] transition-colors"
+              >
+                Sign Out ({user.username})
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="btn-pill-primary w-full py-2.5 text-xs text-center"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

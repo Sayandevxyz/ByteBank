@@ -11,13 +11,29 @@ import {
   ArrowDownLeft,
   RefreshCw,
   FileText,
-  CheckCircle2,
-  XCircle,
-  Clock,
   ChevronLeft,
   ChevronRight,
-  AlertTriangle,
 } from 'lucide-react';
+import AppShell from '@/components/app/AppShell';
+import PageHeader from '@/components/app/PageHeader';
+import SectionCard from '@/components/app/SectionCard';
+import DataTable, { Column } from '@/components/app/DataTable';
+import StatusChip from '@/components/app/StatusChip';
+
+function formatDate(isoStr: string) {
+  try {
+    const d = new Date(isoStr);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = months[d.getMonth()];
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${day} ${month} ${year}, ${hours}:${minutes}`;
+  } catch {
+    return isoStr;
+  }
+}
 
 export default function CustomerHistoryPage() {
   const [activeTab, setActiveTab] = useState<'transactions' | 'statement'>('transactions');
@@ -41,7 +57,7 @@ export default function CustomerHistoryPage() {
       const res = await fetch('/api/admin/assets');
       const data = await res.json();
       if (data.assets) setAssets(data.assets);
-    } catch (e) {}
+    } catch {}
   };
 
   const fetchTransactions = async () => {
@@ -131,68 +147,212 @@ export default function CustomerHistoryPage() {
     setPage(1);
   };
 
-  return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
+  const txnColumns: Column[] = [
+    {
+      key: 'transaction_id',
+      header: 'TX ID',
+      render: (tx) => (
+        <span className="font-mono font-bold text-[#0B4FFF]">
+          #{tx.transaction_id}
+        </span>
+      ),
+    },
+    {
+      key: 'counterparty',
+      header: 'Direction / Counterparty',
+      render: (tx) => {
+        const isDebit = tx.direction === 'OUT' || tx.direction === 'DEBIT';
+        return (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#111c33] border border-blue-800 text-blue-400 font-semibold">
-              TRANSACTION LEDGER
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              Double-entry Invariant Verified
-            </span>
+            <div
+              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
+                isDebit ? 'bg-[#FFE9EF] text-[#D6204F]' : 'bg-[#E6FBF4] text-[#0E9F73]'
+              }`}
+            >
+              {isDebit ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />}
+            </div>
+            <div>
+              <div className="font-semibold text-[#1B0B5C]">
+                {isDebit ? 'To: ' : 'From: '}
+                <span className="font-mono text-xs">{tx.counterparty_account_no}</span>
+              </div>
+              <div className="text-[11px] text-[#6B7090]">{tx.counterparty_name}</div>
+            </div>
           </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Activity & Statements</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Browse all historical transfers, simulated swaps, and signed double-entry ledger records.
-          </p>
+        );
+      },
+    },
+    {
+      key: 'asset',
+      header: 'Asset',
+      render: (tx) => (
+        <div>
+          <span className="font-bold text-[#1B0B5C]">{tx.symbol}</span>{' '}
+          <span className="text-[11px] text-[#6B7090]">({tx.asset_name})</span>
         </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex rounded-xl bg-slate-900 border border-[#182030] p-1">
-            <button
-              onClick={() => {
-                setActiveTab('transactions');
-                setPage(1);
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                activeTab === 'transactions'
-                  ? 'bg-blue-600 text-white font-bold shadow-glow-blue'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Transactions
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('statement');
-                setPage(1);
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                activeTab === 'statement'
-                  ? 'bg-blue-600 text-white font-bold shadow-glow-blue'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Audit Statement
-            </button>
-          </div>
-
-          <button
-            onClick={handleExportCsv}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
+      ),
+    },
+    {
+      key: 'quantity',
+      header: 'Amount',
+      align: 'right',
+      render: (tx) => {
+        const isDebit = tx.direction === 'OUT' || tx.direction === 'DEBIT';
+        return (
+          <span
+            className={`font-mono font-bold tabular-nums text-xs ${
+              isDebit ? 'text-[#D6204F]' : 'text-[#0E9F73]'
+            }`}
           >
-            <Download className="w-3.5 h-3.5 text-blue-400" />
-            Export CSV
-          </button>
-        </div>
-      </div>
+            {isDebit ? '-' : '+'}
+            {parseFloat(tx.quantity).toLocaleString(undefined, { maximumFractionDigits: 8 })}
+          </span>
+        );
+      },
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      render: (tx) => (
+        <span className="capitalize font-semibold text-xs text-[#2B2F4A]">
+          {tx.type}
+        </span>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      align: 'center',
+      render: (tx) => <StatusChip status={tx.status} size="sm" />,
+    },
+    {
+      key: 'created_at',
+      header: 'Timestamp',
+      align: 'right',
+      render: (tx) => (
+        <span className="text-xs text-[#6B7090] font-mono tabular-nums">
+          {formatDate(tx.created_at)}
+        </span>
+      ),
+    },
+  ];
 
-      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-wrap items-center gap-3 text-xs">
-        <div className="flex items-center gap-1.5 text-slate-400 font-mono">
-          <Filter className="w-3.5 h-3.5 text-blue-400" />
+  const statementColumns: Column[] = [
+    {
+      key: 'entry_id',
+      header: 'Entry ID',
+      render: (s) => <span className="font-mono font-bold text-[#0B4FFF]">#{s.entry_id}</span>,
+    },
+    {
+      key: 'transaction_id',
+      header: 'Tx Ref',
+      render: (s) => <span className="font-mono text-xs text-[#6B7090]">#{s.transaction_id}</span>,
+    },
+    {
+      key: 'entry_type',
+      header: 'Entry Type',
+      render: (s) => <StatusChip status={s.entry_type} size="sm" />,
+    },
+    {
+      key: 'asset',
+      header: 'Asset',
+      render: (s) => (
+        <span className="font-bold text-[#1B0B5C]">
+          {s.symbol} <span className="text-xs text-[#6B7090]">({s.asset_name})</span>
+        </span>
+      ),
+    },
+    {
+      key: 'amount',
+      header: 'Amount',
+      align: 'right',
+      render: (s) => {
+        const isDebit = s.entry_type === 'DEBIT';
+        return (
+          <span
+            className={`font-mono font-bold tabular-nums ${
+              isDebit ? 'text-[#D6204F]' : 'text-[#0E9F73]'
+            }`}
+          >
+            {isDebit ? '-' : '+'}
+            {parseFloat(s.amount).toLocaleString(undefined, { maximumFractionDigits: 8 })}
+          </span>
+        );
+      },
+    },
+    {
+      key: 'resulting_balance',
+      header: 'Resulting Balance',
+      align: 'right',
+      render: (s) => (
+        <span className="font-mono font-bold text-[#1B0B5C] tabular-nums">
+          {parseFloat(s.resulting_balance).toLocaleString(undefined, { maximumFractionDigits: 8 })}
+        </span>
+      ),
+    },
+    {
+      key: 'created_at',
+      header: 'Posted At',
+      align: 'right',
+      render: (s) => (
+        <span className="text-xs text-[#6B7090] font-mono tabular-nums">
+          {formatDate(s.created_at)}
+        </span>
+      ),
+    },
+  ];
+
+  return (
+    <AppShell>
+      <PageHeader
+        title="Activity &amp; Statements"
+        subtitle="Browse all historical transfers, simulated swaps, and signed double-entry ledger records"
+        accountNo={accountNo || undefined}
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="p-1 rounded-full bg-[#EEF1FA] border border-[#E8ECF6] flex items-center">
+              <button
+                onClick={() => {
+                  setActiveTab('transactions');
+                  setPage(1);
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  activeTab === 'transactions'
+                    ? 'bg-[#0B4FFF] text-white shadow-xs'
+                    : 'text-[#6B7090] hover:text-[#1B0B5C]'
+                }`}
+              >
+                Transactions
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('statement');
+                  setPage(1);
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  activeTab === 'statement'
+                    ? 'bg-[#0B4FFF] text-white shadow-xs'
+                    : 'text-[#6B7090] hover:text-[#1B0B5C]'
+                }`}
+              >
+                Audit Statement
+              </button>
+            </div>
+
+            <button
+              onClick={handleExportCsv}
+              className="h-10 px-4 rounded-full bg-white border border-[#D5DBEE] hover:bg-[#F6F8FF] text-[#2B2F4A] font-semibold text-xs flex items-center gap-1.5 transition-colors shadow-xs"
+            >
+              <Download className="w-3.5 h-3.5 text-[#0B4FFF]" />
+              <span>Export CSV</span>
+            </button>
+          </div>
+        }
+      />
+
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E8ECF6] shadow-[0_8px_30px_rgba(27,11,92,0.08)] flex flex-wrap items-center gap-3 text-xs">
+        <div className="flex items-center gap-1.5 text-[#6B7090] font-semibold">
+          <Filter className="w-3.5 h-3.5 text-[#0B4FFF]" />
           <span>Filters:</span>
         </div>
 
@@ -204,7 +364,7 @@ export default function CustomerHistoryPage() {
                 setAssetId(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-blue-500"
+              className="bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-3 py-2 text-xs font-semibold text-[#1B0B5C] focus:outline-none focus:border-[#0B4FFF]"
             >
               <option value="">All Assets</option>
               {assets.map((a) => (
@@ -220,7 +380,7 @@ export default function CustomerHistoryPage() {
                 setType(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-blue-500"
+              className="bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-3 py-2 text-xs font-semibold text-[#1B0B5C] focus:outline-none focus:border-[#0B4FFF]"
             >
               <option value="">All Types</option>
               <option value="transfer">Transfer</option>
@@ -235,7 +395,7 @@ export default function CustomerHistoryPage() {
                 setStatus(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-900 border border-[#182030] rounded-lg px-2.5 py-1.5 text-slate-300 font-mono focus:border-blue-500"
+              className="bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-3 py-2 text-xs font-semibold text-[#1B0B5C] focus:outline-none focus:border-[#0B4FFF]"
             >
               <option value="">All Statuses</option>
               <option value="success">Success</option>
@@ -247,7 +407,7 @@ export default function CustomerHistoryPage() {
         )}
 
         <div className="flex items-center gap-2">
-          <span className="text-slate-500">From:</span>
+          <span className="text-[#6B7090] font-medium">From:</span>
           <input
             type="date"
             value={startDate}
@@ -255,9 +415,9 @@ export default function CustomerHistoryPage() {
               setStartDate(e.target.value);
               setPage(1);
             }}
-            className="bg-slate-900 border border-[#182030] rounded-lg px-2 py-1 text-slate-300 font-mono text-[11px]"
+            className="bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-2.5 py-1.5 text-xs text-[#1B0B5C] font-mono focus:outline-none focus:border-[#0B4FFF]"
           />
-          <span className="text-slate-500">To:</span>
+          <span className="text-[#6B7090] font-medium">To:</span>
           <input
             type="date"
             value={endDate}
@@ -265,234 +425,66 @@ export default function CustomerHistoryPage() {
               setEndDate(e.target.value);
               setPage(1);
             }}
-            className="bg-slate-900 border border-[#182030] rounded-lg px-2 py-1 text-slate-300 font-mono text-[11px]"
+            className="bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl px-2.5 py-1.5 text-xs text-[#1B0B5C] font-mono focus:outline-none focus:border-[#0B4FFF]"
           />
         </div>
 
         {(assetId || type || status || startDate || endDate) && (
           <button
             onClick={resetFilters}
-            className="text-[11px] text-blue-400 hover:underline ml-auto font-mono"
+            className="text-xs font-semibold text-[#0B4FFF] hover:underline ml-auto"
           >
             Clear Filters
           </button>
         )}
       </div>
 
-      {activeTab === 'transactions' && (
-        <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
-          {loading ? (
-            <div className="py-20 flex items-center justify-center text-slate-500 text-xs font-mono">
-              <RefreshCw className="w-4 h-4 animate-spin text-blue-400 mr-2" />
-              Fetching Transactions from PostgreSQL...
-            </div>
-          ) : transactions.length === 0 ? (
-            <div className="py-20 text-center text-slate-500 text-xs font-mono">
-              No transactions match the selected filters.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
-                  <tr>
-                    <th className="py-3 px-4 font-semibold">Tx ID</th>
-                    <th className="py-3 px-4 font-semibold">Direction / Counterparty</th>
-                    <th className="py-3 px-4 font-semibold">Asset</th>
-                    <th className="py-3 px-4 font-semibold text-right">Amount</th>
-                    <th className="py-3 px-4 font-semibold">Type</th>
-                    <th className="py-3 px-4 font-semibold">Status</th>
-                    <th className="py-3 px-4 font-semibold text-right">Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
-                  {transactions.map((tx) => {
-                    const isDebit = tx.direction === 'OUT';
-                    return (
-                      <tr key={tx.transaction_id} className="hover:bg-slate-800/30 transition-colors">
-                        <td className="py-3 px-4 text-blue-400 font-bold">
-                          #{tx.transaction_id}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            {isDebit ? (
-                              <div className="w-6 h-6 rounded-full bg-rose-950/80 border border-rose-800 text-rose-400 flex items-center justify-center">
-                                <ArrowUpRight className="w-3.5 h-3.5" />
-                              </div>
-                            ) : (
-                              <div className="w-6 h-6 rounded-full bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center">
-                                <ArrowDownLeft className="w-3.5 h-3.5" />
-                              </div>
-                            )}
-                            <div>
-                              <div className="text-white font-medium">
-                                {isDebit ? 'To: ' : 'From: '}
-                                {tx.counterparty_account_no}
-                              </div>
-                              <div className="text-[10px] text-slate-500">
-                                {tx.counterparty_name}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="font-bold text-white">{tx.symbol}</span>{' '}
-                          <span className="text-[10px] text-slate-500">({tx.asset_name})</span>
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          <span
-                            className={`font-semibold ${
-                              isDebit ? 'text-rose-400' : 'text-emerald-400 font-bold'
-                            }`}
-                          >
-                            {isDebit ? '-' : '+'}
-                            {parseFloat(tx.quantity).toLocaleString(undefined, {
-                              maximumFractionDigits: 8,
-                            })}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 uppercase text-[10px]">
-                            {tx.type}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 ${
-                              tx.status === 'success'
-                                ? 'bg-emerald-950/70 border border-emerald-800 text-emerald-400'
-                                : tx.status === 'pending'
-                                ? 'bg-amber-950/70 border border-amber-800 text-amber-400'
-                                : 'bg-rose-950/70 border border-rose-800 text-rose-400'
-                            }`}
-                          >
-                            {tx.status === 'success' && <CheckCircle2 className="w-2.5 h-2.5" />}
-                            {tx.status === 'pending' && <Clock className="w-2.5 h-2.5" />}
-                            {tx.status === 'failed' && <XCircle className="w-2.5 h-2.5" />}
-                            {tx.status === 'rejected' && <AlertTriangle className="w-2.5 h-2.5" />}
-                            {tx.status.toUpperCase()}
-                          </span>
-                          {tx.failure_reason && (
-                            <div className="text-[9px] text-rose-400 mt-0.5 max-w-xs truncate">
-                              {tx.failure_reason}
-                            </div>
-                          )}
-                        </td>
-                        <td className="py-3 px-4 text-right text-slate-500 text-[11px]">
-                          {new Date(tx.created_at).toLocaleString()}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
+      <div className="space-y-4">
+        {activeTab === 'transactions' ? (
+          <>
+            <DataTable
+              columns={txnColumns}
+              data={transactions}
+              keyExtractor={(tx) => tx.transaction_id}
+              loading={loading}
+              emptyMessage="No transactions match the selected filters."
+            />
 
-          <div className="p-4 bg-[#0c101a] border-t border-[#182030] flex items-center justify-between text-xs font-mono">
-            <span className="text-slate-500">
-              Showing page {page} of {totalPages} ({total} total transactions)
-            </span>
+            <div className="p-4 bg-white rounded-2xl border border-[#E8ECF6] shadow-xs flex items-center justify-between text-xs text-[#6B7090]">
+              <span>
+                Showing page {page} of {totalPages} ({total} total transactions)
+              </span>
 
-            <div className="flex items-center gap-2">
-              <button
-                disabled={page <= 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 disabled:opacity-40 text-slate-300 hover:text-white flex items-center gap-1"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" /> Prev
-              </button>
-              <button
-                disabled={page >= totalPages}
-                onClick={() => setPage((p) => p + 1)}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 disabled:opacity-40 text-slate-300 hover:text-white flex items-center gap-1"
-              >
-                Next <ChevronRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="px-3 py-1.5 rounded-full bg-white border border-[#D5DBEE] hover:bg-[#F6F8FF] disabled:opacity-40 text-[#2B2F4A] font-semibold text-xs flex items-center gap-1 transition-colors"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <span>Prev</span>
+                </button>
+                <button
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="px-3 py-1.5 rounded-full bg-white border border-[#D5DBEE] hover:bg-[#F6F8FF] disabled:opacity-40 text-[#2B2F4A] font-semibold text-xs flex items-center gap-1 transition-colors"
+                >
+                  <span>Next</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'statement' && (
-        <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4 p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#182030] gap-2">
-            <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <FileText className="w-4 h-4 text-blue-400" />
-                Immutable Account Ledger Statement ({accountNo})
-              </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Every line below is an immutable <code className="text-blue-300">ledger_entry</code> generated by a committed transaction. Updates and deletes are blocked by database triggers.
-              </p>
-            </div>
-            <span className="text-xs font-mono text-emerald-400 px-3 py-1 rounded bg-emerald-950/60 border border-emerald-800">
-              Holding = &sum; Ledger Entries
-            </span>
-          </div>
-
-          {loading ? (
-            <div className="py-16 text-center text-slate-500 text-xs font-mono">
-              <RefreshCw className="w-4 h-4 animate-spin text-blue-400 inline mr-2" />
-              Evaluating Statement View...
-            </div>
-          ) : statement.length === 0 ? (
-            <div className="py-16 text-center text-slate-500 text-xs font-mono">
-              No statement entries found for this account.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
-                  <tr>
-                    <th className="py-3 px-4 font-semibold">Ledger Entry ID</th>
-                    <th className="py-3 px-4 font-semibold">Linked Tx ID</th>
-                    <th className="py-3 px-4 font-semibold">Asset</th>
-                    <th className="py-3 px-4 font-semibold text-right">Signed Delta</th>
-                    <th className="py-3 px-4 font-semibold">Counterparty</th>
-                    <th className="py-3 px-4 font-semibold">Posted At</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
-                  {statement.map((entry) => {
-                    const signedQty = parseFloat(entry.signed_quantity);
-                    const isPositive = signedQty > 0;
-                    return (
-                      <tr key={entry.entry_id} className="hover:bg-slate-800/30">
-                        <td className="py-3 px-4 text-blue-400 font-bold">
-                          ENTRY-{entry.entry_id}
-                        </td>
-                        <td className="py-3 px-4 text-slate-400">
-                          TX-{entry.transaction_id}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="font-bold text-white">{entry.symbol}</span>{' '}
-                          <span className="text-[10px] text-slate-500">({entry.asset_name})</span>
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          <span
-                            className={`font-semibold ${
-                              isPositive ? 'text-emerald-400 font-bold' : 'text-rose-400'
-                            }`}
-                          >
-                            {isPositive ? '+' : ''}
-                            {signedQty.toLocaleString(undefined, { maximumFractionDigits: 8 })}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-slate-400">
-                          {entry.counterparty_account_no || 'SYSTEM'}
-                        </td>
-                        <td className="py-3 px-4 text-slate-500 text-[11px]">
-                          {new Date(entry.posted_at).toLocaleString()}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+          </>
+        ) : (
+          <DataTable
+            columns={statementColumns}
+            data={statement}
+            keyExtractor={(s) => s.entry_id}
+            loading={loading}
+            emptyMessage="No statement entries found for the selected range."
+          />
+        )}
+      </div>
+    </AppShell>
   );
 }

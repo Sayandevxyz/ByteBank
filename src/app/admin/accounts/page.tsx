@@ -7,13 +7,15 @@ import {
   Lock,
   Unlock,
   Search,
-  Filter,
   RefreshCw,
   CheckCircle2,
   AlertCircle,
   ShieldAlert,
-  Coins,
+  ArrowLeft,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import StatusChip from '../../../components/app/StatusChip';
 
 export default function AdminAccountsPage() {
   const [accounts, setAccounts] = useState<any[]>([]);
@@ -97,73 +99,62 @@ export default function AdminAccountsPage() {
   });
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-purple-950/80 border border-purple-800 text-purple-400 font-semibold">
-              ACCOUNTS REGISTRY
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              Trigger-Guarded Status Updates
-            </span>
-          </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Account Management</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Enforce compliance freezes, review holdings distribution, and audit account status history.
-          </p>
-        </div>
-
-        <Link
-          href="/admin/dashboard"
-          className="text-xs font-mono text-blue-400 hover:text-blue-300"
-        >
-          &larr; Back to Admin Dashboard
-        </Link>
-      </div>
+    <AppShell>
+      <PageHeader
+        title="Account Management"
+        subtitle="Enforce compliance freezes, review holdings distribution, and audit account status history."
+        actions={
+          <Link
+            href="/admin/dashboard"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-[#EEF3FF] border border-[#E8ECF6] text-[#0B4FFF] text-xs font-semibold transition-colors shadow-2xs h-11"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Admin Dashboard</span>
+          </Link>
+        }
+      />
 
       {message && (
         <div
-          className={`p-4 rounded-xl text-xs flex items-center gap-2 ${
+          className={`p-4 rounded-2xl text-xs flex items-center gap-2.5 border ${
             message.type === 'success'
-              ? 'bg-emerald-950/60 border border-emerald-800 text-emerald-300'
-              : 'bg-rose-950/60 border border-rose-800 text-rose-300'
+              ? 'bg-[#E6FBF4] border-[#99F6E4] text-[#0E9F73]'
+              : 'bg-[#FFE9EF] border-[#FECDD3] text-[#D6204F]'
           }`}
         >
           {message.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0E9F73] shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-[#D6204F] shrink-0" />
           )}
-          <span>{message.text}</span>
+          <span className="font-medium">{message.text}</span>
         </div>
       )}
 
-      <div className="glass-panel p-4 rounded-2xl border border-[#182030] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono">
+      <div className="p-4 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1 max-w-md">
           <div className="relative w-full">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-[#6B7090] absolute left-3 top-3" />
             <input
               type="text"
               placeholder="Search by account number, name, or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-900 border border-[#182030] rounded-xl pl-9 pr-3 py-2 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-blue-500"
+              className="w-full bg-[#F6F8FF] border border-[#E1E6F5] rounded-xl pl-9 pr-3 py-2.5 text-[#1B0B5C] placeholder-[#6B7090] text-xs focus:outline-none focus:border-[#0B4FFF] focus:ring-2 focus:ring-[#0B4FFF]/20"
             />
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex rounded-xl bg-slate-900 border border-[#182030] p-1">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-[#EEF1FA]">
             {(['all', 'active', 'frozen'] as const).map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${
                   statusFilter === st
-                    ? 'bg-purple-600 text-white font-bold shadow-glow-blue'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#0B4FFF] text-white shadow-xs'
+                    : 'text-[#6B7090] hover:text-[#1B0B5C]'
                 }`}
               >
                 {st}
@@ -173,84 +164,72 @@ export default function AdminAccountsPage() {
 
           <button
             onClick={fetchAccounts}
-            className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#F6F8FF] hover:bg-[#EEF3FF] border border-[#E8ECF6] text-xs font-mono text-[#0B4FFF] font-semibold transition-colors"
           >
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Refresh</span>
           </button>
         </div>
       </div>
 
-      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden">
+      <div className="rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white overflow-hidden">
         {loading ? (
-          <div className="py-20 text-center text-slate-500 text-xs font-mono">
-            <RefreshCw className="w-4 h-4 animate-spin text-purple-400 inline mr-2" />
+          <div className="py-20 text-center text-[#6B7090] text-xs font-mono">
+            <RefreshCw className="w-4 h-4 animate-spin text-[#0B4FFF] inline mr-2" />
             Reading Account Registry from PostgreSQL...
           </div>
         ) : filteredAccounts.length === 0 ? (
-          <div className="py-20 text-center text-slate-500 text-xs font-mono">
+          <div className="py-20 text-center text-[#6B7090] text-xs font-mono">
             No accounts found matching criteria.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0c101a] border-b border-[#182030] text-slate-400">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold font-mono">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">Account No</th>
-                  <th className="py-3 px-4 font-semibold">Owner / Customer</th>
-                  <th className="py-3 px-4 font-semibold">Account Type</th>
-                  <th className="py-3 px-4 font-semibold">Status</th>
-                  <th className="py-3 px-4 font-semibold">Simulated Valuation</th>
-                  <th className="py-3 px-4 font-semibold">Holdings Count</th>
-                  <th className="py-3 px-4 font-semibold text-right">Actions</th>
+                  <th className="py-3.5 px-4">Account No</th>
+                  <th className="py-3.5 px-4">Owner / Customer</th>
+                  <th className="py-3.5 px-4">Account Type</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-4">Simulated Valuation</th>
+                  <th className="py-3.5 px-4">Holdings</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
                 {filteredAccounts.map((acc) => (
-                  <tr key={acc.account_id} className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-blue-400 font-bold">
+                  <tr key={acc.account_id} className="hover:bg-[#F6F8FF] transition-colors h-14">
+                    <td className="py-3 px-4 font-mono font-bold text-[#0B4FFF]">
                       {acc.account_no}
                       {acc.is_system && (
-                        <span className="ml-2 px-1.5 py-0.5 rounded bg-amber-950 border border-amber-800 text-amber-400 text-[9px]">
+                        <span className="ml-2 px-2 py-0.5 rounded-full bg-[#FEF3C7] border border-[#FDE68A] text-[#D97706] text-[9px] font-bold">
                           SYSTEM
                         </span>
                       )}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="text-white font-medium">
+                      <div className="text-[#1B0B5C] font-semibold">
                         {acc.customer_name || 'System Entity'}
                       </div>
-                      <div className="text-[10px] text-slate-500">
+                      <div className="text-[10px] text-[#6B7090] font-mono">
                         {acc.customer_email || 'treasury@bytebank.sim'}
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 uppercase text-[10px]">
+                      <span className="px-2.5 py-1 rounded-full bg-[#EEF1FA] text-[#1B0B5C] font-mono uppercase text-[10px] font-bold">
                         {acc.type}
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase inline-flex items-center gap-1 ${
-                          acc.status === 'active'
-                            ? 'bg-emerald-950/70 border border-emerald-800 text-emerald-400'
-                            : 'bg-rose-950/70 border border-rose-800 text-rose-400'
-                        }`}
-                      >
-                        {acc.status === 'active' ? (
-                          <CheckCircle2 className="w-2.5 h-2.5" />
-                        ) : (
-                          <Lock className="w-2.5 h-2.5" />
-                        )}
-                        {acc.status}
-                      </span>
+                      <StatusChip status={acc.status} />
                     </td>
-                    <td className="py-3 px-4 font-bold text-white">
+                    <td className="py-3 px-4 font-mono font-bold text-[#1B0B5C] tabular-nums">
                       ${parseFloat(acc.total_portfolio_value_sru || '0').toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </td>
-                    <td className="py-3 px-4 text-slate-400">
+                    <td className="py-3 px-4 text-[#6B7090] font-mono">
                       {acc.holdings_count || 0} distinct assets
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -258,16 +237,18 @@ export default function AdminAccountsPage() {
                         acc.status === 'active' ? (
                           <button
                             onClick={() => setActionModal({ account: acc, action: 'freeze' })}
-                            className="px-2.5 py-1 rounded bg-rose-950/70 hover:bg-rose-900 border border-rose-800 text-rose-300 text-[10px] font-mono transition-colors inline-flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-full bg-[#FFE9EF] hover:bg-[#F43F6E] text-[#D6204F] hover:text-white border border-[#FECDD3] text-[11px] font-mono font-bold transition-all inline-flex items-center gap-1 shadow-2xs"
                           >
-                            <Lock className="w-3 h-3" /> Freeze
+                            <Lock className="w-3 h-3" />
+                            <span>Freeze</span>
                           </button>
                         ) : (
                           <button
                             onClick={() => setActionModal({ account: acc, action: 'unfreeze' })}
-                            className="px-2.5 py-1 rounded bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 text-[10px] font-mono transition-colors inline-flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-full bg-[#E6FBF4] hover:bg-[#1FD6A0] text-[#0E9F73] hover:text-white border border-[#99F6E4] text-[11px] font-mono font-bold transition-all inline-flex items-center gap-1 shadow-2xs"
                           >
-                            <Unlock className="w-3 h-3" /> Unfreeze
+                            <Unlock className="w-3 h-3" />
+                            <span>Unfreeze</span>
                           </button>
                         )
                       )}
@@ -281,12 +262,12 @@ export default function AdminAccountsPage() {
       </div>
 
       {actionModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-panel p-6 rounded-2xl border border-[#182030] bg-slate-950 max-w-md w-full space-y-4">
-            <div className="flex items-center gap-2 text-white font-bold text-sm">
+        <div className="fixed inset-0 z-50 bg-[#1B0B5C]/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="p-6 rounded-2xl bg-white border border-[#E8ECF6] shadow-2xl max-w-md w-full space-y-4">
+            <div className="flex items-center gap-2 text-[#1B0B5C] font-bold text-sm">
               <ShieldAlert
-                className={`w-4 h-4 ${
-                  actionModal.action === 'freeze' ? 'text-rose-400' : 'text-emerald-400'
+                className={`w-5 h-5 ${
+                  actionModal.action === 'freeze' ? 'text-[#D6204F]' : 'text-[#0E9F73]'
                 }`}
               />
               <span className="capitalize">
@@ -294,14 +275,14 @@ export default function AdminAccountsPage() {
               </span>
             </div>
 
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-[#6B7090] leading-relaxed">
               {actionModal.action === 'freeze'
                 ? 'Freezing this account blocks all outbound transfers and swaps immediately. The risk screening engine will reject transactions targeting this account.'
                 : 'Unfreezing will restore transfer and swap permissions for this customer.'}
             </p>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] font-mono text-slate-400">
+              <label className="text-xs font-semibold text-[#2B2F4A]">
                 Compliance Reason (Logged in audit_log):
               </label>
               <textarea
@@ -309,7 +290,7 @@ export default function AdminAccountsPage() {
                 placeholder="e.g. Account security review / Suspicious activity report #104"
                 value={actionReason}
                 onChange={(e) => setActionReason(e.target.value)}
-                className="w-full bg-slate-900 border border-[#182030] rounded-xl p-3 text-white font-mono text-xs focus:outline-none focus:border-blue-500"
+                className="w-full bg-[#F6F8FF] border border-[#E1E6F5] focus:border-[#0B4FFF] rounded-xl p-3 text-[#1B0B5C] font-mono text-xs focus:outline-none focus:ring-2 focus:ring-[#0B4FFF]/20"
               />
             </div>
 
@@ -320,7 +301,7 @@ export default function AdminAccountsPage() {
                   setActionModal(null);
                   setActionReason('');
                 }}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono"
+                className="px-4 py-2 rounded-full bg-[#F6F8FF] hover:bg-[#EEF1FA] text-[#2B2F4A] text-xs font-semibold transition-colors"
               >
                 Cancel
               </button>
@@ -328,10 +309,10 @@ export default function AdminAccountsPage() {
                 type="button"
                 onClick={handleExecuteAction}
                 disabled={processing || !actionReason.trim()}
-                className={`px-4 py-2 rounded-xl text-white text-xs font-bold font-mono shadow-glow-blue ${
+                className={`px-5 py-2 rounded-full text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50 ${
                   actionModal.action === 'freeze'
-                    ? 'bg-rose-600 hover:bg-rose-500'
-                    : 'bg-emerald-600 hover:bg-emerald-500'
+                    ? 'bg-[#F43F6E] hover:bg-[#d6204f]'
+                    : 'bg-[#1FD6A0] hover:bg-[#19b98a]'
                 }`}
               >
                 {processing ? 'Applying...' : `Confirm ${actionModal.action.toUpperCase()}`}
@@ -340,6 +321,6 @@ export default function AdminAccountsPage() {
           </div>
         </div>
       )}
-    </div>
+    </AppShell>
   );
 }

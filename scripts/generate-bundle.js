@@ -28,3 +28,4 @@ export const MASTER_SEED_SQL = \`${escapeBackticks(seed)}\`;
 const targetPath = path.join(__dirname, '..', 'src', 'lib', 'db-schema-bundle.ts');
 fs.writeFileSync(targetPath, outContent, 'utf8');
 console.log('✓ db-schema-bundle.ts generated successfully at', targetPath);
+

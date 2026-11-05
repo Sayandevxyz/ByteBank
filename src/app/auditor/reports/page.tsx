@@ -19,23 +19,25 @@ import {
   PieChart as PieIcon,
   RefreshCw,
   AlertTriangle,
-  CheckCircle2,
-  TrendingDown,
-  Layers,
   Database,
+  ArrowLeft,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import SectionCard from '../../../components/app/SectionCard';
+import StatusChip from '../../../components/app/StatusChip';
 
 const STATUS_COLORS: Record<string, string> = {
-  success: '#10b981',
-  pending: '#f59e0b',
-  failed: '#ef4444',
-  rejected: '#a855f7',
+  success: '#1FD6A0',
+  pending: '#FFAB2E',
+  failed: '#F43F6E',
+  rejected: '#8B5CF6',
 };
 
 const RISK_COLORS: Record<string, string> = {
-  ALLOW: '#10b981',
-  REQUIRE_EXTRA_CONFIRMATION: '#f59e0b',
-  REJECT: '#ef4444',
+  ALLOW: '#1FD6A0',
+  REQUIRE_EXTRA_CONFIRMATION: '#FFAB2E',
+  REJECT: '#F43F6E',
 };
 
 export default function AuditorReportsPage() {
@@ -61,10 +63,12 @@ export default function AuditorReportsPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center py-20 text-slate-400 font-mono text-sm">
-        <RefreshCw className="w-4 h-4 animate-spin text-blue-400 mr-2" />
-        Aggregating Compliance Views from PostgreSQL...
-      </div>
+      <AppShell>
+        <div className="flex-1 flex items-center justify-center py-24 text-[#6B7090] font-mono text-sm">
+          <RefreshCw className="w-4 h-4 animate-spin text-[#0B4FFF] mr-2" />
+          Aggregating Compliance Views from PostgreSQL...
+        </div>
+      </AppShell>
     );
   }
 
@@ -89,43 +93,26 @@ export default function AuditorReportsPage() {
   }));
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#111c33] border border-blue-800 text-blue-400 font-semibold">
-              COMPLIANCE ANALYTICS
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              v_failed_by_month &bull; risk_assessment
-            </span>
-          </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Regulatory Reports &amp; Trends</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Visual telemetry on transaction success rates, risk rule distributions, and failed transaction cause clustering.
-          </p>
-        </div>
-
-        <Link
-          href="/auditor/dashboard"
-          className="text-xs font-mono text-blue-400 hover:text-blue-300"
-        >
-          &larr; Back to Auditor Dashboard
-        </Link>
-      </div>
+    <AppShell>
+      <PageHeader
+        title="Regulatory Reports & Trends"
+        subtitle="Visual telemetry on transaction success rates, risk rule distributions, and failed transaction cause clustering."
+        actions={
+          <Link
+            href="/auditor/dashboard"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-[#EEF3FF] border border-[#E8ECF6] text-[#0B4FFF] text-xs font-semibold transition-colors shadow-2xs h-11"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Auditor Dashboard</span>
+          </Link>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <PieIcon className="w-4 h-4 text-blue-400" />
-              Transaction Outcome Distribution
-            </h2>
-            <span className="text-xs font-mono text-slate-500">PostgreSQL Status Enum</span>
-          </div>
-
+        <SectionCard
+          title="Transaction Outcome Distribution"
+          subtitle="PostgreSQL status enum breakdown across all historical transactions."
+        >
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -141,22 +128,24 @@ export default function AuditorReportsPage() {
                   {statusBreakdown.map((entry: any, index: number) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={STATUS_COLORS[entry.statusKey] || '#64748b'}
+                      fill={STATUS_COLORS[entry.statusKey] || '#6B7090'}
                     />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0f172a',
-                    borderColor: '#334155',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E8ECF6',
                     borderRadius: '0.75rem',
+                    boxShadow: '0 8px 30px rgba(27,11,92,0.08)',
                     fontSize: '11px',
                     fontFamily: 'monospace',
+                    color: '#1B0B5C',
                   }}
                 />
                 <Legend
                   formatter={(val, entry: any) => (
-                    <span className="text-xs font-mono text-slate-300">
+                    <span className="text-xs font-mono text-[#2B2F4A]">
                       {val} ({entry.payload.value})
                     </span>
                   )}
@@ -164,127 +153,104 @@ export default function AuditorReportsPage() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </SectionCard>
 
-        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              Risk Screening Outcomes
-            </h2>
-            <span className="text-xs font-mono text-slate-500">assess_transfer_risk()</span>
-          </div>
-
+        <SectionCard
+          title="Risk Screening Outcomes"
+          subtitle="Automated risk rules engine decisions via assess_transfer_risk()."
+        >
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={riskStats}>
-                <XAxis dataKey="name" stroke="#64748b" fontSize={11} fontFamily="monospace" />
-                <YAxis stroke="#64748b" fontSize={11} fontFamily="monospace" />
+                <XAxis dataKey="name" stroke="#6B7090" fontSize={11} fontFamily="monospace" />
+                <YAxis stroke="#6B7090" fontSize={11} fontFamily="monospace" />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0f172a',
-                    borderColor: '#334155',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E8ECF6',
                     borderRadius: '0.75rem',
+                    boxShadow: '0 8px 30px rgba(27,11,92,0.08)',
                     fontSize: '11px',
                     fontFamily: 'monospace',
+                    color: '#1B0B5C',
                   }}
                 />
-                <ColumnBar dataKey="value" fill="#8884d8" radius={[6, 6, 0, 0]}>
+                <ColumnBar dataKey="value" fill="#0B4FFF" radius={[6, 6, 0, 0]}>
                   {riskStats.map((entry: any, index: number) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={RISK_COLORS[entry.name] || '#06b6d4'}
+                      fill={RISK_COLORS[entry.name] || '#0B4FFF'}
                     />
                   ))}
                 </ColumnBar>
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </SectionCard>
       </div>
 
-      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-[#182030]">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-emerald-400" />
-            Simulated Reference Volume by Asset (SRU / USD Equivalent)
-          </h2>
-          <span className="text-xs font-mono text-slate-500">quantity &times; sim_ref_price</span>
-        </div>
-
+      <SectionCard
+        title="Simulated Reference Volume by Asset (SRU / USD Equivalent)"
+        subtitle="Computed as quantity × sim_ref_price across all settled transactions."
+      >
         <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={assetVolumes}>
-              <XAxis dataKey="symbol" stroke="#64748b" fontSize={12} fontFamily="monospace" />
-              <YAxis stroke="#64748b" fontSize={11} fontFamily="monospace" />
+              <XAxis dataKey="symbol" stroke="#6B7090" fontSize={12} fontFamily="monospace" />
+              <YAxis stroke="#6B7090" fontSize={11} fontFamily="monospace" />
               <Tooltip
                 formatter={(val: any) => [`$${Number(val).toLocaleString()}`, 'Simulated Volume']}
                 contentStyle={{
-                  backgroundColor: '#0f172a',
-                  borderColor: '#334155',
+                  backgroundColor: '#FFFFFF',
+                  borderColor: '#E8ECF6',
                   borderRadius: '0.75rem',
+                  boxShadow: '0 8px 30px rgba(27,11,92,0.08)',
                   fontSize: '11px',
                   fontFamily: 'monospace',
+                  color: '#1B0B5C',
                 }}
               />
-              <ColumnBar dataKey="volume" fill="#06b6d4" radius={[6, 6, 0, 0]} />
+              <ColumnBar dataKey="volume" fill="#0B4FFF" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </SectionCard>
 
-      <div className="glass-panel rounded-2xl border border-[#182030] overflow-hidden space-y-4">
-        <div className="p-4 bg-[#0c101a] border-b border-[#182030] flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <Database className="w-4 h-4 text-rose-400" />
-              Failed &amp; Rejected Transactions by Month (v_failed_by_month)
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Materialized aggregation of transaction rejections, grouped by calendar month and failure reason codes.
-            </p>
-          </div>
-        </div>
-
+      <SectionCard
+        title="Failed & Rejected Transactions by Month (v_failed_by_month)"
+        subtitle="Materialized aggregation of transaction rejections, grouped by calendar month and failure reason codes."
+      >
         {failedByMonth.length === 0 ? (
-          <div className="py-12 text-center text-slate-500 text-xs font-mono">
+          <div className="py-12 text-center text-[#6B7090] text-xs font-mono">
             No failed transactions recorded in monthly aggregate view.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-6 -mb-6">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/40 text-slate-400 border-b border-[#182030]">
+              <thead className="bg-[#F6F8FF] border-b border-[#E8ECF6] text-[#6B7090] uppercase tracking-wider text-[11px] font-semibold">
                 <tr>
-                  <th className="py-2.5 px-4 font-semibold">Calendar Month</th>
-                  <th className="py-2.5 px-4 font-semibold">Outcome Status</th>
-                  <th className="py-2.5 px-4 font-semibold">Failure Reason / Violation</th>
-                  <th className="py-2.5 px-4 font-semibold text-right">Occurrence Count</th>
+                  <th className="py-3 px-4 font-semibold">Calendar Month</th>
+                  <th className="py-3 px-4 font-semibold">Outcome Status</th>
+                  <th className="py-3 px-4 font-semibold">Failure Reason / Violation</th>
+                  <th className="py-3 px-4 font-semibold text-right">Count</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-[#EEF1FA] text-[#2B2F4A]">
                 {failedByMonth.map((row: any, idx: number) => (
-                  <tr key={idx} className="hover:bg-slate-800/30">
-                    <td className="py-2.5 px-4 font-bold text-white">
+                  <tr key={idx} className="hover:bg-[#F6F8FF] transition-colors h-12">
+                    <td className="py-2.5 px-4 font-bold text-[#1B0B5C]">
                       {new Date(row.month).toLocaleDateString(undefined, {
                         year: 'numeric',
                         month: 'long',
                       })}
                     </td>
                     <td className="py-2.5 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                          row.status === 'rejected'
-                            ? 'bg-purple-950 text-purple-400 border border-purple-800'
-                            : 'bg-rose-950 text-rose-400 border border-rose-800'
-                        }`}
-                      >
-                        {row.status}
-                      </span>
+                      <StatusChip status={row.status} />
                     </td>
-                    <td className="py-2.5 px-4 text-slate-300">
+                    <td className="py-2.5 px-4 text-[#6B7090]">
                       {row.failure_reason || 'Unknown constraint failure'}
                     </td>
-                    <td className="py-2.5 px-4 text-right font-bold text-white">
+                    <td className="py-2.5 px-4 text-right font-bold text-[#1B0B5C] tabular-nums">
                       {row.n}
                     </td>
                   </tr>
@@ -293,7 +259,7 @@ export default function AuditorReportsPage() {
             </table>
           </div>
         )}
-      </div>
-    </div>
+      </SectionCard>
+    </AppShell>
   );
 }

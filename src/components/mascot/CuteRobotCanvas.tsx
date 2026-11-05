@@ -126,7 +126,7 @@ function CuteRobotMesh({ isHovered, isMoving, isWaving, headingZ }: RobotModelPr
   });
 
   return (
-    <group ref={rootRef} position={[0, -0.08, 0]} scale={[0.82, 0.82, 0.82]}>
+    <group ref={rootRef} position={[0, -0.12, 0]} scale={[0.72, 0.72, 0.72]}>
       <group ref={headRef} position={[0, 0.28, 0]}>
         <mesh position={[0, 0.08, 0]}>
           <sphereGeometry args={[0.36, 32, 32]} />
@@ -317,7 +317,7 @@ export default function CuteRobotCanvas({
           alpha: true,
           powerPreference: 'high-performance',
         }}
-        camera={{ position: [0, 0, 2.7], fov: 35 }}
+        camera={{ position: [0, 0.04, 3.1], fov: 36 }}
         style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}
       >
         <ambientLight intensity={1.3} />

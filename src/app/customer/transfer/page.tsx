@@ -11,14 +11,21 @@ import {
   CheckCircle2,
   Lock,
   ArrowRight,
-  Info,
-  Clock,
   RefreshCw,
+  Coins,
 } from 'lucide-react';
+import AppShell from '@/components/app/AppShell';
+import PageHeader from '@/components/app/PageHeader';
+import SectionCard from '@/components/app/SectionCard';
+import StatusChip from '@/components/app/StatusChip';
 
-const TransferCoinCanvas = dynamic(() => import('../../../components/canvas/TransferCoinCanvas'), {
+const TransferCoinCanvas = dynamic(() => import('@/components/canvas/TransferCoinCanvas'), {
   ssr: false,
-  loading: () => <div className="h-48 w-full flex items-center justify-center text-slate-500 text-xs">Loading 3D Transfer Node...</div>,
+  loading: () => (
+    <div className="h-44 w-full flex items-center justify-center text-[#6B7090] text-xs font-medium bg-white rounded-2xl border border-[#E8ECF6]">
+      Loading 3D Transfer Node...
+    </div>
+  ),
 });
 
 function TransferForm() {
@@ -134,14 +141,13 @@ function TransferForm() {
   };
 
   return (
-    <div className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
-
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Execute Asset Transfer</h1>
-        <p className="text-xs text-slate-400 mt-1">
-          Two-phase transfer: deterministic rule-based risk screening preview before committing ACID ledger debit & credit.
-        </p>
-      </div>
+    <AppShell containerClassName="max-w-5xl">
+      <PageHeader
+        title="Execute Asset Transfer"
+        subtitle="Recorded in PostgreSQL with double-entry ledger"
+        accountNo={account?.account_no}
+        accountStatus={account?.status}
+      />
 
       <TransferCoinCanvas
         status={transferStatus}
@@ -151,17 +157,14 @@ function TransferForm() {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-
-        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-5">
-          <div className="flex items-center justify-between border-b border-[#182030] pb-3">
-            <h2 className="text-sm font-semibold text-white">1. Transfer Parameters</h2>
-            <span className="text-[11px] font-mono text-blue-400">Step 1 of 2</span>
-          </div>
-
+        <SectionCard
+          title="1. Transfer Parameters"
+          subtitle="Configure recipient, asset, and quantity"
+        >
           <form onSubmit={handlePreview} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Recipient Account Number (e.g. BB-ACC-5002)
+              <label className="block text-sm font-semibold text-[#2B2F4A] mb-1.5">
+                Recipient Account Number
               </label>
               <input
                 type="text"
@@ -169,19 +172,21 @@ function TransferForm() {
                 value={recipientAccountNo}
                 onChange={(e) => setRecipientAccountNo(e.target.value.toUpperCase())}
                 placeholder="BB-ACC-5003"
-                className="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-[#182030] focus:border-blue-500 focus:outline-none text-xs font-mono text-white placeholder-slate-500"
+                className="w-full h-12 px-3.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] focus:border-[#0B4FFF] focus:ring-3 focus:ring-[rgba(11,79,255,0.18)] focus:outline-none text-xs font-mono text-[#1B0B5C] placeholder-[#8A90B0] transition-all"
               />
-              <span className="text-[10px] text-slate-500 mt-1 block">
-                Quick test accounts: BB-ACC-5001 (Rishi), BB-ACC-5002 (Rahul), BB-ACC-5003 (Priya), BB-ACC-5004 (Frozen Aman)
+              <span className="text-[11px] text-[#6B7090] mt-1.5 block">
+                Sample accounts: BB-ACC-5001 (Rishi), BB-ACC-5002 (Rahul), BB-ACC-5003 (Priya), BB-ACC-5004 (Frozen)
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Select Asset to Send</label>
+              <label className="block text-sm font-semibold text-[#2B2F4A] mb-1.5">
+                Select Asset to Send
+              </label>
               <select
                 value={assetId}
                 onChange={(e) => setAssetId(parseInt(e.target.value, 10))}
-                className="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-[#182030] text-xs text-white focus:outline-none focus:border-blue-500"
+                className="w-full h-12 px-3.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] text-xs font-semibold text-[#1B0B5C] focus:outline-none focus:border-[#0B4FFF] focus:ring-3 focus:ring-[rgba(11,79,255,0.18)] transition-all"
               >
                 {holdings.map((h) => (
                   <option key={h.assetId} value={h.assetId}>
@@ -192,13 +197,15 @@ function TransferForm() {
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="text-xs font-medium text-slate-300">Transfer Quantity</label>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="text-sm font-semibold text-[#2B2F4A]">
+                  Transfer Quantity
+                </label>
                 {selectedHolding && (
                   <button
                     type="button"
                     onClick={() => setQuantity(String(selectedHolding.availableQuantity))}
-                    className="text-[10px] font-mono text-blue-400 hover:underline"
+                    className="text-xs font-mono font-semibold text-[#0B4FFF] hover:text-[#0A3FD1] hover:underline"
                   >
                     Max ({selectedHolding.availableQuantity})
                   </button>
@@ -212,12 +219,12 @@ function TransferForm() {
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="0.1"
-                className="w-full px-3 py-2.5 rounded-lg bg-slate-900 border border-[#182030] focus:border-blue-500 focus:outline-none text-xs font-mono text-white"
+                className="w-full h-12 px-3.5 rounded-xl bg-[#F6F8FF] border border-[#E1E6F5] focus:border-[#0B4FFF] focus:ring-3 focus:ring-[rgba(11,79,255,0.18)] focus:outline-none text-xs font-mono text-[#1B0B5C] transition-all"
               />
             </div>
 
             {previewError && (
-              <div className="p-3 rounded-lg bg-rose-950/70 border border-rose-800 text-rose-300 text-xs">
+              <div className="p-3.5 rounded-xl bg-[#FFE9EF] border border-[#FED0DC] text-[#D6204F] text-xs font-semibold">
                 {previewError}
               </div>
             )}
@@ -225,51 +232,52 @@ function TransferForm() {
             <button
               type="submit"
               disabled={previewLoading || !selectedHolding}
-              className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center justify-center gap-2 shadow-glow-blue transition-all disabled:opacity-50"
+              className="w-full h-12 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-[0_6px_20px_-2px_rgba(11,79,255,0.35)] transition-all disabled:opacity-50"
             >
               <ShieldCheck className="w-4 h-4" />
               <span>{previewLoading ? 'Screening Risk Rules...' : 'Run Transaction Safety Preview'}</span>
             </button>
           </form>
-        </div>
+        </SectionCard>
 
-        <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-5">
-          <div className="flex items-center justify-between border-b border-[#182030] pb-3">
-            <h2 className="text-sm font-semibold text-white">2. Transaction Safety Preview</h2>
-            <span className="text-[10px] font-mono text-slate-400 uppercase">Rule-Based Risk Screening</span>
-          </div>
-
+        <SectionCard
+          title="2. Safety Preview &amp; Confirmation"
+          subtitle="Pre-flight rule check before PostgreSQL commit"
+        >
           {!previewData && !confirmReceipt && (
-            <div className="py-16 text-center text-slate-500 text-xs flex flex-col items-center justify-center gap-2">
-              <ShieldCheck className="w-8 h-8 text-slate-600" />
-              <span>Enter transfer details and run Safety Preview to inspect recipient and risk reasons.</span>
+            <div className="py-20 text-center text-[#6B7090] text-xs flex flex-col items-center justify-center gap-2.5">
+              <div className="w-12 h-12 rounded-full bg-[#EEF3FF] flex items-center justify-center text-[#0B4FFF]">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <span className="max-w-xs font-medium">
+                Enter transfer details and run Safety Preview to inspect recipient and risk reasons.
+              </span>
             </div>
           )}
 
           {previewData && !confirmReceipt && (
             <div className="space-y-4 text-xs">
-
               <div
-                className={`p-3.5 rounded-xl border flex items-start gap-3 ${
+                className={`p-4 rounded-xl border flex items-start gap-3 ${
                   previewData.outcome === 'ALLOW'
-                    ? 'bg-emerald-950/40 border-emerald-800/80 text-emerald-300'
+                    ? 'bg-[#E6FBF4] border-[#B2F5DE] text-[#0E9F73]'
                     : previewData.outcome === 'REQUIRE_EXTRA_CONFIRMATION'
-                    ? 'bg-amber-950/40 border-amber-800/80 text-amber-300'
-                    : 'bg-rose-950/40 border-rose-800/80 text-rose-300'
+                    ? 'bg-[#FFF4DD] border-[#FDE6B0] text-[#B7791F]'
+                    : 'bg-[#FFE9EF] border-[#FED0DC] text-[#D6204F]'
                 }`}
               >
                 {previewData.outcome === 'ALLOW' ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-[#0E9F73] shrink-0" />
                 ) : previewData.outcome === 'REQUIRE_EXTRA_CONFIRMATION' ? (
-                  <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <AlertTriangle className="w-5 h-5 text-[#B7791F] shrink-0" />
                 ) : (
-                  <XCircle className="w-5 h-5 text-rose-400 flex-shrink-0" />
+                  <XCircle className="w-5 h-5 text-[#D6204F] shrink-0" />
                 )}
                 <div>
                   <div className="font-bold text-xs uppercase tracking-wide">
                     OUTCOME: {previewData.outcome.replace(/_/g, ' ')}
                   </div>
-                  <div className="text-[11px] mt-0.5 opacity-90">
+                  <div className="text-[11px] mt-0.5 opacity-90 leading-relaxed font-medium">
                     {previewData.outcome === 'ALLOW' && 'Transfer cleared deterministic risk screening parameters.'}
                     {previewData.outcome === 'REQUIRE_EXTRA_CONFIRMATION' && 'Secondary confirmation required before posting.'}
                     {previewData.outcome === 'REJECT' && 'Transfer blocked by database compliance rules.'}
@@ -278,9 +286,9 @@ function TransferForm() {
               </div>
 
               {previewData.reasons?.length > 0 && (
-                <div className="p-3 rounded-xl bg-slate-900 border border-[#182030] space-y-1.5">
-                  <span className="font-semibold text-slate-300 text-[11px] block">Screening Rule Reasons:</span>
-                  <ul className="list-disc pl-4 space-y-1 text-slate-400 text-[11px]">
+                <div className="p-3.5 rounded-xl bg-[#F6F8FF] border border-[#E8ECF6] space-y-1.5">
+                  <span className="font-bold text-[#1B0B5C] text-xs block">Screening Rule Reasons:</span>
+                  <ul className="list-disc pl-4 space-y-1 text-[#2B2F4A] text-xs">
                     {previewData.reasons.map((r: string, idx: number) => (
                       <li key={idx}>{r}</li>
                     ))}
@@ -288,35 +296,35 @@ function TransferForm() {
                 </div>
               )}
 
-              <div className="space-y-2 p-3 rounded-xl bg-[#0c101a] border border-[#182030] text-[11px]">
-                <div className="flex justify-between py-1 border-b border-[#182030]">
-                  <span className="text-slate-400">Recipient (Masked):</span>
-                  <span className="font-semibold text-white">
+              <div className="space-y-2 p-3.5 rounded-xl bg-[#F6F8FF] border border-[#E8ECF6] text-xs">
+                <div className="flex justify-between py-1 border-b border-[#E8ECF6]">
+                  <span className="text-[#6B7090]">Recipient (Masked):</span>
+                  <span className="font-semibold text-[#1B0B5C]">
                     {previewData.recipient.ownerMasked} ({previewData.recipient.accountNo})
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#182030]">
-                  <span className="text-slate-400">Transfer Amount:</span>
-                  <span className="font-mono font-bold text-white">
+                <div className="flex justify-between py-1 border-b border-[#E8ECF6]">
+                  <span className="text-[#6B7090]">Transfer Amount:</span>
+                  <span className="font-mono font-bold text-[#0B4FFF]">
                     {previewData.transferQuantity} {previewData.asset.symbol} (~{previewData.simulatedValueSru} SRU)
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#182030]">
-                  <span className="text-slate-400">Current Available:</span>
-                  <span className="font-mono text-slate-300">
+                <div className="flex justify-between py-1 border-b border-[#E8ECF6]">
+                  <span className="text-[#6B7090]">Current Available:</span>
+                  <span className="font-mono text-[#2B2F4A]">
                     {previewData.currentAvailableQuantity} {previewData.asset.symbol}
                   </span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-400">Resulting Available Balance:</span>
-                  <span className="font-mono font-bold text-emerald-400">
+                  <span className="text-[#6B7090]">Resulting Available Balance:</span>
+                  <span className="font-mono font-bold text-[#0E9F73]">
                     {previewData.resultingAvailableQuantity} {previewData.asset.symbol}
                   </span>
                 </div>
               </div>
 
               {confirmError && (
-                <div className="p-3 rounded-lg bg-rose-950/80 border border-rose-800 text-rose-300 text-xs">
+                <div className="p-3.5 rounded-xl bg-[#FFE9EF] border border-[#FED0DC] text-[#D6204F] text-xs font-semibold">
                   {confirmError}
                 </div>
               )}
@@ -326,7 +334,7 @@ function TransferForm() {
                   type="button"
                   onClick={handleConfirm}
                   disabled={confirmLoading}
-                  className="w-full py-2.5 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-medium text-xs flex items-center justify-center gap-2 shadow-glow-blue transition-all disabled:opacity-50"
+                  className="w-full h-12 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-[0_6px_20px_-2px_rgba(11,79,255,0.35)] transition-all disabled:opacity-50"
                 >
                   <Lock className="w-4 h-4" />
                   <span>
@@ -342,46 +350,46 @@ function TransferForm() {
           )}
 
           {confirmReceipt && (
-            <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-800/80 text-xs space-y-3">
-              <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+            <div className="p-5 rounded-2xl bg-[#E6FBF4] border border-[#B2F5DE] text-xs space-y-4">
+              <div className="flex items-center gap-2 text-[#0E9F73] font-bold text-sm">
                 <CheckCircle2 className="w-5 h-5" />
                 <span>Transfer Committed to Double-Entry Ledger</span>
               </div>
-              <p className="text-slate-300 text-[11px] leading-relaxed">
-                Transaction ID <code className="text-blue-400 font-bold">#{confirmReceipt.transaction?.transaction_id}</code> was executed atomically with paired debit and credit ledger rows.
+              <p className="text-[#2B2F4A] text-xs leading-relaxed">
+                Transaction ID <code className="text-[#0B4FFF] font-bold">#{confirmReceipt.transaction?.transaction_id}</code> was executed atomically with paired debit and credit ledger rows.
               </p>
 
-              <div className="p-2.5 rounded bg-slate-900 border border-[#182030] font-mono text-[11px] space-y-1">
-                <div>From: {confirmReceipt.transaction?.sender_account_no}</div>
-                <div>To: {confirmReceipt.transaction?.receiver_account_no}</div>
-                <div>Quantity: {confirmReceipt.transaction?.quantity} {confirmReceipt.transaction?.symbol}</div>
-                <div>Status: {confirmReceipt.transaction?.status?.toUpperCase()}</div>
-                <div>Idempotent Replay: {confirmReceipt.idempotentReplay ? 'YES' : 'NO'}</div>
+              <div className="p-3.5 rounded-xl bg-white border border-[#B2F5DE] font-mono text-xs space-y-1.5 text-[#1B0B5C]">
+                <div>From: <span className="font-bold">{confirmReceipt.transaction?.sender_account_no}</span></div>
+                <div>To: <span className="font-bold">{confirmReceipt.transaction?.receiver_account_no}</span></div>
+                <div>Quantity: <span className="font-bold text-[#0B4FFF]">{confirmReceipt.transaction?.quantity} {confirmReceipt.transaction?.symbol}</span></div>
+                <div>Status: <StatusChip status={confirmReceipt.transaction?.status || 'success'} size="sm" /></div>
+                <div>Idempotent Replay: <span className="font-bold">{confirmReceipt.idempotentReplay ? 'YES' : 'NO'}</span></div>
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => {
                     setConfirmReceipt(null);
                     setPreviewData(null);
                     setTransferStatus('idle');
                   }}
-                  className="flex-1 py-1.5 rounded bg-slate-900 border border-[#182030] text-slate-300 text-xs hover:text-white"
+                  className="flex-1 h-11 rounded-full bg-white border border-[#D5DBEE] text-[#2B2F4A] hover:bg-[#F6F8FF] font-semibold text-xs transition-colors"
                 >
                   New Transfer
                 </button>
                 <button
                   onClick={() => router.push('/customer/history')}
-                  className="flex-1 py-1.5 rounded bg-blue-600 text-white text-xs hover:bg-blue-500 font-medium"
+                  className="flex-1 h-11 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white font-semibold text-xs transition-colors shadow-xs"
                 >
                   View in History
                 </button>
               </div>
             </div>
           )}
-        </div>
+        </SectionCard>
       </div>
-    </div>
+    </AppShell>
   );
 }
 
@@ -389,10 +397,12 @@ export default function CustomerTransferPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex-1 flex items-center justify-center py-24 text-slate-500 font-mono text-xs">
-          <RefreshCw className="w-4 h-4 animate-spin text-blue-400 mr-2" />
-          Loading Transfer Terminal...
-        </div>
+        <AppShell>
+          <div className="py-24 flex items-center justify-center text-[#6B7090] text-sm font-medium">
+            <RefreshCw className="w-5 h-5 animate-spin text-[#0B4FFF] mr-2" />
+            Loading Transfer Terminal...
+          </div>
+        </AppShell>
       }
     >
       <TransferForm />

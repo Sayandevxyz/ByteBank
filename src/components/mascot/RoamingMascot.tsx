@@ -117,8 +117,8 @@ export default function RoamingMascot() {
 
     const br = { x: winW - bw - pad, y: winH - bh - pad };
     const bl = { x: pad, y: winH - bh - pad };
-    const tl = { x: pad, y: topPad };
-    const tr = { x: winW - bw - pad, y: topPad };
+    const midL = { x: pad, y: Math.max(winH - bh - pad - 140, winH * 0.6) };
+    const midR = { x: winW - bw - pad, y: Math.max(winH - bh - pad - 140, winH * 0.6) };
 
     if (isMobile) {
       return [
@@ -133,11 +133,13 @@ export default function RoamingMascot() {
       { from: br, to: br, duration: 30000, isMoving: false },
       { from: br, to: bl, duration: 20000, isMoving: true },
       { from: bl, to: bl, duration: 10000, isMoving: false },
-      { from: bl, to: tl, duration: 20000, isMoving: true },
-      { from: tl, to: tl, duration: 10000, isMoving: false },
-      { from: tl, to: tr, duration: 25000, isMoving: true },
-      { from: tr, to: tr, duration: 10000, isMoving: false },
-      { from: tr, to: br, duration: 20000, isMoving: true },
+      { from: bl, to: midL, duration: 15000, isMoving: true },
+      { from: midL, to: midL, duration: 8000, isMoving: false },
+      { from: midL, to: bl, duration: 15000, isMoving: true },
+      { from: bl, to: br, duration: 20000, isMoving: true },
+      { from: br, to: midR, duration: 15000, isMoving: true },
+      { from: midR, to: midR, duration: 8000, isMoving: false },
+      { from: midR, to: br, duration: 15000, isMoving: true },
     ];
   }, []);
 
@@ -514,13 +516,9 @@ export default function RoamingMascot() {
           onClick={() => setIsChatOpen(!isChatOpen)}
           className="group relative cursor-pointer flex flex-col items-center"
         >
-          <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-b from-[#F5F8FF] to-white p-1 border-2 border-[#0B4FFF]/25 group-hover:border-[#0B4FFF] shadow-[0_8px_25px_rgba(11,79,255,0.22)] group-hover:shadow-[0_12px_32px_rgba(11,79,255,0.34)] transition-all duration-300 transform group-hover:scale-105 active:scale-95 flex items-center justify-center">
-            <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-b from-[#EBF2FF] to-transparent flex items-center justify-center">
-              <CuteRobotCanvas
-                onClick={() => setIsChatOpen(!isChatOpen)}
-                isMoving={isMoving}
-                headingZ={headingZ}
-              />
+          <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-gradient-to-b from-[#F5F8FF] to-white p-1 border-2 border-[#0B4FFF]/25 group-hover:border-[#0B4FFF] shadow-[0_8px_25px_rgba(11,79,255,0.22)] group-hover:shadow-[0_12px_32px_rgba(11,79,255,0.34)] transition-all duration-300 transform group-hover:scale-105 active:scale-95 flex items-center justify-center">
+            <div className="w-full h-full rounded-full bg-gradient-to-b from-[#EBF2FF] to-white flex items-center justify-center p-1.5 overflow-hidden">
+              <RobotAvatarSvg className="w-full h-full drop-shadow-xs select-none" />
             </div>
 
             {isOnline && (

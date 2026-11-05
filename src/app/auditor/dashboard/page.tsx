@@ -10,17 +10,16 @@ import {
   Activity,
   Layers,
   BarChart3,
-  CheckCircle2,
-  AlertTriangle,
   ArrowRight,
-  RefreshCw,
-  Lock,
 } from 'lucide-react';
+import AppShell from '../../../components/app/AppShell';
+import PageHeader from '../../../components/app/PageHeader';
+import SectionCard from '../../../components/app/SectionCard';
 
 const NetworkGraphCanvas = dynamic(() => import('../../../components/canvas/NetworkGraphCanvas'), {
   ssr: false,
   loading: () => (
-    <div className="h-80 w-full flex items-center justify-center text-slate-500 text-xs font-mono">
+    <div className="h-80 w-full flex items-center justify-center text-[#6B7090] text-xs font-mono bg-[#F6F8FF] rounded-2xl border border-[#E8ECF6]">
       Loading 3D Auditor Network Topology...
     </div>
   ),
@@ -48,166 +47,144 @@ export default function AuditorDashboardPage() {
   }, []);
 
   const totals = reports?.totals || {};
-  const statusBreakdown = reports?.statusBreakdown || [];
 
   return (
-    <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl glass-panel border border-[#182030]">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-bold">
-              ROLE: BYTEBANK_AUDITOR
-            </span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400">
-              Read-Only &amp; Zero-PII Enforced
-            </span>
-          </div>
-          <h1 className="text-2xl font-extrabold text-white mt-1">Regulatory &amp; Compliance Portal</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Read-only, privacy-masked oversight of all system transactions, immutable audit trails, and staff access logs.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
+    <AppShell>
+      <PageHeader
+        title="Regulatory & Compliance Portal"
+        subtitle="Read-only, privacy-masked oversight of all system transactions, immutable audit trails, and staff access logs."
+        actions={
           <Link
             href="/auditor/reports"
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-glow-blue transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white text-xs font-bold transition-all shadow-xs h-11"
           >
             <BarChart3 className="w-4 h-4" />
-            View Analytics Reports
+            <span>View Analytics Reports</span>
           </Link>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Activity className="w-3.5 h-3.5 text-blue-400" /> Audited Transactions
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#0B4FFF] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Activity className="w-3.5 h-3.5 text-[#0B4FFF]" /> Audited Txns
           </div>
-          <div className="text-2xl font-bold font-mono text-white">
+          <div className="text-2xl font-bold font-mono text-[#1B0B5C] tabular-nums">
             {totals.total_transactions || '0'}
           </div>
-          <div className="text-[10px] text-slate-500">Accessible via v_auditor_transactions</div>
+          <div className="text-[11px] text-[#6B7090]">Via v_auditor_transactions</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Layers className="w-3.5 h-3.5 text-emerald-400" /> Immutable Ledger Rows
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#1FD6A0] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Layers className="w-3.5 h-3.5 text-[#0E9F73]" /> Ledger Rows
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-400">
+          <div className="text-2xl font-bold font-mono text-[#0E9F73] tabular-nums">
             {totals.total_ledger_entries || '0'}
           </div>
-          <div className="text-[10px] text-slate-500">Trigger-guarded immutability</div>
+          <div className="text-[11px] text-[#6B7090]">Trigger-guarded immutability</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <FileText className="w-3.5 h-3.5 text-purple-400" /> System Audit Logs
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#8B5CF6] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-[#8B5CF6]" /> System Audit Logs
           </div>
-          <div className="text-2xl font-bold font-mono text-white">
+          <div className="text-2xl font-bold font-mono text-[#1B0B5C] tabular-nums">
             {totals.total_audit_logs || '0'}
           </div>
-          <div className="text-[10px] text-slate-500">Capture of all DB mutations</div>
+          <div className="text-[11px] text-[#6B7090]">Capture of all DB mutations</div>
         </div>
 
-        <div className="p-4 rounded-xl glass-panel border border-[#182030] space-y-1">
-          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-            <Eye className="w-3.5 h-3.5 text-amber-400" /> Staff Access Logs
+        <div className="p-5 rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white border-t-4 border-t-[#FFAB2E] space-y-1">
+          <div className="text-xs font-mono text-[#6B7090] flex items-center gap-1.5">
+            <Eye className="w-3.5 h-3.5 text-[#D97706]" /> Staff Access Logs
           </div>
-          <div className="text-2xl font-bold font-mono text-amber-400">
+          <div className="text-2xl font-bold font-mono text-[#D97706] tabular-nums">
             {totals.total_access_logs || '0'}
           </div>
-          <div className="text-[10px] text-slate-500">Purpose-coded read telemetry</div>
+          <div className="text-[11px] text-[#6B7090]">Purpose-coded read telemetry</div>
         </div>
       </div>
 
-      <div className="glass-panel p-6 rounded-2xl border border-[#182030] space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#182030] gap-2">
-          <div>
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              Auditor Graph Topology (Masked Identity Nodes)
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Force-directed 3D topology of transaction flows with customer PII stripped at the database level.
-            </p>
-          </div>
-          <span className="text-xs font-mono text-slate-400 px-3 py-1 rounded bg-slate-900 border border-[#182030]">
+      <SectionCard
+        title="Auditor Graph Topology (Masked Identity Nodes)"
+        subtitle="Force-directed 3D topology of transaction flows with customer PII stripped at the database level."
+        action={
+          <span className="text-xs font-mono text-[#0B4FFF] px-3 py-1 rounded-full bg-[#EEF3FF] border border-[#B9C6FF] font-semibold">
             SELECT * FROM v_auditor_transactions
           </span>
-        </div>
-
-        <div className="h-96 w-full rounded-xl overflow-hidden bg-slate-950/60 border border-slate-900 relative">
+        }
+      >
+        <div className="h-96 w-full rounded-2xl overflow-hidden relative">
           <NetworkGraphCanvas />
         </div>
-      </div>
+      </SectionCard>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link
           href="/auditor/transactions"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Activity className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#E6FBF4] border border-[#99F6E4] text-[#0E9F73] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Activity className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            Masked Transactions
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>Masked Transactions</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Browse all transfers and swaps without exposing customer names, phone numbers, addresses, or identifiers.
           </p>
         </Link>
 
         <Link
           href="/auditor/audit-logs"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-800 text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <FileText className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#F5F3FF] border border-[#DDD6FE] text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <FileText className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            Immutable Audit Trail
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-purple-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>Immutable Audit Trail</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Inspect trigger-generated audit records capturing table mutations with old and new values.
           </p>
         </Link>
 
         <Link
           href="/auditor/access-logs"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-800 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Eye className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#FEF3C7] border border-[#FDE68A] text-[#D97706] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Eye className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            Staff Access Log
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>Staff Access Log</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Audit staff queries against customer PII, verifying purpose codes, timestamps, and request references.
           </p>
         </Link>
 
         <Link
           href="/auditor/reports"
-          className="p-6 rounded-2xl glass-panel border border-[#182030] hover:border-emerald-500/50 transition-all group space-y-3"
+          className="p-6 rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF] shadow-card-white hover:shadow-card-hover transition-all group space-y-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-[#111c33] border border-blue-800 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <BarChart3 className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-2xl bg-[#EEF3FF] border border-[#B9C6FF] text-[#0B4FFF] flex items-center justify-center group-hover:scale-105 transition-transform">
+            <BarChart3 className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-bold text-white flex items-center justify-between">
-            Compliance Analytics
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+          <h3 className="text-base font-bold text-[#1B0B5C] flex items-center justify-between">
+            <span>Compliance Analytics</span>
+            <ArrowRight className="w-4 h-4 text-[#6B7090] group-hover:text-[#0B4FFF] group-hover:translate-x-0.5 transition-all" />
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#6B7090] leading-relaxed">
             Interactive charts on failed transaction causes, monthly volumes, and risk screening distributions.
           </p>
         </Link>
       </div>
-    </div>
+    </AppShell>
   );
 }
