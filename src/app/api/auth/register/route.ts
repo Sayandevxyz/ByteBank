@@ -18,7 +18,15 @@ const registerSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON request payload' } },
+        { status: 400 }
+      );
+    }
     const data = registerSchema.parse(body);
 
     const idHash = crypto.createHash('sha256').update(data.idProofNumber).digest('hex');
@@ -57,19 +65,21 @@ export async function POST(req: NextRequest) {
 
       await client.query(
         `INSERT INTO notification (customer_id, type, title, body)
-         VALUES ($1, 'WELCOME', 'Welcome to ByteBank', 'Account ' || $2 || ' successfully registered. KYC verification is pending review.');`,
+         VALUES ($1, 'WELCOME', 'Welcome to ByteBank', 'Account ' || $2::text || ' successfully registered. KYC verification is pending review.');`,
         [customer.customer_id, account.account_no]
       );
 
+      const auditValue = JSON.stringify({
+        customer_id: customer.customer_id,
+        email: customer.email,
+        account_no: account.account_no,
+        kyc_status: 'pending'
+      });
+
       await client.query(
         `INSERT INTO audit_log (actor, action, resource, new_value)
-         VALUES ('system', 'CUSTOMER_REGISTRATION', 'customer:' || $1, jsonb_build_object(
-           'customer_id', $1,
-           'email', $2,
-           'account_no', $3,
-           'kyc_status', 'pending'
-         ));`,
-        [customer.customer_id, customer.email, account.account_no]
+         VALUES ('system', 'CUSTOMER_REGISTRATION', 'customer:' || $1::text, $2::jsonb);`,
+        [customer.customer_id, auditValue]
       );
 
       return { customer, account, user };

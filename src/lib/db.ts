@@ -58,14 +58,14 @@ export async function withRole<T>(
 
     if (role === 'CUSTOMER') {
       await client.query(`SET LOCAL ROLE bytebank_customer;`);
-      await client.query(`SET LOCAL bytebank.current_customer_id = $1;`, [String(actorId)]);
-      await client.query(`SET LOCAL bytebank.current_actor = $1;`, [`customer:${actorId}`]);
+      await client.query(`SELECT set_config('bytebank.current_customer_id', $1, true);`, [String(actorId)]);
+      await client.query(`SELECT set_config('bytebank.current_actor', $1, true);`, [`customer:${actorId}`]);
     } else if (role === 'ADMIN') {
       await client.query(`SET LOCAL ROLE bytebank_admin;`);
-      await client.query(`SET LOCAL bytebank.current_actor = $1;`, [`staff:${actorId}`]);
+      await client.query(`SELECT set_config('bytebank.current_actor', $1, true);`, [`staff:${actorId}`]);
     } else if (role === 'AUDITOR') {
       await client.query(`SET LOCAL ROLE bytebank_auditor;`);
-      await client.query(`SET LOCAL bytebank.current_actor = $1;`, [`auditor:${actorId}`]);
+      await client.query(`SELECT set_config('bytebank.current_actor', $1, true);`, [`auditor:${actorId}`]);
     }
 
     const result = await callback(client);
