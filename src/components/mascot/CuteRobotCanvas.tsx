@@ -26,10 +26,10 @@ function CuteRobotMesh({ isHovered, isMoving, isWaving, headingZ }: RobotModelPr
     const t = state.clock.getElapsedTime();
 
     if (rootRef.current) {
-      const bob = Math.sin(t * 2.8) * 0.06;
-      rootRef.current.position.y = bob;
+      const bob = Math.sin(t * 2.8) * 0.035;
+      rootRef.current.position.y = -0.08 + bob;
 
-      const targetRotZ = headingZ + Math.sin(t * 1.5) * 0.04;
+      const targetRotZ = headingZ + Math.sin(t * 1.5) * 0.03;
       rootRef.current.rotation.z = THREE.MathUtils.lerp(rootRef.current.rotation.z, targetRotZ, delta * 4);
 
       if (isHovered) {
@@ -126,7 +126,7 @@ function CuteRobotMesh({ isHovered, isMoving, isWaving, headingZ }: RobotModelPr
   });
 
   return (
-    <group ref={rootRef} position={[0, 0, 0]}>
+    <group ref={rootRef} position={[0, -0.08, 0]} scale={[0.82, 0.82, 0.82]}>
       <group ref={headRef} position={[0, 0.28, 0]}>
         <mesh position={[0, 0.08, 0]}>
           <sphereGeometry args={[0.36, 32, 32]} />
@@ -317,7 +317,7 @@ export default function CuteRobotCanvas({
           alpha: true,
           powerPreference: 'high-performance',
         }}
-        camera={{ position: [0, 0.06, 2.1], fov: 36 }}
+        camera={{ position: [0, 0, 2.7], fov: 35 }}
         style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}
       >
         <ambientLight intensity={1.3} />
