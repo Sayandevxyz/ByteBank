@@ -12,12 +12,13 @@ import {
   Minimize2,
   ExternalLink,
 } from 'lucide-react';
+import RobotAvatarSvg from './RobotAvatarSvg';
 
 const CuteRobotCanvas = dynamic(() => import('./CuteRobotCanvas'), {
   ssr: false,
   loading: () => (
-    <div className="w-16 h-20 sm:w-20 sm:h-24 flex items-center justify-center">
-      <div className="w-6 h-6 rounded-full bg-[#0B4FFF]/20 animate-pulse" />
+    <div className="w-full h-full flex items-center justify-center p-2">
+      <RobotAvatarSvg className="w-12 h-12 animate-pulse" />
     </div>
   ),
 });
@@ -369,14 +370,8 @@ export default function RoamingMascot() {
           >
             <div className="px-4 py-3 bg-[#0B4FFF] text-white flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-white/20 p-1 flex items-center justify-center shrink-0">
-                  <Image
-                    src="/bytebank-icon.svg"
-                    alt="ByteBank"
-                    width={20}
-                    height={20}
-                    className="w-4 h-4 rounded-full"
-                  />
+                <div className="w-8 h-8 rounded-full bg-white/20 p-1 flex items-center justify-center shrink-0 border border-white/30 overflow-hidden">
+                  <RobotAvatarSvg className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="text-xs font-bold leading-tight flex items-center gap-1.5 text-white">
@@ -419,25 +414,32 @@ export default function RoamingMascot() {
                   key={m.id}
                   className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
                 >
-                  <div
-                    className={`p-3 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${m.sender === 'user'
-                      ? 'bg-[#0B4FFF] text-white font-medium rounded-br-none shadow-sm'
-                      : 'bg-white text-[#2B2F4A] border border-[#E8ECF6] rounded-bl-none shadow-sm'
-                      }`}
-                  >
-                    <div>{m.text}</div>
-                    {m.actionUrl && m.actionLabel && (
-                      <div className="pt-2">
-                        <Link
-                          href={m.actionUrl}
-                          onClick={() => setIsChatOpen(false)}
-                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#0B4FFF] text-white text-[11px] font-semibold hover:bg-[#0A3FD1] transition-colors"
-                        >
-                          <span>{m.actionLabel}</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </Link>
+                  <div className={`flex items-start gap-2 max-w-[88%] ${m.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                    {m.sender === 'bot' && (
+                      <div className="w-6 h-6 rounded-full bg-[#EBF2FF] border border-[#B9C6FF] flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+                        <RobotAvatarSvg className="w-4 h-4" />
                       </div>
                     )}
+                    <div
+                      className={`p-3 rounded-2xl whitespace-pre-wrap leading-relaxed ${m.sender === 'user'
+                        ? 'bg-[#0B4FFF] text-white font-medium rounded-br-none shadow-sm'
+                        : 'bg-white text-[#2B2F4A] border border-[#E8ECF6] rounded-tl-none shadow-sm'
+                        }`}
+                    >
+                      <div>{m.text}</div>
+                      {m.actionUrl && m.actionLabel && (
+                        <div className="pt-2">
+                          <Link
+                            href={m.actionUrl}
+                            onClick={() => setIsChatOpen(false)}
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#0B4FFF] text-white text-[11px] font-semibold hover:bg-[#0A3FD1] transition-colors"
+                          >
+                            <span>{m.actionLabel}</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <span className="text-[9px] text-[#6B7090] mt-1 px-1">{m.timestamp}</span>
                 </div>
@@ -508,25 +510,34 @@ export default function RoamingMascot() {
           </div>
         )}
 
-        <div className="w-16 h-20 sm:w-20 sm:h-24 filter drop-shadow-md">
-          <CuteRobotCanvas
-            onClick={() => setIsChatOpen(!isChatOpen)}
-            isMoving={isMoving}
-            headingZ={headingZ}
-          />
-        </div>
+        <div
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          className="group relative cursor-pointer flex flex-col items-center"
+        >
+          <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-b from-[#F5F8FF] to-white p-1 border-2 border-[#0B4FFF]/25 group-hover:border-[#0B4FFF] shadow-[0_8px_25px_rgba(11,79,255,0.22)] group-hover:shadow-[0_12px_32px_rgba(11,79,255,0.34)] transition-all duration-300 transform group-hover:scale-105 active:scale-95 flex items-center justify-center">
+            <div className="w-full h-full rounded-full overflow-hidden bg-gradient-to-b from-[#EBF2FF] to-transparent flex items-center justify-center">
+              <CuteRobotCanvas
+                onClick={() => setIsChatOpen(!isChatOpen)}
+                isMoving={isMoving}
+                headingZ={headingZ}
+              />
+            </div>
 
-        {!isChatOpen && (
-          <button
-            onClick={() => setIsChatOpen(true)}
-            className="mt-1 px-2.5 py-1 rounded-full bg-white border border-[#E8ECF6] shadow-card-white text-[11px] font-semibold text-[#1B0B5C] flex items-center gap-1.5 hover:bg-[#F3F7FF] transition-colors"
-          >
             {isOnline && (
-              <span className="w-1.5 h-1.5 rounded-full bg-[#1FD6A0] animate-pulse" />
+              <span className="absolute top-0 right-0 flex h-3.5 w-3.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1FD6A0] opacity-75" />
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#1FD6A0] border-2 border-white shadow-xs" />
+              </span>
             )}
-            <span></span>
-          </button>
-        )}
+          </div>
+
+          {!isChatOpen && (
+            <div className="mt-1 px-2.5 py-0.5 rounded-full bg-white/95 backdrop-blur-xs border border-[#E8ECF6] shadow-card-white text-[10px] font-bold text-[#1B0B5C] flex items-center gap-1 group-hover:text-[#0B4FFF] group-hover:border-[#0B4FFF]/30 transition-colors whitespace-nowrap">
+              <MessageSquare className="w-2.5 h-2.5 text-[#0B4FFF]" />
+              <span>ByteBank AI</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
