@@ -274,7 +274,7 @@ export default function RoamingMascot() {
       dragHoldUntilRef.current = Date.now() + 60000;
       try {
         (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-      } catch {}
+      } catch { }
     }
   };
 
@@ -364,9 +364,8 @@ export default function RoamingMascot() {
               [isNearBottom ? 'bottom' : 'top']: '105%',
               [isNearRight ? 'right' : 'left']: '0',
             }}
-            className={`rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white flex flex-col overflow-hidden transition-all duration-300 z-50 animate-in fade-in ${
-              isChatExpanded ? 'h-[540px] w-[420px]' : 'h-[440px] w-80 sm:w-92'
-            }`}
+            className={`rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white flex flex-col overflow-hidden transition-all duration-300 z-50 animate-in fade-in ${isChatExpanded ? 'h-[540px] w-[420px]' : 'h-[440px] w-80 sm:w-92'
+              }`}
           >
             <div className="px-4 py-3 bg-[#0B4FFF] text-white flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -381,7 +380,7 @@ export default function RoamingMascot() {
                 </div>
                 <div>
                   <div className="text-xs font-bold leading-tight flex items-center gap-1.5 text-white">
-                    ByteBank Support
+
                   </div>
                   {isOnline ? (
                     <div className="text-[10px] text-[#1FD6A0] font-medium flex items-center gap-1">
@@ -421,11 +420,10 @@ export default function RoamingMascot() {
                   className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
-                    className={`p-3 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${
-                      m.sender === 'user'
+                    className={`p-3 rounded-2xl max-w-[85%] whitespace-pre-wrap leading-relaxed ${m.sender === 'user'
                         ? 'bg-[#0B4FFF] text-white font-medium rounded-br-none shadow-sm'
                         : 'bg-white text-[#2B2F4A] border border-[#E8ECF6] rounded-bl-none shadow-sm'
-                    }`}
+                      }`}
                   >
                     <div>{m.text}</div>
                     {m.actionUrl && m.actionLabel && (
