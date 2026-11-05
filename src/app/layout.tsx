@@ -3,7 +3,7 @@ import { Jost } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import FloatingAssistant from '@/components/chat/FloatingAssistant';
+import MascotClientMount from '@/components/mascot/MascotClientMount';
 
 const jost = Jost({
   subsets: ['latin'],
@@ -33,7 +33,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
-        <FloatingAssistant />
+        <MascotClientMount />
       </body>
     </html>
   );
