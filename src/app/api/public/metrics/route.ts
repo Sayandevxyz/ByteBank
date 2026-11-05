@@ -5,7 +5,7 @@ export const revalidate = 60;
 
 export async function GET() {
   try {
-    const [accRes, txnRes, ledgRes, assetsRes, recRes, monthlyRes, recentTxRes] = await Promise.all([
+    const [accRes, txnRes, ledgRes, assetsRes, recRes, monthlyRes, recentTxRes, assetCountsRes] = await Promise.all([
       query(`SELECT count(*)::int as count FROM account;`),
       query(`SELECT count(*)::int as count FROM asset_transaction;`),
       query(`SELECT count(*)::int as count FROM ledger_entry;`),
@@ -47,37 +47,39 @@ export async function GET() {
         LEFT JOIN customer c ON c.customer_id = acc.customer_id
         ORDER BY t.created_at DESC
         LIMIT 4;
+      `),
+      query(`
+        SELECT type, count(*)::int as count
+        FROM asset
+        GROUP BY type;
       `)
     ]);
 
-    const totalAccounts = accRes.rows[0]?.count || 127;
-    const totalTransactions = txnRes.rows[0]?.count || 885;
-    const totalLedgerEntries = ledgRes.rows[0]?.count || 1752;
+    const totalAccounts = accRes.rows[0]?.count || 0;
+    const totalTransactions = txnRes.rows[0]?.count || 0;
+    const totalLedgerEntries = ledgRes.rows[0]?.count || 0;
     const openIssues = recRes.rows[0]?.open_issues || 0;
     const reconciliationRate = openIssues === 0 ? 100 : Math.max(90, 100 - openIssues);
 
+    const typeCounts: Record<string, number> = {};
+    assetCountsRes.rows.forEach((r: any) => {
+      typeCounts[r.type] = r.count;
+    });
+
+    const cryptoCount = typeCounts['crypto'] || 7;
+    const stockCount = typeCounts['stock'] || 3;
+    const totalAssetTypes = cryptoCount + stockCount;
+
     const assetCategories = [
-      { name: 'Major Crypto', value: 52, color: '#3B5BFF' },
-      { name: 'Simulated Stocks', value: 31, color: '#F43F6E' },
-      { name: 'Reserve Assets', value: 17, color: '#FFAB2E' },
+      { name: 'Cryptocurrency', count: cryptoCount, value: Math.round((cryptoCount / totalAssetTypes) * 100), color: '#3B5BFF' },
+      { name: 'Simulated Equities', count: stockCount, value: Math.round((stockCount / totalAssetTypes) * 100), color: '#F43F6E' },
     ];
 
-    const fallbackMonths = [
-      { month: 'Mar', count: 98, isHighlighted: false },
-      { month: 'Apr', count: 124, isHighlighted: false },
-      { month: 'May', count: 156, isHighlighted: false },
-      { month: 'Jun', count: 182, isHighlighted: false },
-      { month: 'Jul', count: 215, isHighlighted: false },
-      { month: 'Aug', count: 260, isHighlighted: true },
-    ];
-
-    const monthlyBars = monthlyRes.rows.length >= 4 
-      ? monthlyRes.rows.map((r, i, arr) => ({
-          month: r.month,
-          count: r.count,
-          isHighlighted: i === arr.length - 1,
-        }))
-      : fallbackMonths;
+    const monthlyBars = monthlyRes.rows.map((r: any, i: number, arr: any[]) => ({
+      month: r.month,
+      count: r.count,
+      isHighlighted: i === arr.length - 1,
+    }));
 
     return NextResponse.json({
       success: true,
@@ -85,6 +87,7 @@ export async function GET() {
         totalAccounts,
         totalTransactions,
         totalLedgerEntries,
+        supportedAssetsCount: totalAssetTypes,
         reconciliationRate,
         topAssets: assetsRes.rows,
         assetCategories,
@@ -94,28 +97,9 @@ export async function GET() {
     });
   } catch (error) {
     return NextResponse.json({
-      success: true,
-      metrics: {
-        totalAccounts: 127,
-        totalTransactions: 885,
-        totalLedgerEntries: 1752,
-        reconciliationRate: 100,
-        assetCategories: [
-          { name: 'Major Crypto', value: 52, color: '#3B5BFF' },
-          { name: 'Simulated Stocks', value: 31, color: '#F43F6E' },
-          { name: 'Reserve Assets', value: 17, color: '#FFAB2E' },
-        ],
-        monthlyBars: [
-          { month: 'Mar', count: 98, isHighlighted: false },
-          { month: 'Apr', count: 124, isHighlighted: false },
-          { month: 'May', count: 156, isHighlighted: false },
-          { month: 'Jun', count: 182, isHighlighted: false },
-          { month: 'Jul', count: 215, isHighlighted: false },
-          { month: 'Aug', count: 260, isHighlighted: true },
-        ],
-        recentTransactions: [],
-      }
-    });
+      success: false,
+      error: 'Metrics temporarily unavailable',
+      metrics: null
+    }, { status: 500 });
   }
 }
-

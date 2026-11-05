@@ -328,7 +328,7 @@ export default function AdminAssetsPage() {
 
             <div className="space-y-3 font-mono text-xs">
               <div className="space-y-1">
-                <label className="text-slate-400">Asset Symbol (e.g. AVAX, NVDA)</label>
+                <label className="text-slate-400">Asset Symbol (e.g. SOL, BNB)</label>
                 <input
                   type="text"
                   required

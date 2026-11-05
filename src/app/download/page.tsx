@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { Download, Database, FileSpreadsheet, Code, FileText, ArrowRight } from 'lucide-react';
+import { Download, Database, FileSpreadsheet, Code, ArrowRight } from 'lucide-react';
+import WaveDivider from '@/components/ui/WaveDivider';
 
 export const metadata = {
   title: 'Download Architecture & Data Packs | ByteBank',
@@ -16,8 +17,8 @@ const DOWNLOADS = [
     desc: 'All migrations containing table definitions, CHECK constraints, immutability triggers, PL/pgSQL transfer procedures, and Row-Level Security policies.',
     url: '/api/download/schema',
     icon: Database,
-    color: 'text-blue-400',
-    bgColor: 'bg-blue-600/20',
+    color: 'text-[#0B4FFF]',
+    bgColor: 'bg-[#F3F7FF]',
   },
   {
     title: '125 Master Customer Synthetic Dataset',
@@ -27,8 +28,8 @@ const DOWNLOADS = [
     desc: 'The complete seeded dataset of 125 synthetic master customers with unique emails, phone numbers, verified KYC statuses, and generated account numbers.',
     url: '/api/download/dataset',
     icon: FileSpreadsheet,
-    color: 'text-emerald-400',
-    bgColor: 'bg-emerald-600/20',
+    color: 'text-[#1FD6A0]',
+    bgColor: 'bg-[#1FD6A0]/10',
   },
   {
     title: 'OpenAPI 3.1 REST Specification',
@@ -38,30 +39,32 @@ const DOWNLOADS = [
     desc: 'Full OpenAPI 3.1.0 specification defining all 53 endpoints, request schemas, Zod validation models, and HTTP response codes.',
     url: '/api/download/openapi',
     icon: Code,
-    color: 'text-cyan-400',
-    bgColor: 'bg-cyan-600/20',
+    color: 'text-[#0B4FFF]',
+    bgColor: 'bg-[#F3F7FF]',
   },
 ];
 
 export default function DownloadPage() {
   return (
-    <div className="w-full bg-[#060911] text-white min-h-screen">
-      <section className="relative w-full pt-16 pb-16 bg-[#080d18] border-b border-white/[0.06] text-center overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full bg-white text-[#2B2F4A] min-h-screen">
+      <section className="relative w-full pt-20 pb-16 bg-[#F3F7FF] text-center overflow-hidden">
+        <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[600px] h-[350px] hero-blob-gradient rounded-full pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0d1424] border border-blue-500/30 text-xs font-mono text-blue-400 mb-6 shadow-glow-blue">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E8ECF6] text-xs font-semibold text-[#0B4FFF] shadow-sm">
             <span>Download Center &amp; Open Artifacts</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
-            Download Data Pack
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#1B0B5C] uppercase tracking-tight font-sans">
+            DOWNLOAD DATA PACK
           </h1>
 
-          <p className="mt-4 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-3 text-base text-[#6B7090] max-w-2xl mx-auto leading-relaxed">
             Download verifiable database schema files, synthetic customer data, and API contracts directly from the platform.
           </p>
         </div>
+
+        <WaveDivider fill="#FFFFFF" direction="down" className="absolute bottom-0 left-0 w-full" />
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -71,28 +74,28 @@ export default function DownloadPage() {
             return (
               <div
                 key={item.filename}
-                className="rounded-3xl bg-[#0c1220] border border-white/[0.08] hover:border-blue-500/40 p-8 flex flex-col justify-between transition-all group shadow-card-dark"
+                className="rounded-2xl bg-white border border-[#E8ECF6] hover:border-[#0B4FFF]/40 p-8 flex flex-col justify-between transition-all group shadow-card-white"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 rounded-2xl ${item.bgColor} border border-white/10 flex items-center justify-center ${item.color} group-hover:scale-105 transition-transform`}>
+                    <div className={`w-12 h-12 rounded-2xl ${item.bgColor} border border-[#E8ECF6] flex items-center justify-center ${item.color} group-hover:scale-105 transition-transform`}>
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-white/[0.05] text-slate-400 border border-white/[0.08]">
+                    <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-[#F3F7FF] text-[#6B7090] border border-[#E8ECF6]">
                       {item.size}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-xs font-mono text-blue-400 uppercase tracking-wider">
+                    <span className="text-xs font-mono text-[#0B4FFF] uppercase tracking-wider">
                       {item.format}
                     </span>
-                    <h2 className="text-lg font-bold text-white mt-1">
+                    <h2 className="text-lg font-bold text-[#1B0B5C] mt-1">
                       {item.title}
                     </h2>
                   </div>
 
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-[#6B7090] leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -101,7 +104,7 @@ export default function DownloadPage() {
                   <a
                     href={item.url}
                     download={item.filename}
-                    className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-glow-blue"
+                    className="w-full py-3 px-4 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-md"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download {item.filename}</span>
@@ -113,21 +116,22 @@ export default function DownloadPage() {
         </div>
       </section>
 
-      <section className="bg-[#080d18] border-t border-white/[0.06] py-14">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4">
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            Need live database verification?
+      <section className="relative bg-[#F3F7FF] py-16 overflow-hidden">
+        <WaveDivider fill="#F3F7FF" direction="up" className="absolute top-0 left-0 w-full" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-4 relative z-10 pt-4">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1B0B5C] uppercase tracking-tight font-sans">
+            NEED LIVE DATABASE VERIFICATION?
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+          <p className="text-sm text-[#6B7090] max-w-xl mx-auto leading-relaxed">
             You can run automated database invariant tests or launch the concurrency race simulator directly against your local PostgreSQL instance.
           </p>
           <div className="pt-2">
             <Link
               href="/admin/lab"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#111827] hover:bg-[#1a2338] text-white border border-white/10 text-xs font-semibold transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white text-xs font-semibold shadow-md transition-all"
             >
               <span>Explore DBMS Concurrency Lab</span>
-              <ArrowRight className="w-3.5 h-3.5 text-blue-400" />
+              <ArrowRight className="w-3.5 h-3.5 text-white" />
             </Link>
           </div>
         </div>
