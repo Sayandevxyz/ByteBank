@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
+import { Jost } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import FloatingAssistant from '@/components/chat/FloatingAssistant';
+
+const jost = Jost({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-jost',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'ByteBank | Digital Asset & Transaction Management System',
@@ -20,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen flex flex-col bg-[#06080e] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+    <html lang="en" className={jost.variable}>
+      <body className={`${jost.className} min-h-screen flex flex-col bg-[#060911] text-white antialiased selection:bg-blue-600 selection:text-white`}>
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />

@@ -1,9 +1,19 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Database, ShieldCheck, Scale, Cpu, Terminal, Sparkles } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import MarketingFooter from './MarketingFooter';
+import { Terminal, ShieldCheck, Scale, Database } from 'lucide-react';
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname === '/' || pathname === '/about' || pathname === '/download') {
+    return <MarketingFooter />;
+  }
+
   return (
     <footer className="w-full border-t border-[#182030] bg-[#06080e] text-slate-400 text-xs mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 space-y-12">
@@ -33,20 +43,15 @@ export default function Footer() {
 
             <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>PostgreSQL 18 &bull; 15/15 Invariants PASS</span>
+              <span>PostgreSQL 16 &bull; 15/15 Invariants PASS</span>
             </div>
           </div>
 
           <div className="space-y-3 font-mono text-[11px]">
             <div className="font-bold text-white uppercase tracking-wider text-xs font-sans">
-              Portals
+              Tools
             </div>
             <ul className="space-y-2">
-              <li>
-                <Link href="/customer/dashboard" className="hover:text-blue-400 transition-colors">
-                  Customer Dashboard
-                </Link>
-              </li>
               <li>
                 <Link href="/customer/transfer" className="hover:text-blue-400 transition-colors">
                   Transfer Terminal
@@ -58,31 +63,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/admin/dashboard" className="hover:text-blue-400 transition-colors">
-                  Admin Center
-                </Link>
-              </li>
-              <li>
-                <Link href="/auditor/dashboard" className="hover:text-blue-400 transition-colors">
-                  Auditor Portal
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-3 font-mono text-[11px]">
-            <div className="font-bold text-white uppercase tracking-wider text-xs font-sans">
-              DBMS Core
-            </div>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/admin/lab" className="hover:text-blue-400 transition-colors flex items-center gap-1 text-purple-400">
-                  <Terminal className="w-3 h-3" /> In-App DBMS Lab
+                <Link href="/admin/lab" className="hover:text-blue-400 transition-colors">
+                  Concurrency Lab
                 </Link>
               </li>
               <li>
                 <Link href="/admin/reconciliation" className="hover:text-blue-400 transition-colors">
-                  Ledger Reconciliation
+                  Reconciliation Run
                 </Link>
               </li>
               <li>
@@ -90,9 +77,22 @@ export default function Footer() {
                   Asset Reservations
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          <div className="space-y-3 font-mono text-[11px]">
+            <div className="font-bold text-white uppercase tracking-wider text-xs font-sans">
+              Ledger Engine
+            </div>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/customer/history" className="hover:text-blue-400 transition-colors">
+                  Double-Entry Ledger
+                </Link>
+              </li>
               <li>
                 <Link href="/auditor/transactions" className="hover:text-blue-400 transition-colors">
-                  Masked Transactions
+                  Masked Auditor Views
                 </Link>
               </li>
               <li>
@@ -100,12 +100,22 @@ export default function Footer() {
                   Immutable Audit Log
                 </Link>
               </li>
+              <li>
+                <Link href="/auditor/access-logs" className="hover:text-blue-400 transition-colors">
+                  Purpose Access Logs
+                </Link>
+              </li>
+              <li>
+                <Link href="/auditor/reports" className="hover:text-blue-400 transition-colors">
+                  Compliance Reports
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div className="space-y-3 font-mono text-[11px]">
             <div className="font-bold text-white uppercase tracking-wider text-xs font-sans">
-              Documentation
+              Architecture
             </div>
             <ul className="space-y-2">
               <li>
@@ -114,26 +124,31 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="/api/docs" target="_blank" className="hover:text-blue-400 transition-colors">
-                  Raw OpenAPI JSON
-                </a>
-              </li>
-              <li>
-                <Link href="/admin/lab" className="hover:text-blue-400 transition-colors">
-                  Concurrency Tests
+                <Link href="/download" className="hover:text-blue-400 transition-colors">
+                  Download Data Packs
                 </Link>
               </li>
               <li>
-                <Link href="/auditor/reports" className="hover:text-blue-400 transition-colors">
-                  Compliance Analytics
+                <Link href="/about" className="hover:text-blue-400 transition-colors">
+                  About ByteBank
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin/kyc" className="hover:text-blue-400 transition-colors">
+                  KYC Verification
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin/accounts" className="hover:text-blue-400 transition-colors">
+                  Account Management
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-slate-500">
-          <div>&copy; 2026 ByteBank DBMS Architecture. All database invariants verified.</div>
+        <div className="pt-8 border-t border-[#182030] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono text-slate-500">
+          <div>&copy; 2026 ByteBank DBMS Platform. All rights reserved.</div>
 
           <div className="text-center sm:text-right max-w-lg text-[10px] text-amber-500/70">
             SIMULATION NOTICE: All digital asset balances, token transfers, KYC hashes, and market reference prices are simulated representation units (SRU) within an isolated relational database environment. No real funds or fiat currency are handled.

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import MarketingNavbar from './MarketingNavbar';
 import {
   Wallet,
   ArrowRightLeft,
@@ -39,6 +40,10 @@ interface UserSession {
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+
+  if (pathname === '/' || pathname === '/about' || pathname === '/download') {
+    return <MarketingNavbar />;
+  }
   const [user, setUser] = useState<UserSession | null>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotifs, setShowNotifs] = useState(false);
