@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node db/scripts/migrate.js && node db/scripts/seed.js && next build",
     "start": "next start",
     "test": "node scripts/run-tests.js",
     "test:concurrency": "node scripts/test-concurrency.js",
     "migrate": "node db/scripts/migrate.js",
-    "seed": "node db/scripts/seed.js"
+    "seed": "node db/scripts/seed.js",
+    "bundle": "node scripts/generate-bundle.js"
   },
   "keywords": [],
   "author": "",

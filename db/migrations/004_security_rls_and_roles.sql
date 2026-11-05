@@ -1,26 +1,64 @@
 
 DO $$
 BEGIN
-  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_admin') THEN
-    CREATE ROLE bytebank_admin NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_auditor') THEN
-    CREATE ROLE bytebank_auditor NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_customer') THEN
-    CREATE ROLE bytebank_customer NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_app') THEN
-    CREATE ROLE bytebank_app WITH LOGIN PASSWORD 'bytebank_secret_pw';
-  END IF;
+  BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_admin') THEN
+      CREATE ROLE bytebank_admin NOLOGIN;
+    END IF;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_auditor') THEN
+      CREATE ROLE bytebank_auditor NOLOGIN;
+    END IF;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_customer') THEN
+      CREATE ROLE bytebank_customer NOLOGIN;
+    END IF;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'bytebank_app') THEN
+      CREATE ROLE bytebank_app WITH LOGIN PASSWORD 'bytebank_secret_pw';
+    END IF;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    GRANT bytebank_admin TO bytebank_app;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    GRANT bytebank_auditor TO bytebank_app;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    GRANT bytebank_customer TO bytebank_app;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    GRANT postgres TO bytebank_app;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    EXECUTE format('GRANT bytebank_admin, bytebank_auditor, bytebank_customer TO %I', CURRENT_USER);
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+
+  BEGIN
+    GRANT USAGE ON SCHEMA public TO bytebank_admin, bytebank_auditor, bytebank_customer, bytebank_app;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
 END $$;
-
-GRANT bytebank_admin TO bytebank_app;
-GRANT bytebank_auditor TO bytebank_app;
-GRANT bytebank_customer TO bytebank_app;
-GRANT postgres TO bytebank_app;
-
-GRANT USAGE ON SCHEMA public TO bytebank_admin, bytebank_auditor, bytebank_customer, bytebank_app;
 
 ALTER TABLE customer ENABLE ROW LEVEL SECURITY;
 ALTER TABLE account ENABLE ROW LEVEL SECURITY;
@@ -163,6 +201,12 @@ GRANT EXECUTE ON FUNCTION release_reservation(BIGINT) TO bytebank_customer, byte
 GRANT EXECUTE ON FUNCTION consume_reservation(BIGINT) TO bytebank_customer, bytebank_admin, bytebank_app;
 GRANT EXECUTE ON FUNCTION expire_reservations() TO bytebank_admin, bytebank_app;
 
-GRANT ALL ON ALL TABLES IN SCHEMA public TO bytebank_app;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO bytebank_app;
-GRANT ALL ON ALL ROUTINES IN SCHEMA public TO bytebank_app;
+DO $$
+BEGIN
+  BEGIN
+    GRANT ALL ON ALL TABLES IN SCHEMA public TO bytebank_app;
+    GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO bytebank_app;
+    GRANT ALL ON ALL ROUTINES IN SCHEMA public TO bytebank_app;
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+END $$;
