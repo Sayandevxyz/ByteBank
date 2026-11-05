@@ -3,7 +3,17 @@ import { query } from '@/lib/db';
 
 export const revalidate = 60;
 
+let cachedMetricsData: any = null;
+let lastCacheTimestamp = 0;
+
 export async function GET() {
+  if (cachedMetricsData && Date.now() - lastCacheTimestamp < 30000) {
+    return NextResponse.json({
+      success: true,
+      metrics: cachedMetricsData
+    });
+  }
+
   try {
     const [accRes, txnRes, ledgRes, assetsRes, recRes, monthlyRes, recentTxRes, assetCountsRes] = await Promise.all([
       query(`SELECT count(*)::int as count FROM account;`),
@@ -81,21 +91,33 @@ export async function GET() {
       isHighlighted: i === arr.length - 1,
     }));
 
+    const metricsPayload = {
+      totalAccounts,
+      totalTransactions,
+      totalLedgerEntries,
+      supportedAssetsCount: totalAssetTypes,
+      reconciliationRate,
+      topAssets: assetsRes.rows,
+      assetCategories,
+      monthlyBars,
+      recentTransactions: recentTxRes.rows,
+    };
+
+    cachedMetricsData = metricsPayload;
+    lastCacheTimestamp = Date.now();
+
     return NextResponse.json({
       success: true,
-      metrics: {
-        totalAccounts,
-        totalTransactions,
-        totalLedgerEntries,
-        supportedAssetsCount: totalAssetTypes,
-        reconciliationRate,
-        topAssets: assetsRes.rows,
-        assetCategories,
-        monthlyBars,
-        recentTransactions: recentTxRes.rows,
-      }
+      metrics: metricsPayload
     });
   } catch (error) {
+    if (cachedMetricsData) {
+      return NextResponse.json({
+        success: true,
+        metrics: cachedMetricsData
+      });
+    }
+
     return NextResponse.json({
       success: false,
       error: 'Metrics temporarily unavailable',

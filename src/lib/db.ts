@@ -12,7 +12,7 @@ export const pool: Pool = global.__bytebankPool || new Pool({
   connectionString,
   max: 25,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 20000,
 });
 
 if (process.env.NODE_ENV !== 'production') {

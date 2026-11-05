@@ -53,6 +53,16 @@ export function formatErrorResponse(err: unknown) {
     };
   }
 
+  if (err instanceof SyntaxError) {
+    return {
+      error: {
+        code: 'VALIDATION_ERROR' as ErrorCode,
+        message: 'Invalid request JSON payload format',
+      },
+      status: 400,
+    };
+  }
+
   const message = err instanceof Error ? err.message : 'An unexpected error occurred';
   return {
     error: {
