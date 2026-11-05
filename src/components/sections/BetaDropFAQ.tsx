@@ -16,7 +16,7 @@ const RobotMascotCanvas = dynamic(() => import('../canvas/RobotMascotCanvas'), {
 const FAQS = [
   {
     q: 'What is ByteBank and why are balances simulated?',
-    a: 'ByteBank is an advanced Database Management System (DBMS) platform built on PostgreSQL 16. It demonstrates enterprise-grade financial engineering: double-entry bookkeeping, strict ACID serialization, versioned risk rules, and privacy-aware auditor logging. All balances, KYC tokens, and ticker prices are synthetic to showcase real database architecture without real-world financial risk.',
+    a: 'ByteBank is an advanced Database Management System (DBMS) platform built on PostgreSQL 16. It implements enterprise-grade financial engineering: double-entry bookkeeping, strict ACID serialization, versioned risk rules, and privacy-aware auditor logging. All balances, KYC tokens, and ticker prices are synthetic to showcase real database architecture without real-world financial risk.',
   },
   {
     q: 'How does the double-entry ledger prevent balance drift?',

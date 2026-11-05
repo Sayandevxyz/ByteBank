@@ -7,7 +7,7 @@ import { formatErrorResponse, AppError } from '@/lib/errors';
 
 const lookupSchema = z.object({
   customerId: z.number().int().positive(),
-  purposeCode: z.enum(['KYC_VERIFICATION', 'FRAUD_INVESTIGATION', 'ACCOUNT_SERVICING', 'AUDIT_SAMPLE']),
+  purposeCode: z.enum(['KYC_VERIFICATION', 'FRAUD_INVESTIGATION', 'ACCOUNT_SERVICING', 'CUSTOMER_SUPPORT_INQUIRY', 'COURT_ORDER_LEGAL', 'AUDIT_COMPLIANCE_REVIEW', 'AUDIT_INSPECTION']),
   requestRef: z.string().optional(),
 });
 

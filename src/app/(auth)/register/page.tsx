@@ -18,7 +18,7 @@ export default function RegisterPage() {
   const [address, setAddress] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('2000-01-15');
   const [idType, setIdType] = useState('PAN');
-  const [idProofNumber, setIdProofNumber] = useState('PAN-DEMO9901Z');
+  const [idProofNumber, setIdProofNumber] = useState('PAN-ABCDE1234F');
   const [password, setPassword] = useState('password123');
 
   const handleSubmit = async (e: React.FormEvent) => {

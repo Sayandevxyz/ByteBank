@@ -124,7 +124,7 @@ export default function MarketingFooter() {
 
         <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono">
           <div>
-            &copy; {new Date().getFullYear()} ByteBank. All balances and assets are simulated for educational DBMS demonstration.
+            &copy; {new Date().getFullYear()} ByteBank. All balances and assets are simulated for educational database architecture.
           </div>
           <div className="flex items-center gap-4">
             <span className="text-slate-400">Strict Relational Integrity</span>

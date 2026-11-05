@@ -74,7 +74,7 @@ export default function FeatureCardsSection() {
               <div className="pt-6">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/10 text-blue-400 border border-blue-500/20 text-[11px] font-mono">
                   <Zap className="w-3 h-3 text-blue-400" />
-                  0.25ms reconciliation latency
+                  Automated reconciliation audit
                 </span>
               </div>
             </div>

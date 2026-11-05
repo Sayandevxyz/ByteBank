@@ -86,8 +86,6 @@ export async function GET() {
         totalTransactions,
         totalLedgerEntries,
         reconciliationRate,
-        averageVerificationMs: '0.25ms',
-        fee: '$0.00',
         topAssets: assetsRes.rows,
         assetCategories,
         monthlyBars,
@@ -102,8 +100,6 @@ export async function GET() {
         totalTransactions: 885,
         totalLedgerEntries: 1752,
         reconciliationRate: 100,
-        averageVerificationMs: '0.25ms',
-        fee: '$0.00',
         assetCategories: [
           { name: 'Major Crypto', value: 52, color: '#3B5BFF' },
           { name: 'Simulated Stocks', value: 31, color: '#F43F6E' },

@@ -145,7 +145,7 @@ function TransferForm() {
 
       <TransferCoinCanvas
         status={transferStatus}
-        senderAccountNo={account?.account_no || 'BB-ACC-XXXX'}
+        senderAccountNo={account?.account_no || 'BB-ACC-5001'}
         receiverAccountNo={recipientAccountNo}
         assetSymbol={selectedHolding?.symbol || 'ASSET'}
       />
@@ -161,7 +161,7 @@ function TransferForm() {
           <form onSubmit={handlePreview} className="space-y-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Recipient Account Number (BB-ACC-XXXX)
+                Recipient Account Number (e.g. BB-ACC-5002)
               </label>
               <input
                 type="text"

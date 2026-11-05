@@ -239,7 +239,7 @@ export default function HeroSection({ metrics }: HeroSectionProps) {
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
                   ACID Serialized Execution
                 </span>
-                <span className="font-mono text-slate-500">Latency: 0.25ms</span>
+                <span className="font-mono text-slate-500">Engine: PostgreSQL 16</span>
               </div>
             </div>
           </div>

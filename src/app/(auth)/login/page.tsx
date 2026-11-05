@@ -113,7 +113,7 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-8 pt-6 border-t border-[#182030] text-xs">
-          <span className="text-[11px] font-mono text-slate-400 block mb-2.5">CLICK TO AUTOFILL DEMO LOGIN:</span>
+          <span className="text-[11px] font-mono text-slate-400 block mb-2.5">CLICK TO AUTOFILL PRESET CREDENTIALS:</span>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"

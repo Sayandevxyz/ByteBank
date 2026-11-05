@@ -26,9 +26,7 @@ export async function query<T extends QueryResultRow = any>(
   const start = Date.now();
   const res = await pool.query<T>(text, params);
   const duration = Date.now() - start;
-  if (process.env.DEBUG_SQL === 'true') {
-    console.log('[SQL]', { text, duration, rows: res.rowCount });
-  }
+
   return res;
 }
 

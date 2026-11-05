@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   BarChart,
-  Bar,
+  Bar as ColumnBar,
   XAxis,
   YAxis,
   Tooltip,
@@ -189,14 +189,14 @@ export default function AuditorReportsPage() {
                     fontFamily: 'monospace',
                   }}
                 />
-                <Bar dataKey="value" fill="#8884d8" radius={[6, 6, 0, 0]}>
+                <ColumnBar dataKey="value" fill="#8884d8" radius={[6, 6, 0, 0]}>
                   {riskStats.map((entry: any, index: number) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={RISK_COLORS[entry.name] || '#06b6d4'}
                     />
                   ))}
-                </Bar>
+                </ColumnBar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -227,7 +227,7 @@ export default function AuditorReportsPage() {
                   fontFamily: 'monospace',
                 }}
               />
-              <Bar dataKey="volume" fill="#06b6d4" radius={[6, 6, 0, 0]} />
+              <ColumnBar dataKey="volume" fill="#06b6d4" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

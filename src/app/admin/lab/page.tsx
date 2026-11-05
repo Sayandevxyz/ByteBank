@@ -482,7 +482,7 @@ export default function DbmsLabPage() {
               Reconciliation Drift Injection &amp; Compensating Resolution
             </h2>
             <p className="text-xs text-slate-400">
-              Demonstrate how ByteBank detects out-of-band balance anomalies without ever mutating historical ledger records:
+              Verify how ByteBank detects out-of-band balance anomalies without ever mutating historical ledger records:
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
