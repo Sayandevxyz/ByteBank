@@ -26,7 +26,7 @@ export default function MarketingLandingPage() {
   }, []);
 
   return (
-    <div className="w-full bg-white text-[#2B2F4A] flex flex-col">
+    <div className="w-full bg-white text-[#2B2F4A] flex flex-col overflow-x-hidden">
       <HeroSection metrics={metrics} />
       <IntroSection />
       <FeatureCardsSection />

@@ -54,7 +54,7 @@ export default function ApiCliSection() {
   };
 
   return (
-    <section className="relative w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#E8ECF6]">
+    <section className="relative w-full py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-[#E8ECF6] overflow-x-hidden">
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3F7FF] border border-[#E8ECF6] text-xs font-semibold text-[#0B4FFF]">

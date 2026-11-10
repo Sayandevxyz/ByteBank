@@ -1,10 +1,9 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { withTransaction } from '@/lib/db';
 import { hashPassword, createAccessToken, createRefreshToken, setAuthCookies } from '@/lib/auth';
-import { formatErrorResponse, AppError } from '@/lib/errors';
+import { formatErrorResponse } from '@/lib/errors';
 
 const registerSchema = z.object({
   fullName: z.string().min(2),
@@ -29,18 +28,26 @@ export async function POST(req: NextRequest) {
     }
     const data = registerSchema.parse(body);
 
+    const normalizedEmail = data.email.trim().toLowerCase();
+    const normalizedPhone = data.phone.trim();
+    const normalizedName = data.fullName.trim();
+    const normalizedAddress = data.address.trim();
+
     const idHash = crypto.createHash('sha256').update(data.idProofNumber).digest('hex');
     const idLast4 = data.idProofNumber.slice(-4);
     const pwdHash = await hashPassword(data.password);
-    const username = data.email.split('@')[0];
+    const baseUsername =
+      normalizedEmail
+        .split('@')[0]
+        .replace(/[^a-zA-Z0-9._-]/g, '')
+        .slice(0, 24) || 'user';
 
     const result = await withTransaction(async (client) => {
-
       const custRes = await client.query(
         `INSERT INTO customer (full_name, phone, email, address, date_of_birth, id_proof_hash, id_proof_last4, kyc_status)
          VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending')
          RETURNING customer_id, full_name, email, kyc_status;`,
-        [data.fullName, data.phone, data.email, data.address, data.dateOfBirth, idHash, idLast4]
+        [normalizedName, normalizedPhone, normalizedEmail, normalizedAddress, data.dateOfBirth, idHash, idLast4]
       );
       const customer = custRes.rows[0];
 
@@ -55,11 +62,20 @@ export async function POST(req: NextRequest) {
       );
       const account = accRes.rows[0];
 
+      const existingUserRes = await client.query(
+        `SELECT 1 FROM app_user WHERE LOWER(username) = LOWER($1) LIMIT 1;`,
+        [baseUsername]
+      );
+      const username =
+        existingUserRes.rows.length > 0
+          ? `${baseUsername}_${crypto.randomBytes(2).toString('hex')}`
+          : baseUsername;
+
       const userRes = await client.query(
         `INSERT INTO app_user (username, email, password_hash, role, customer_id)
          VALUES ($1, $2, $3, 'CUSTOMER', $4)
          RETURNING user_id, username, email, role;`,
-        [username, data.email, pwdHash, customer.customer_id]
+        [username, normalizedEmail, pwdHash, customer.customer_id]
       );
       const user = userRes.rows[0];
 
@@ -73,7 +89,7 @@ export async function POST(req: NextRequest) {
         customer_id: customer.customer_id,
         email: customer.email,
         account_no: account.account_no,
-        kyc_status: 'pending'
+        kyc_status: 'pending',
       });
 
       await client.query(
@@ -101,37 +117,44 @@ export async function POST(req: NextRequest) {
 
     await setAuthCookies(accessToken, refreshToken);
 
-    return NextResponse.json({
-      success: true,
-      user: {
-        userId: result.user.user_id,
-        username: result.user.username,
-        email: result.user.email,
-        role: result.user.role,
-        fullName: result.customer.full_name,
-        customerId: result.customer.customer_id,
-        accountNo: result.account.account_no,
-        accountId: result.account.account_id,
-        accountStatus: result.account.status,
-        kycStatus: result.customer.kyc_status,
+    return NextResponse.json(
+      {
+        success: true,
+        user: {
+          userId: result.user.user_id,
+          username: result.user.username,
+          email: result.user.email,
+          role: result.user.role,
+          fullName: result.customer.full_name,
+          customerId: result.customer.customer_id,
+          accountNo: result.account.account_no,
+          accountId: result.account.account_id,
+          accountStatus: result.account.status,
+          kycStatus: result.customer.kyc_status,
+        },
       },
-    }, { status: 201 });
-
+      { status: 201 }
+    );
   } catch (err: any) {
     if (err.code === '23505') {
-      const detail = err.detail || '';
-      if (detail.includes('email')) {
+      const detail = (err.detail || '').toLowerCase();
+      const constraint = (err.constraint || '').toLowerCase();
+      if (constraint.includes('email') || detail.includes('email')) {
         return NextResponse.json(
           { error: { code: 'VALIDATION_ERROR', message: 'An account with this email address already exists.' } },
           { status: 409 }
         );
       }
-      if (detail.includes('phone')) {
+      if (constraint.includes('phone') || detail.includes('phone')) {
         return NextResponse.json(
           { error: { code: 'VALIDATION_ERROR', message: 'An account with this phone number already exists.' } },
           { status: 409 }
         );
       }
+      return NextResponse.json(
+        { error: { code: 'VALIDATION_ERROR', message: 'An account with these details already exists.' } },
+        { status: 409 }
+      );
     }
     const { error, status } = formatErrorResponse(err);
     return NextResponse.json({ error }, { status });

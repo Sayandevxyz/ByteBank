@@ -105,7 +105,7 @@ export default function ManageFinancesSection({ metrics }: ManageFinancesSection
             </div>
           </div>
 
-          <div className="lg:col-span-6 space-y-8 text-left">
+          <div className="lg:col-span-6 min-w-0 space-y-8 text-left">
             <div className="space-y-3">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1B0B5C] tracking-tight uppercase font-sans">
                 MANAGE YOUR FINANCES
