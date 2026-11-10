@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
@@ -50,6 +50,8 @@ export default function RegisterPage() {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
+  const [checkingStep1, setCheckingStep1] = useState(false);
+  const submittingRef = useRef(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
 
   const [fullName, setFullName] = useState('');
@@ -102,9 +104,18 @@ export default function RegisterPage() {
     validateField(fieldName, value);
   };
 
-  const handleStep1Continue = (e: React.FormEvent) => {
+  const handleStep1Continue = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (checkingStep1) return;
     setGeneralError(null);
+
+    const allStep1Touched = {
+      fullName: true,
+      email: true,
+      phone: true,
+      address: true,
+      dateOfBirth: true,
+    };
 
     const result = step1Schema.safeParse({
       fullName,
@@ -121,14 +132,38 @@ export default function RegisterPage() {
         if (!errors[key]) errors[key] = err.message;
       });
       setFieldErrors(errors);
-      setTouched({
-        fullName: true,
-        email: true,
-        phone: true,
-        address: true,
-        dateOfBirth: true,
-      });
+      setTouched(allStep1Touched);
       return;
+    }
+
+    setTouched(allStep1Touched);
+    setCheckingStep1(true);
+    try {
+      const res = await fetch('/api/auth/check-availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          phone: phone.trim(),
+        }),
+      });
+      if (res.ok) {
+        const availability = await res.json();
+        const conflictErrors: Record<string, string> = {};
+        if (availability.emailTaken) {
+          conflictErrors.email = 'This email is already registered';
+        }
+        if (availability.phoneTaken) {
+          conflictErrors.phone = 'This phone number is already registered';
+        }
+        if (Object.keys(conflictErrors).length > 0) {
+          setFieldErrors((prev) => ({ ...prev, ...conflictErrors }));
+          return;
+        }
+      }
+    } catch {
+    } finally {
+      setCheckingStep1(false);
     }
 
     setStep(2);
@@ -136,6 +171,7 @@ export default function RegisterPage() {
 
   const handleStep2Submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submittingRef.current || loading) return;
     setGeneralError(null);
 
     const step2Result = step2Schema.safeParse({ idProofNumber, password });
@@ -150,6 +186,7 @@ export default function RegisterPage() {
       return;
     }
 
+    submittingRef.current = true;
     setLoading(true);
 
     try {
@@ -171,14 +208,17 @@ export default function RegisterPage() {
 
       if (!res.ok) {
         const message = data.error?.message || 'Registration failed';
+        const lowerMsg = message.toLowerCase();
 
-        if (message.toLowerCase().includes('email')) {
+        if (lowerMsg.includes('email')) {
+          setTouched((prev) => ({ ...prev, email: true }));
           setFieldErrors((prev) => ({
             ...prev,
             email: 'This email is already registered',
           }));
           setStep(1);
-        } else if (message.toLowerCase().includes('phone')) {
+        } else if (lowerMsg.includes('phone')) {
+          setTouched((prev) => ({ ...prev, phone: true }));
           setFieldErrors((prev) => ({
             ...prev,
             phone: 'This phone number is already registered',
@@ -195,6 +235,7 @@ export default function RegisterPage() {
     } catch {
       setGeneralError('Connection failed. Please ensure the server is running.');
     } finally {
+      submittingRef.current = false;
       setLoading(false);
     }
   };
@@ -339,15 +380,24 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              disabled={!isStep1Valid}
+              disabled={!isStep1Valid || checkingStep1}
               className={`w-full h-[52px] rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-all mt-6 shadow-md ${
-                isStep1Valid
+                isStep1Valid && !checkingStep1
                   ? 'bg-[#0B4FFF] hover:bg-[#0A3FD1] text-white hover:-translate-y-0.5'
                   : 'bg-[#B9C6FF] text-white cursor-not-allowed'
               }`}
             >
-              <span>Continue to Simulated KYC</span>
-              <ArrowRight className="w-4 h-4" />
+              {checkingStep1 ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Verifying Details...</span>
+                </>
+              ) : (
+                <>
+                  <span>Continue to Simulated KYC</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
         ) : (

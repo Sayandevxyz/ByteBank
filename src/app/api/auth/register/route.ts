@@ -52,7 +52,15 @@ export async function POST(req: NextRequest) {
       const customer = custRes.rows[0];
 
       const nextAccNum = 5000 + customer.customer_id;
-      const accountNo = `BB-ACC-${nextAccNum}`;
+      const baseAccountNo = `BB-ACC-${nextAccNum}`;
+      const existingAccRes = await client.query(
+        `SELECT 1 FROM account WHERE account_no = $1 LIMIT 1;`,
+        [baseAccountNo]
+      );
+      const accountNo =
+        existingAccRes.rows.length > 0
+          ? `BB-ACC-${nextAccNum}-${crypto.randomInt(100, 999)}`
+          : baseAccountNo;
 
       const accRes = await client.query(
         `INSERT INTO account (account_no, customer_id, account_type, status)
