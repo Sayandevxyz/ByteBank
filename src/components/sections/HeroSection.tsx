@@ -26,7 +26,7 @@ export default function HeroSection({ metrics }: HeroSectionProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[580px]">
-          <div className="lg:col-span-6 space-y-8 text-left">
+          <div className="lg:col-span-6 min-w-0 space-y-8 text-left">
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#1B0B5C] uppercase font-sans leading-[1.05]">
                 THE WORLD IN<br />YOUR WALLET
@@ -51,23 +51,25 @@ export default function HeroSection({ metrics }: HeroSectionProps) {
             </div>
           </div>
 
-          <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end">
-            <div className="relative w-full max-w-[480px]">
+          <div className="lg:col-span-6 min-w-0 relative flex items-center justify-center lg:justify-end">
+            <div className="relative w-full max-w-[600px] min-w-0">
               <MintDotGrid
                 cols={8}
                 rows={6}
-                className="absolute -top-10 -right-6 z-0"
+                className="hidden sm:grid absolute -top-8 -right-4 z-0"
               />
 
-              <div className="relative z-10 w-full pr-10 pb-16">
-                <HeroDonutChart
-                  categories={metrics?.assetCategories}
-                  totalCount={metrics?.supportedAssetsCount || 10}
-                />
-              </div>
+              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-5 items-stretch">
+                <div className="w-full min-w-0">
+                  <HeroDonutChart
+                    categories={metrics?.assetCategories}
+                    totalCount={metrics?.supportedAssetsCount || 10}
+                  />
+                </div>
 
-              <div className="absolute -bottom-2 right-0 w-[78%] z-20">
-                <HeroBarChart monthlyData={metrics?.monthlyBars} />
+                <div className="w-full min-w-0">
+                  <HeroBarChart monthlyData={metrics?.monthlyBars} />
+                </div>
               </div>
             </div>
           </div>

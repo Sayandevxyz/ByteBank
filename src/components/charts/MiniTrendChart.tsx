@@ -37,6 +37,7 @@ export default function MiniTrendChart() {
             stroke="#3B5BFF"
             strokeWidth={2}
             fill="url(#trendGrad1)"
+            isAnimationActive={false}
           />
           <Area
             type="monotone"
@@ -44,6 +45,7 @@ export default function MiniTrendChart() {
             stroke="#1FD6A0"
             strokeWidth={1.5}
             fill="url(#trendGrad2)"
+            isAnimationActive={false}
           />
         </AreaChart>
       </ResponsiveContainer>

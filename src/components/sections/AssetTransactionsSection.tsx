@@ -37,7 +37,7 @@ export default function AssetTransactionsSection({ metrics }: AssetTransactionsS
     <section className="relative w-full bg-white py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-6 space-y-8 text-left">
+          <div className="lg:col-span-6 min-w-0 space-y-8 text-left">
             <div className="space-y-3">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1B0B5C] tracking-tight uppercase font-sans">
                 ASSET TRANSACTIONS
@@ -68,8 +68,8 @@ export default function AssetTransactionsSection({ metrics }: AssetTransactionsS
             </div>
           </div>
 
-          <div className="lg:col-span-6 relative flex justify-center">
-            <div className="relative w-full max-w-[460px]">
+          <div className="lg:col-span-6 min-w-0 relative flex justify-center">
+            <div className="relative w-full max-w-[460px] min-w-0">
               <MintDotGrid
                 cols={8}
                 rows={5}

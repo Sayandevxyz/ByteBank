@@ -27,7 +27,7 @@ export default function SecuritySection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-4 pb-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-6 space-y-8 text-left">
+          <div className="lg:col-span-6 min-w-0 space-y-8 text-left">
             <div className="space-y-3">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1B0B5C] tracking-tight uppercase font-sans">
                 SECURITY
@@ -53,15 +53,15 @@ export default function SecuritySection() {
             </div>
           </div>
 
-          <div className="lg:col-span-6 relative flex justify-center">
-            <div className="relative w-full max-w-[460px]">
+          <div className="lg:col-span-6 min-w-0 relative flex justify-center">
+            <div className="relative w-full max-w-[460px] min-w-0">
               <MintDotGrid
                 cols={8}
                 rows={5}
                 className="absolute -top-8 -right-6 z-0"
               />
 
-              <div className="relative z-10 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-white p-6 mb-6">
+              <div className="relative z-10 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-white p-6 mb-5">
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-xs font-bold uppercase tracking-wider text-[#1B0B5C]">
                     DBMS Invariant Audit
@@ -83,6 +83,7 @@ export default function SecuritySection() {
                         dataKey="value"
                         stroke="#FFFFFF"
                         strokeWidth={2}
+                        isAnimationActive={false}
                       >
                         <Cell fill="#1FD6A0" />
                       </Pie>
@@ -100,7 +101,7 @@ export default function SecuritySection() {
                 </div>
               </div>
 
-              <div className="relative z-20 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-elevated p-6 -mt-10 ml-6">
+              <div className="relative z-20 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-elevated p-6 sm:ml-6">
                 <div className="text-xs font-bold uppercase tracking-wider text-[#6B7090] mb-2">
                   Continuous Ledger Verification
                 </div>

@@ -70,7 +70,7 @@ export default function ApiCliSection() {
         </div>
 
         <div className="rounded-2xl bg-white border border-[#E8ECF6] shadow-card-white overflow-hidden">
-          <div className="px-5 py-3.5 bg-[#F3F7FF] border-b border-[#E8ECF6] flex items-center justify-between">
+          <div className="px-4 sm:px-5 py-3.5 bg-[#F3F7FF] border-b border-[#E8ECF6] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-[#FFAB2E]" />
               <span className="w-3 h-3 rounded-full bg-[#1FD6A0]" />
@@ -78,7 +78,7 @@ export default function ApiCliSection() {
               <span className="text-xs font-mono text-[#6B7090] ml-2">bash &mdash; bytebank-client</span>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-[#E8ECF6]">
                 <button
                   onClick={() => setActiveTab('curl')}

@@ -41,22 +41,22 @@ export default function ManageFinancesSection({ metrics }: ManageFinancesSection
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-4 pb-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-6 relative flex justify-center">
-            <div className="relative w-full max-w-[460px]">
+          <div className="lg:col-span-6 min-w-0 relative flex justify-center">
+            <div className="relative w-full max-w-[460px] min-w-0">
               <MintDotGrid
                 cols={7}
                 rows={5}
                 className="absolute -bottom-8 -left-8 z-0"
               />
 
-              <div className="relative z-10 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-white p-6 mb-6">
+              <div className="relative z-10 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-white p-6 mb-5">
                 <div className="text-xs font-bold uppercase tracking-wider text-[#6B7090] mb-2">
                   Asset Inflow Trends
                 </div>
                 <MiniTrendChart />
               </div>
 
-              <div className="relative z-20 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-elevated p-6 -mt-10 ml-6">
+              <div className="relative z-20 bg-white rounded-2xl border border-[#E8ECF6] shadow-card-elevated p-6 sm:ml-6">
                 <div className="text-xs font-bold uppercase tracking-wider text-[#1B0B5C] mb-4">
                   Transaction History
                 </div>
